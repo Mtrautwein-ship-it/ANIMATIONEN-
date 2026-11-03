@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 0 560 570" class="talking mode-idle" style="--skin:#f2c4a0; --skin-shade:#e3a985; --hair:#5a3b24; --eye:#3b6ea5; --jacket:#1f3a5f; --accent:#4fb3e8; --pants:#2c3440; --boots:#5b3d26; --line:#22262b; --belly:1;" id="figur" width="1120" height="1140">
+      <style>
+        #figur .ol { stroke: var(--line); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+        #figur .skin { fill: var(--skin); }
+        #figur .skin-shade { fill: var(--skin-shade); }
+        #figur .hair { fill: var(--hair); }
+        #figur .jacket { fill: var(--jacket); }
+        #figur .accent { fill: var(--accent); }
+        #figur .pants { fill: var(--pants); }
+        #figur .boots { fill: var(--boots); }
+        #figur .iris { fill: var(--eye); }
+        #figur .white { fill: #ffffff; }
+        #figur .dark { fill: var(--line); }
+        #figur .brow { fill: none; stroke: var(--hair); stroke-width: 9; stroke-linecap: round; }
+        #figur .arm-ol { stroke: var(--line); stroke-width: 46; stroke-linecap: round; }
+        #figur .arm-fill { stroke: var(--jacket); stroke-width: 38; stroke-linecap: round; }
+        #figur .cuff { stroke: var(--accent); stroke-width: 38; stroke-linecap: butt; }
+        #figur .pipe-ol { stroke: var(--line); stroke-width: 12; stroke-linecap: round; }
+        #figur .pipe { stroke: #c8763a; stroke-width: 7; stroke-linecap: round; }
+        #figur .glasses { fill: rgba(255,255,255,.18); stroke: var(--line); stroke-width: 5; }
+
+        /* Drehpunkte (Koordinaten im viewBox) */
+        #figur #armL   { transform-origin: 124px 292px; }
+        #figur #armR   { transform-origin: 276px 292px; }
+        #figur #legL   { transform-origin: 171px 420px; }
+        #figur #legR   { transform-origin: 229px 420px; }
+        #figur #head   { transform-origin: 200px 265px; }
+        #figur #upper  { transform-origin: 200px 450px; }
+        #figur #all    { transform-origin: 200px 530px; }
+        #figur #shadow { transform-origin: 200px 540px; }
+        #figur #mouth  { transform-origin: 200px 228px; }
+        #figur #eyes   { transform-origin: 200px 172px; }
+        #figur #brows  { transform-origin: 200px 140px; }
+        #figur #torsoScale { transform-origin: 200px 360px; transform: scaleX(var(--belly)); }
+        #figur #pointer { display: none; }
+        #figur.pointer-on #pointer, #figur.mode-point #pointer { display: inline; }
+
+        /* Immer: Blinzeln */
+        #figur #eyes { animation: blink 4.2s infinite; }
+        @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
+
+        /* Sprechen (kombinierbar mit jeder Pose) */
+        #figur.talking #mouth { animation: talk .36s infinite alternate ease-in-out; }
+        @keyframes talk { 0% { transform: scaleY(.35); } 40% { transform: scaleY(1.15); } 70% { transform: scaleY(.6); } 100% { transform: scaleY(1.3) scaleX(.9); } }
+
+        /* Pose: Stehen / Atmen */
+        #figur.mode-idle #upper { animation: breathe 3s infinite ease-in-out; }
+        #figur.mode-idle #head  { animation: nod 6s infinite ease-in-out; }
+        @keyframes breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.018) translateY(-1px); } }
+        @keyframes nod { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-2.5deg); } 70% { transform: rotate(2deg); } }
+
+        /* Pose: Erklären (Hände gestikulieren) */
+        #figur.mode-explain #upper { animation: breathe 3s infinite ease-in-out; }
+        #figur.mode-explain #armL { animation: gestureL 2.4s infinite ease-in-out; }
+        #figur.mode-explain #armR { animation: gestureR 2.4s infinite ease-in-out; }
+        #figur.mode-explain #head { animation: explainHead 2.4s infinite ease-in-out; }
+        @keyframes gestureL { 0%, 100% { transform: rotate(35deg); } 25% { transform: rotate(70deg); } 50% { transform: rotate(45deg); } 75% { transform: rotate(60deg); } }
+        @keyframes gestureR { 0%, 100% { transform: rotate(-55deg); } 25% { transform: rotate(-35deg); } 50% { transform: rotate(-75deg); } 75% { transform: rotate(-40deg); } }
+        @keyframes explainHead { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+        /* Pose: Winken */
+        #figur.mode-wave #armR { animation: wave .9s infinite ease-in-out; }
+        #figur.mode-wave #head { transform: rotate(-4deg); }
+        #figur.mode-wave #upper { animation: breathe 3s infinite ease-in-out; }
+        @keyframes wave { 0%, 100% { transform: rotate(-120deg); } 50% { transform: rotate(-150deg); } }
+
+        /* Pose: Zeigen (mit Rohr-Zeigestab) */
+        #figur.mode-point #armR { animation: point 2.2s infinite ease-in-out; }
+        #figur.mode-point #armL { transform: rotate(10deg); }
+        #figur.mode-point #head { transform: rotate(6deg); }
+        #figur.mode-point #upper { animation: breathe 3s infinite ease-in-out; }
+        @keyframes point { 0%, 100% { transform: rotate(-98deg); } 50% { transform: rotate(-106deg); } }
+
+        /* Pose: Achtung! (Finger hoch, Augenbrauen hoch) */
+        #figur.mode-warn #armR { animation: warn 1.2s infinite ease-in-out; }
+        #figur.mode-warn #brows { transform: translateY(-8px); }
+        #figur.mode-warn #head { animation: shake 1.2s infinite ease-in-out; }
+        @keyframes warn { 0%, 100% { transform: rotate(-128deg); } 50% { transform: rotate(-138deg); } }
+        @keyframes shake { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+        /* Pose: Gehen (auf der Stelle – Bewegung im Schnittprogramm) */
+        #figur.mode-walk #legL { animation: legSwing .6s infinite ease-in-out; }
+        #figur.mode-walk #legR { animation: legSwing .6s infinite ease-in-out reverse; }
+        #figur.mode-walk #armL { animation: armSwing .6s infinite ease-in-out; }
+        #figur.mode-walk #armR { animation: armSwing .6s infinite ease-in-out reverse; }
+        #figur.mode-walk #upper { animation: bob .3s infinite alternate ease-in-out; }
+        @keyframes legSwing { 0%, 100% { transform: rotate(14deg); } 50% { transform: rotate(-14deg); } }
+        @keyframes armSwing { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(22deg); } }
+        @keyframes bob { from { transform: translateY(0); } to { transform: translateY(-7px); } }
+
+        /* Pose: Jubeln / Springen */
+        #figur.mode-jump #all { animation: jump 1s infinite cubic-bezier(.3,0,.4,1); }
+        #figur.mode-jump #shadow { animation: shadowJump 1s infinite cubic-bezier(.3,0,.4,1); }
+        #figur.mode-jump #armL { transform: rotate(128deg); }
+        #figur.mode-jump #armR { transform: rotate(-128deg); }
+        #figur.mode-jump #brows { transform: translateY(-6px); }
+        @keyframes jump {
+          0%, 100% { transform: translateY(0) scale(1.06, .92); }
+          15% { transform: translateY(0) scale(.95, 1.06); }
+          50% { transform: translateY(-70px) scale(1, 1); }
+          85% { transform: translateY(0) scale(1.05, .94); }
+        }
+        @keyframes shadowJump { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.6); opacity: .5; } }
+      </style>
+
+      <defs>
+        <clipPath id="torsoClip">
+          <path d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z"/>
+        </clipPath>
+      </defs>
+
+      <ellipse id="shadow" cx="200" cy="540" rx="115" ry="14" fill="#000" fill-opacity=".18"/>
+
+      <g id="all">
+        <!-- Beine + Arbeitsschuhe -->
+        <g id="legs">
+          <g id="legL">
+            <rect class="pants ol" x="148" y="405" width="46" height="95" rx="14"/>
+            <rect class="boots ol" x="120" y="484" width="76" height="42" rx="19"/>
+            <rect class="dark" x="122" y="516" width="72" height="9" rx="4"/>
+            <path d="M130,494 Q138,488 148,490" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+          </g>
+          <g id="legR">
+            <rect class="pants ol" x="206" y="405" width="46" height="95" rx="14"/>
+            <rect class="boots ol" x="204" y="484" width="76" height="42" rx="19"/>
+            <rect class="dark" x="206" y="516" width="72" height="9" rx="4"/>
+            <path d="M252,490 Q262,488 270,494" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <g id="upper">
+          <!-- Rumpf: Arbeitsjacke -->
+          <g id="torso"><g id="torsoScale">
+            <path class="jacket ol" d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z"/>
+            <g clip-path="url(#torsoClip)">
+              <path d="M270,270 C300,320 300,420 270,452 L320,452 L320,270 Z" fill="#000" fill-opacity=".14"/>
+              <rect x="80" y="372" width="240" height="14" fill="#dfe7ee"/>
+              <rect x="80" y="372" width="240" height="14" class="accent" fill-opacity=".35"/>
+              <rect x="80" y="416" width="240" height="20" fill="#6b4a2b"/>
+            </g>
+            <path d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z" fill="none" class="ol"/>
+            <line x1="200" y1="294" x2="200" y2="414" stroke="#0f1f33" stroke-width="3"/>
+            <rect x="187" y="413" width="26" height="26" rx="5" fill="#d4a640" class="ol" style="stroke-width:3"/>
+            <!-- Kragen -->
+            <path class="skin ol" d="M176,258 L200,294 L224,258 Z"/>
+            <path class="accent ol" d="M158,258 L182,255 L200,294 L170,288 Z"/>
+            <path class="accent ol" d="M242,258 L218,255 L200,294 L230,288 Z"/>
+            <!-- Namensschild -->
+            <rect x="134" y="306" width="64" height="24" rx="5" class="white ol" style="stroke-width:3"/>
+            <text id="nameText" x="166" y="323" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1f3a5f" textLength="54" lengthAdjust="spacingAndGlyphs">MEISTER</text>
+            <!-- Wassertropfen-Abzeichen -->
+            <path class="accent ol" style="stroke-width:3" d="M248,298 C258,312 263,320 263,328 A15,15 0 0 1 233,328 C233,320 238,312 248,298 Z"/>
+            <path d="M241,326 A7,7 0 0 0 247,334" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+            <!-- Werkzeugtasche mit Rohrzange -->
+            <g id="pouch">
+              <rect x="266" y="388" width="9" height="40" rx="3" fill="#8e99a4" class="ol" style="stroke-width:3"/>
+              <path d="M258,380 h26 v14 h-10 v-6 h-6 v6 h-10 Z" fill="#c33d32" class="ol" style="stroke-width:3"/>
+              <rect x="252" y="418" width="38" height="36" rx="7" fill="#7b5534" class="ol"/>
+              <path d="M254,428 H288" stroke="#5a3d24" stroke-width="3"/>
+            </g>
+          </g></g>
+
+          <!-- Kopf -->
+          <g id="head">
+            <ellipse class="skin ol" cx="110" cy="188" rx="15" ry="21"/>
+            <ellipse class="skin ol" cx="290" cy="188" rx="15" ry="21"/>
+            <path d="M106,180 Q114,188 108,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
+            <path d="M294,180 Q286,188 292,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
+            <ellipse class="skin ol" cx="200" cy="176" rx="92" ry="98"/>
+
+            <!-- Haare: kurz -->
+            <path id="hairShort" class="hair ol" d="M108,180 C98,100 148,70 200,72 C256,70 304,100 292,180 C286,150 272,128 246,120 C232,134 206,132 190,122 C166,132 128,144 108,180 Z"/>
+            <!-- Haare: Seitenscheitel -->
+            <path id="hairSide" class="hair ol" style="display:none" d="M106,182 C94,96 150,66 206,70 C262,72 306,104 294,182 C290,150 280,132 262,124 C230,126 180,118 150,104 C138,126 120,146 106,182 Z"/>
+            <!-- Haare: wenig / Geheimratsecken -->
+            <g id="hairThin" style="display:none">
+              <path class="hair ol" d="M110,192 C102,158 112,132 134,120 C128,142 126,166 126,194 Z"/>
+              <path class="hair ol" d="M290,192 C298,158 288,132 266,120 C272,142 274,166 274,194 Z"/>
+            </g>
+            <!-- Haare: Locken (per Skript gefüllt) -->
+            <g id="hairCurly" style="display:none"><path class="hair" d="M108,180 C98,100 148,70 200,72 C256,70 304,100 292,180 C286,150 272,128 246,120 C232,134 206,132 190,122 C166,132 128,144 108,180 Z"/><circle cx="110.1" cy="171.2" r="17" class="hair ol"/><circle cx="112.3" cy="147.3" r="17" class="hair ol"/><circle cx="120.5" cy="124.8" r="23" class="hair ol"/><circle cx="134.2" cy="105.3" r="23" class="hair ol"/><circle cx="152.3" cy="90.0" r="23" class="hair ol"/><circle cx="173.7" cy="80.0" r="23" class="hair ol"/><circle cx="196.9" cy="76.1" r="23" class="hair ol"/><circle cx="220.2" cy="78.4" r="23" class="hair ol"/><circle cx="242.3" cy="86.8" r="23" class="hair ol"/><circle cx="261.4" cy="100.7" r="23" class="hair ol"/><circle cx="276.3" cy="119.2" r="23" class="hair ol"/><circle cx="286.1" cy="141.1" r="23" class="hair ol"/><circle cx="289.9" cy="164.8" r="17" class="hair ol"/></g>
+
+            <!-- Bart -->
+            <path id="beardFull" class="hair ol" style="display:none" d="M112,196 C114,262 160,288 200,288 C240,288 286,262 288,196 C278,232 258,246 236,244 C226,262 174,262 164,244 C142,246 122,232 112,196 Z"/>
+            <path id="beardStubble" class="hair" style="display:none" fill-opacity=".28" d="M112,196 C114,262 160,282 200,282 C240,282 286,262 288,196 C278,232 258,246 236,244 C226,262 174,262 164,244 C142,246 122,232 112,196 Z"/>
+            <path id="beardShort" class="hair ol" style="display:none" d="M164,248 C170,272 186,284 200,284 C214,284 230,272 236,248 C224,262 176,262 164,248 Z"/>
+
+            <!-- Wangen -->
+            <circle cx="146" cy="212" r="13" fill="#ff7a7a" fill-opacity=".28"/>
+            <circle cx="254" cy="212" r="13" fill="#ff7a7a" fill-opacity=".28"/>
+
+            <!-- Mund -->
+            <g id="mouth">
+              <path class="ol" fill="#7a2230" d="M174,222 Q200,226 226,222 Q224,252 200,254 Q176,252 174,222 Z"/>
+              <path fill="#fff" d="M180,224 Q200,228 220,224 L219,231 Q200,234 181,231 Z"/>
+              <ellipse cx="200" cy="246" rx="12" ry="5" fill="#e0707a"/>
+            </g>
+            <path id="mustache" class="hair ol" style="display:none" d="M166,224 Q182,206 200,216 Q218,206 234,224 Q218,230 200,222 Q182,230 166,224 Z"/>
+
+            <!-- Nase -->
+            <ellipse class="skin-shade ol" cx="200" cy="200" rx="17" ry="14"/>
+            <ellipse cx="194" cy="195" rx="5" ry="3.5" fill="#fff" fill-opacity=".5"/>
+
+            <!-- Augen -->
+            <g id="eyes">
+              <ellipse class="white ol" cx="166" cy="168" rx="16" ry="20"/>
+              <circle class="iris" cx="169" cy="172" r="9"/>
+              <circle class="dark" cx="170" cy="173" r="5"/>
+              <circle class="white" cx="173" cy="168" r="3"/>
+              <ellipse class="white ol" cx="234" cy="168" rx="16" ry="20"/>
+              <circle class="iris" cx="231" cy="172" r="9"/>
+              <circle class="dark" cx="232" cy="173" r="5"/>
+              <circle class="white" cx="235" cy="168" r="3"/>
+            </g>
+
+            <!-- Augenbrauen -->
+            <g id="brows">
+              <path class="brow" d="M146,138 Q164,126 184,136"/>
+              <path class="brow" d="M216,136 Q236,126 254,138"/>
+            </g>
+
+            <!-- Brille -->
+            <g id="glassesRound">
+              <circle class="glasses" cx="166" cy="170" r="27"/>
+              <circle class="glasses" cx="234" cy="170" r="27"/>
+              <path d="M193,166 Q200,160 207,166" fill="none" stroke="var(--line)" stroke-width="5"/>
+              <path d="M139,164 L112,170 M261,164 L288,170" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/>
+            </g>
+            <g id="glassesSquare" style="display:none">
+              <rect class="glasses" x="138" y="146" width="56" height="46" rx="10"/>
+              <rect class="glasses" x="206" y="146" width="56" height="46" rx="10"/>
+              <path d="M194,164 Q200,158 206,164" fill="none" stroke="var(--line)" stroke-width="5"/>
+              <path d="M138,160 L112,168 M262,160 L288,168" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/>
+            </g>
+
+            <!-- Schutzhelm -->
+            <g id="helmet" style="display:none">
+              <path class="white ol" d="M98,152 C98,40 302,40 302,152 Z"/>
+              <path d="M200,70 V150" stroke="#e3e8ec" stroke-width="16"/>
+              <path class="white ol" d="M82,154 Q200,134 318,154 Q322,166 306,166 Q200,150 94,166 Q78,166 82,154 Z"/>
+              <path class="accent ol" style="stroke-width:3" d="M200,90 C210,104 215,112 215,120 A15,15 0 0 1 185,120 C185,112 190,104 200,90 Z"/>
+            </g>
+          </g>
+          <!-- Linker Arm (vom Betrachter aus) -->
+          <g id="armL">
+            <line class="arm-ol" x1="124" y1="292" x2="100" y2="378"/>
+            <line class="arm-fill" x1="124" y1="292" x2="100" y2="378"/>
+            <line class="cuff" x1="102.5" y1="366" x2="99" y2="380"/>
+            <circle class="skin ol" cx="98" cy="396" r="21"/>
+            <ellipse class="skin ol" cx="115" cy="388" rx="8" ry="11" transform="rotate(-20 115 388)"/>
+          </g>
+
+          <!-- Rechter Arm (vom Betrachter aus) mit Rohr-Zeigestab -->
+          <g id="armR">
+            <line class="arm-ol" x1="276" y1="292" x2="300" y2="378"/>
+            <line class="arm-fill" x1="276" y1="292" x2="300" y2="378"/>
+            <line class="cuff" x1="297.5" y1="366" x2="301" y2="380"/>
+            <g id="pointer">
+              <line class="pipe-ol" x1="302" y1="396" x2="328" y2="486"/>
+              <line class="pipe" x1="302" y1="396" x2="328" y2="486"/>
+              <path class="accent ol" style="stroke-width:3" d="M330,476 C338,488 342,494 342,500 A12,12 0 0 1 318,500 C318,494 322,488 330,476 Z" transform="rotate(-16 330 492)"/>
+            </g>
+            <circle class="skin ol" cx="302" cy="396" r="21"/>
+            <ellipse class="skin ol" cx="285" cy="388" rx="8" ry="11" transform="rotate(20 285 388)"/>
+          </g>
+
+        </g>
+      </g>
+    </svg>

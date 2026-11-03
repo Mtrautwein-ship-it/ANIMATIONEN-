@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wasser-Meister Figur</title>
+<style>
+  :root {
+    --bg: #f4f6f8; --panel: #ffffff; --text: #1d2733; --muted: #5d6b7a; --border: #d8dee5; --btn: #1f4e79; --btn-text: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #12171d; --panel: #1b222b; --text: #e6edf3; --muted: #9aa7b4; --border: #2c3642; --btn: #3a83c4; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+  header { padding: 16px; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  header p { margin: 0; color: var(--muted); }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; padding: 0 16px 24px; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  .stage { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 16 / 10; display: flex; align-items: flex-end; justify-content: center; }
+  .stage.bg-transparent { background: repeating-conic-gradient(#d9d9d9 0% 25%, #f2f2f2 0% 50%) 0 0 / 24px 24px; }
+  .stage.bg-green { background: #00b140; }
+  .stage.bg-classroom { background: #e9e2d3; }
+  .stage #classroom { position: absolute; inset: 0; width: 100%; height: 100%; display: none; }
+  .stage.bg-classroom #classroom { display: block; }
+  .stage #figur { position: relative; height: 96%; width: auto; max-width: 100%; }
+  aside { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  legend { font-weight: 700; margin-bottom: 6px; font-size: .95rem; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .9rem; }
+  .row select, .row input[type=text] { width: 60%; padding: 5px 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+  .row input[type=color] { width: 44px; height: 28px; border: 1px solid var(--border); border-radius: 6px; padding: 0; background: none; }
+  .row input[type=range] { width: 60%; }
+  .poses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  button { font: inherit; font-size: .88rem; padding: 7px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; }
+  button.active { background: var(--btn); color: var(--btn-text); border-color: var(--btn); }
+  button.primary { background: var(--btn); color: var(--btn-text); border-color: var(--btn); }
+  .exports { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .hint { font-size: .8rem; color: var(--muted); margin: 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Wasser-Meister – Lehrer-Figur für Erklärvideos</h1>
+  <p>Trinkwasserhygiene &amp; Installation · Pose wählen, Aussehen anpassen, als PNG / SVG / Video exportieren.</p>
+</header>
+
+<main>
+<div>
+  <div class="stage bg-classroom" id="stage">
+    <!-- Hintergrund „Klassenzimmer" (nur Vorschau) -->
+    <svg id="classroom" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <rect width="1600" height="1000" fill="#e9e2d3"/>
+      <rect y="820" width="1600" height="180" fill="#c9b79a"/>
+      <rect x="140" y="90" width="1320" height="560" rx="18" fill="#7a5a3a"/>
+      <rect x="160" y="110" width="1280" height="520" rx="10" fill="#fbfdff"/>
+      <text x="220" y="190" font-family="system-ui, sans-serif" font-size="46" font-weight="700" fill="#1f4e79">Trinkwasserhygiene</text>
+      <g font-family="system-ui, sans-serif" font-size="32" fill="#2b3a4a">
+        <text x="220" y="260">Warmwasser am Speicheraustritt: ≥ 60 °C</text>
+        <text x="220" y="310">Zirkulationsrücklauf: ≥ 55 °C</text>
+        <text x="220" y="360">Kaltwasser: ≤ 25 °C</text>
+        <text x="220" y="410">Stagnation vermeiden!</text>
+      </g>
+      <!-- kleine Rohr-Skizze -->
+      <g fill="none" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1000,560 V300 H1340 V560" stroke="#d0453a"/>
+        <path d="M1060,560 V360 H1280 V560" stroke="#2d7fd0"/>
+      </g>
+      <circle cx="1170" cy="300" r="22" fill="#fbfdff" stroke="#2b3a4a" stroke-width="6"/>
+      <text x="1150" y="270" font-family="system-ui, sans-serif" font-size="26" fill="#2b3a4a">°C</text>
+    </svg>
+
+    <!-- ================= DIE FIGUR ================= -->
+    <svg id="figur" xmlns="http://www.w3.org/2000/svg" viewBox="-80 0 560 570" class="mode-idle talking"
+         style="--skin:#f2c4a0; --skin-shade:#e3a985; --hair:#5a3b24; --eye:#3b6ea5; --jacket:#1f3a5f; --accent:#4fb3e8; --pants:#2c3440; --boots:#5b3d26; --line:#22262b; --belly:1;">
+      <style>
+        #figur .ol { stroke: var(--line); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+        #figur .skin { fill: var(--skin); }
+        #figur .skin-shade { fill: var(--skin-shade); }
+        #figur .hair { fill: var(--hair); }
+        #figur .jacket { fill: var(--jacket); }
+        #figur .accent { fill: var(--accent); }
+        #figur .pants { fill: var(--pants); }
+        #figur .boots { fill: var(--boots); }
+        #figur .iris { fill: var(--eye); }
+        #figur .white { fill: #ffffff; }
+        #figur .dark { fill: var(--line); }
+        #figur .brow { fill: none; stroke: var(--hair); stroke-width: 9; stroke-linecap: round; }
+        #figur .arm-ol { stroke: var(--line); stroke-width: 46; stroke-linecap: round; }
+        #figur .arm-fill { stroke: var(--jacket); stroke-width: 38; stroke-linecap: round; }
+        #figur .cuff { stroke: var(--accent); stroke-width: 38; stroke-linecap: butt; }
+        #figur .pipe-ol { stroke: var(--line); stroke-width: 12; stroke-linecap: round; }
+        #figur .pipe { stroke: #c8763a; stroke-width: 7; stroke-linecap: round; }
+        #figur .glasses { fill: rgba(255,255,255,.18); stroke: var(--line); stroke-width: 5; }
+
+        /* Drehpunkte (Koordinaten im viewBox) */
+        #figur #armL   { transform-origin: 124px 292px; }
+        #figur #armR   { transform-origin: 276px 292px; }
+        #figur #legL   { transform-origin: 171px 420px; }
+        #figur #legR   { transform-origin: 229px 420px; }
+        #figur #head   { transform-origin: 200px 265px; }
+        #figur #upper  { transform-origin: 200px 450px; }
+        #figur #all    { transform-origin: 200px 530px; }
+        #figur #shadow { transform-origin: 200px 540px; }
+        #figur #mouth  { transform-origin: 200px 228px; }
+        #figur #eyes   { transform-origin: 200px 172px; }
+        #figur #brows  { transform-origin: 200px 140px; }
+        #figur #torsoScale { transform-origin: 200px 360px; transform: scaleX(var(--belly)); }
+        #figur #pointer { display: none; }
+        #figur.pointer-on #pointer, #figur.mode-point #pointer { display: inline; }
+
+        /* Immer: Blinzeln */
+        #figur #eyes { animation: blink 4.2s infinite; }
+        @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
+
+        /* Sprechen (kombinierbar mit jeder Pose) */
+        #figur.talking #mouth { animation: talk .36s infinite alternate ease-in-out; }
+        @keyframes talk { 0% { transform: scaleY(.35); } 40% { transform: scaleY(1.15); } 70% { transform: scaleY(.6); } 100% { transform: scaleY(1.3) scaleX(.9); } }
+
+        /* Pose: Stehen / Atmen */
+        #figur.mode-idle #upper { animation: breathe 3s infinite ease-in-out; }
+        #figur.mode-idle #head  { animation: nod 6s infinite ease-in-out; }
+        @keyframes breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.018) translateY(-1px); } }
+        @keyframes nod { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-2.5deg); } 70% { transform: rotate(2deg); } }
+
+        /* Pose: Erklären (Hände gestikulieren) */
+        #figur.mode-explain #upper { animation: breathe 3s infinite ease-in-out; }
+        #figur.mode-explain #armL { animation: gestureL 2.4s infinite ease-in-out; }
+        #figur.mode-explain #armR { animation: gestureR 2.4s infinite ease-in-out; }
+        #figur.mode-explain #head { animation: explainHead 2.4s infinite ease-in-out; }
+        @keyframes gestureL { 0%, 100% { transform: rotate(35deg); } 25% { transform: rotate(70deg); } 50% { transform: rotate(45deg); } 75% { transform: rotate(60deg); } }
+        @keyframes gestureR { 0%, 100% { transform: rotate(-55deg); } 25% { transform: rotate(-35deg); } 50% { transform: rotate(-75deg); } 75% { transform: rotate(-40deg); } }
+        @keyframes explainHead { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+        /* Pose: Winken */
+        #figur.mode-wave #armR { animation: wave .9s infinite ease-in-out; }
+        #figur.mode-wave #head { transform: rotate(-4deg); }
+        #figur.mode-wave #upper { animation: breathe 3s infinite ease-in-out; }
+        @keyframes wave { 0%, 100% { transform: rotate(-120deg); } 50% { transform: rotate(-150deg); } }
+
+        /* Pose: Zeigen (mit Rohr-Zeigestab) */
+        #figur.mode-point #armR { animation: point 2.2s infinite ease-in-out; }
+        #figur.mode-point #armL { transform: rotate(10deg); }
+        #figur.mode-point #head { transform: rotate(6deg); }
+        #figur.mode-point #upper { animation: breathe 3s infinite ease-in-out; }
+        @keyframes point { 0%, 100% { transform: rotate(-98deg); } 50% { transform: rotate(-106deg); } }
+
+        /* Pose: Achtung! (Finger hoch, Augenbrauen hoch) */
+        #figur.mode-warn #armR { animation: warn 1.2s infinite ease-in-out; }
+        #figur.mode-warn #brows { transform: translateY(-8px); }
+        #figur.mode-warn #head { animation: shake 1.2s infinite ease-in-out; }
+        @keyframes warn { 0%, 100% { transform: rotate(-128deg); } 50% { transform: rotate(-138deg); } }
+        @keyframes shake { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+        /* Pose: Gehen (auf der Stelle – Bewegung im Schnittprogramm) */
+        #figur.mode-walk #legL { animation: legSwing .6s infinite ease-in-out; }
+        #figur.mode-walk #legR { animation: legSwing .6s infinite ease-in-out reverse; }
+        #figur.mode-walk #armL { animation: armSwing .6s infinite ease-in-out; }
+        #figur.mode-walk #armR { animation: armSwing .6s infinite ease-in-out reverse; }
+        #figur.mode-walk #upper { animation: bob .3s infinite alternate ease-in-out; }
+        @keyframes legSwing { 0%, 100% { transform: rotate(14deg); } 50% { transform: rotate(-14deg); } }
+        @keyframes armSwing { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(22deg); } }
+        @keyframes bob { from { transform: translateY(0); } to { transform: translateY(-7px); } }
+
+        /* Pose: Jubeln / Springen */
+        #figur.mode-jump #all { animation: jump 1s infinite cubic-bezier(.3,0,.4,1); }
+        #figur.mode-jump #shadow { animation: shadowJump 1s infinite cubic-bezier(.3,0,.4,1); }
+        #figur.mode-jump #armL { transform: rotate(128deg); }
+        #figur.mode-jump #armR { transform: rotate(-128deg); }
+        #figur.mode-jump #brows { transform: translateY(-6px); }
+        @keyframes jump {
+          0%, 100% { transform: translateY(0) scale(1.06, .92); }
+          15% { transform: translateY(0) scale(.95, 1.06); }
+          50% { transform: translateY(-70px) scale(1, 1); }
+          85% { transform: translateY(0) scale(1.05, .94); }
+        }
+        @keyframes shadowJump { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.6); opacity: .5; } }
+      </style>
+
+      <defs>
+        <clipPath id="torsoClip">
+          <path d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z"/>
+        </clipPath>
+      </defs>
+
+      <ellipse id="shadow" cx="200" cy="540" rx="115" ry="14" fill="#000" fill-opacity=".18"/>
+
+      <g id="all">
+        <!-- Beine + Arbeitsschuhe -->
+        <g id="legs">
+          <g id="legL">
+            <rect class="pants ol" x="148" y="405" width="46" height="95" rx="14"/>
+            <rect class="boots ol" x="120" y="484" width="76" height="42" rx="19"/>
+            <rect class="dark" x="122" y="516" width="72" height="9" rx="4"/>
+            <path d="M130,494 Q138,488 148,490" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+          </g>
+          <g id="legR">
+            <rect class="pants ol" x="206" y="405" width="46" height="95" rx="14"/>
+            <rect class="boots ol" x="204" y="484" width="76" height="42" rx="19"/>
+            <rect class="dark" x="206" y="516" width="72" height="9" rx="4"/>
+            <path d="M252,490 Q262,488 270,494" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <g id="upper">
+          <!-- Rumpf: Arbeitsjacke -->
+          <g id="torso"><g id="torsoScale">
+            <path class="jacket ol" d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z"/>
+            <g clip-path="url(#torsoClip)">
+              <path d="M270,270 C300,320 300,420 270,452 L320,452 L320,270 Z" fill="#000" fill-opacity=".14"/>
+              <rect x="80" y="372" width="240" height="14" fill="#dfe7ee"/>
+              <rect x="80" y="372" width="240" height="14" class="accent" fill-opacity=".35"/>
+              <rect x="80" y="416" width="240" height="20" fill="#6b4a2b"/>
+            </g>
+            <path d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z" fill="none" class="ol"/>
+            <line x1="200" y1="294" x2="200" y2="414" stroke="#0f1f33" stroke-width="3"/>
+            <rect x="187" y="413" width="26" height="26" rx="5" fill="#d4a640" class="ol" style="stroke-width:3"/>
+            <!-- Kragen -->
+            <path class="skin ol" d="M176,258 L200,294 L224,258 Z"/>
+            <path class="accent ol" d="M158,258 L182,255 L200,294 L170,288 Z"/>
+            <path class="accent ol" d="M242,258 L218,255 L200,294 L230,288 Z"/>
+            <!-- Namensschild -->
+            <rect x="134" y="306" width="64" height="24" rx="5" class="white ol" style="stroke-width:3"/>
+            <text id="nameText" x="166" y="323" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1f3a5f" textLength="54" lengthAdjust="spacingAndGlyphs">MEISTER</text>
+            <!-- Wassertropfen-Abzeichen -->
+            <path class="accent ol" style="stroke-width:3" d="M248,298 C258,312 263,320 263,328 A15,15 0 0 1 233,328 C233,320 238,312 248,298 Z"/>
+            <path d="M241,326 A7,7 0 0 0 247,334" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+            <!-- Werkzeugtasche mit Rohrzange -->
+            <g id="pouch">
+              <rect x="266" y="388" width="9" height="40" rx="3" fill="#8e99a4" class="ol" style="stroke-width:3"/>
+              <path d="M258,380 h26 v14 h-10 v-6 h-6 v6 h-10 Z" fill="#c33d32" class="ol" style="stroke-width:3"/>
+              <rect x="252" y="418" width="38" height="36" rx="7" fill="#7b5534" class="ol"/>
+              <path d="M254,428 H288" stroke="#5a3d24" stroke-width="3"/>
+            </g>
+          </g></g>
+
+          <!-- Kopf -->
+          <g id="head">
+            <ellipse class="skin ol" cx="110" cy="188" rx="15" ry="21"/>
+            <ellipse class="skin ol" cx="290" cy="188" rx="15" ry="21"/>
+            <path d="M106,180 Q114,188 108,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
+            <path d="M294,180 Q286,188 292,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
+            <ellipse class="skin ol" cx="200" cy="176" rx="92" ry="98"/>
+
+            <!-- Haare: kurz -->
+            <path id="hairShort" class="hair ol" d="M108,180 C98,100 148,70 200,72 C256,70 304,100 292,180 C286,150 272,128 246,120 C232,134 206,132 190,122 C166,132 128,144 108,180 Z"/>
+            <!-- Haare: Seitenscheitel -->
+            <path id="hairSide" class="hair ol" style="display:none" d="M106,182 C94,96 150,66 206,70 C262,72 306,104 294,182 C290,150 280,132 262,124 C230,126 180,118 150,104 C138,126 120,146 106,182 Z"/>
+            <!-- Haare: wenig / Geheimratsecken -->
+            <g id="hairThin" style="display:none">
+              <path class="hair ol" d="M110,192 C102,158 112,132 134,120 C128,142 126,166 126,194 Z"/>
+              <path class="hair ol" d="M290,192 C298,158 288,132 266,120 C272,142 274,166 274,194 Z"/>
+            </g>
+            <!-- Haare: Locken (per Skript gefüllt) -->
+            <g id="hairCurly" style="display:none"></g>
+
+            <!-- Bart -->
+            <path id="beardFull" class="hair ol" style="display:none" d="M112,196 C114,262 160,288 200,288 C240,288 286,262 288,196 C278,232 258,246 236,244 C226,262 174,262 164,244 C142,246 122,232 112,196 Z"/>
+            <path id="beardStubble" class="hair" style="display:none" fill-opacity=".28" d="M112,196 C114,262 160,282 200,282 C240,282 286,262 288,196 C278,232 258,246 236,244 C226,262 174,262 164,244 C142,246 122,232 112,196 Z"/>
+            <path id="beardShort" class="hair ol" style="display:none" d="M164,248 C170,272 186,284 200,284 C214,284 230,272 236,248 C224,262 176,262 164,248 Z"/>
+
+            <!-- Wangen -->
+            <circle cx="146" cy="212" r="13" fill="#ff7a7a" fill-opacity=".28"/>
+            <circle cx="254" cy="212" r="13" fill="#ff7a7a" fill-opacity=".28"/>
+
+            <!-- Mund -->
+            <g id="mouth">
+              <path class="ol" fill="#7a2230" d="M174,222 Q200,226 226,222 Q224,252 200,254 Q176,252 174,222 Z"/>
+              <path fill="#fff" d="M180,224 Q200,228 220,224 L219,231 Q200,234 181,231 Z"/>
+              <ellipse cx="200" cy="246" rx="12" ry="5" fill="#e0707a"/>
+            </g>
+            <path id="mustache" class="hair ol" style="display:none" d="M166,224 Q182,206 200,216 Q218,206 234,224 Q218,230 200,222 Q182,230 166,224 Z"/>
+
+            <!-- Nase -->
+            <ellipse class="skin-shade ol" cx="200" cy="200" rx="17" ry="14"/>
+            <ellipse cx="194" cy="195" rx="5" ry="3.5" fill="#fff" fill-opacity=".5"/>
+
+            <!-- Augen -->
+            <g id="eyes">
+              <ellipse class="white ol" cx="166" cy="168" rx="16" ry="20"/>
+              <circle class="iris" cx="169" cy="172" r="9"/>
+              <circle class="dark" cx="170" cy="173" r="5"/>
+              <circle class="white" cx="173" cy="168" r="3"/>
+              <ellipse class="white ol" cx="234" cy="168" rx="16" ry="20"/>
+              <circle class="iris" cx="231" cy="172" r="9"/>
+              <circle class="dark" cx="232" cy="173" r="5"/>
+              <circle class="white" cx="235" cy="168" r="3"/>
+            </g>
+
+            <!-- Augenbrauen -->
+            <g id="brows">
+              <path class="brow" d="M146,138 Q164,126 184,136"/>
+              <path class="brow" d="M216,136 Q236,126 254,138"/>
+            </g>
+
+            <!-- Brille -->
+            <g id="glassesRound">
+              <circle class="glasses" cx="166" cy="170" r="27"/>
+              <circle class="glasses" cx="234" cy="170" r="27"/>
+              <path d="M193,166 Q200,160 207,166" fill="none" stroke="var(--line)" stroke-width="5"/>
+              <path d="M139,164 L112,170 M261,164 L288,170" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/>
+            </g>
+            <g id="glassesSquare" style="display:none">
+              <rect class="glasses" x="138" y="146" width="56" height="46" rx="10"/>
+              <rect class="glasses" x="206" y="146" width="56" height="46" rx="10"/>
+              <path d="M194,164 Q200,158 206,164" fill="none" stroke="var(--line)" stroke-width="5"/>
+              <path d="M138,160 L112,168 M262,160 L288,168" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/>
+            </g>
+
+            <!-- Schutzhelm -->
+            <g id="helmet" style="display:none">
+              <path class="white ol" d="M98,152 C98,40 302,40 302,152 Z"/>
+              <path d="M200,70 V150" stroke="#e3e8ec" stroke-width="16"/>
+              <path class="white ol" d="M82,154 Q200,134 318,154 Q322,166 306,166 Q200,150 94,166 Q78,166 82,154 Z"/>
+              <path class="accent ol" style="stroke-width:3" d="M200,90 C210,104 215,112 215,120 A15,15 0 0 1 185,120 C185,112 190,104 200,90 Z"/>
+            </g>
+          </g>
+          <!-- Linker Arm (vom Betrachter aus) -->
+          <g id="armL">
+            <line class="arm-ol" x1="124" y1="292" x2="100" y2="378"/>
+            <line class="arm-fill" x1="124" y1="292" x2="100" y2="378"/>
+            <line class="cuff" x1="102.5" y1="366" x2="99" y2="380"/>
+            <circle class="skin ol" cx="98" cy="396" r="21"/>
+            <ellipse class="skin ol" cx="115" cy="388" rx="8" ry="11" transform="rotate(-20 115 388)"/>
+          </g>
+
+          <!-- Rechter Arm (vom Betrachter aus) mit Rohr-Zeigestab -->
+          <g id="armR">
+            <line class="arm-ol" x1="276" y1="292" x2="300" y2="378"/>
+            <line class="arm-fill" x1="276" y1="292" x2="300" y2="378"/>
+            <line class="cuff" x1="297.5" y1="366" x2="301" y2="380"/>
+            <g id="pointer">
+              <line class="pipe-ol" x1="302" y1="396" x2="328" y2="486"/>
+              <line class="pipe" x1="302" y1="396" x2="328" y2="486"/>
+              <path class="accent ol" style="stroke-width:3" d="M330,476 C338,488 342,494 342,500 A12,12 0 0 1 318,500 C318,494 322,488 330,476 Z" transform="rotate(-16 330 492)"/>
+            </g>
+            <circle class="skin ol" cx="302" cy="396" r="21"/>
+            <ellipse class="skin ol" cx="285" cy="388" rx="8" ry="11" transform="rotate(20 285 388)"/>
+          </g>
+
+        </g>
+      </g>
+    </svg>
+  </div>
+  <p class="hint" style="margin-top:8px">Tipp: Für den Videoschnitt „Greenscreen" wählen und die Video-Aufnahme nutzen, oder PNGs mit transparentem Hintergrund exportieren.</p>
+</div>
+
+<aside>
+  <fieldset>
+    <legend>Pose / Animation</legend>
+    <div class="poses" id="poses">
+      <button data-mode="idle" class="active">Stehen</button>
+      <button data-mode="explain">Erklären</button>
+      <button data-mode="point">Zeigen</button>
+      <button data-mode="wave">Winken</button>
+      <button data-mode="warn">Achtung!</button>
+      <button data-mode="walk">Gehen</button>
+      <button data-mode="jump">Jubeln</button>
+    </div>
+    <label class="row">Spricht (Mund bewegt sich) <input type="checkbox" id="talking" checked></label>
+    <label class="row">Rohr-Zeigestab immer zeigen <input type="checkbox" id="pointerOn"></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Aussehen (an dich anpassen)</legend>
+    <label class="row">Haarfarbe <input type="color" data-var="--hair" value="#5a3b24"></label>
+    <label class="row">Hautton <input type="color" data-var="--skin" value="#f2c4a0"></label>
+    <label class="row">Augenfarbe <input type="color" data-var="--eye" value="#3b6ea5"></label>
+    <label class="row">Frisur
+      <select id="hairStyle">
+        <option value="hairShort">Kurz</option>
+        <option value="hairSide">Seitenscheitel</option>
+        <option value="hairCurly">Locken</option>
+        <option value="hairThin">Geheimratsecken</option>
+        <option value="none">Glatze</option>
+      </select>
+    </label>
+    <label class="row">Bart
+      <select id="beard">
+        <option value="none">Kein Bart</option>
+        <option value="stubble">Dreitagebart</option>
+        <option value="short">Kinnbart</option>
+        <option value="full">Vollbart</option>
+      </select>
+    </label>
+    <label class="row">Schnurrbart <input type="checkbox" id="mustacheOn"></label>
+    <label class="row">Brille
+      <select id="glasses">
+        <option value="glassesRound">Rund</option>
+        <option value="glassesSquare">Eckig</option>
+        <option value="none">Keine</option>
+      </select>
+    </label>
+    <label class="row">Schutzhelm <input type="checkbox" id="helmetOn"></label>
+    <label class="row">Statur <input type="range" id="belly" min="0.85" max="1.15" step="0.01" value="1"></label>
+    <label class="row">Namensschild <input type="text" id="name" value="MEISTER" maxlength="10"></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Kleidung</legend>
+    <label class="row">Jacke <input type="color" data-var="--jacket" value="#1f3a5f"></label>
+    <label class="row">Akzent / Kragen <input type="color" data-var="--accent" value="#4fb3e8"></label>
+    <label class="row">Hose <input type="color" data-var="--pants" value="#2c3440"></label>
+    <label class="row">Schuhe <input type="color" data-var="--boots" value="#5b3d26"></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Hintergrund &amp; Export</legend>
+    <label class="row">Hintergrund
+      <select id="bg">
+        <option value="classroom">Klassenzimmer (Vorschau)</option>
+        <option value="transparent">Transparent</option>
+        <option value="green">Greenscreen</option>
+      </select>
+    </label>
+    <label class="row">Videolänge
+      <select id="duration">
+        <option value="5">5 Sekunden</option>
+        <option value="10" selected>10 Sekunden</option>
+        <option value="20">20 Sekunden</option>
+      </select>
+    </label>
+    <div class="exports">
+      <button class="primary" id="exportPng">PNG (transparent)</button>
+      <button class="primary" id="exportSvg">SVG (animiert)</button>
+      <button class="primary" id="exportVideo" style="grid-column: span 2">Video aufnehmen (WebM)</button>
+    </div>
+    <p class="hint" id="status">Video: bei „Transparent" mit Alphakanal (Chrome/Edge), sonst mit Greenscreen.</p>
+  </fieldset>
+</aside>
+</main>
+
+<script>
+(() => {
+  const fig = document.getElementById('figur');
+  const $ = (id) => document.getElementById(id);
+  const show = (id, on) => { const el = $(id); if (el) el.style.display = on ? '' : 'none'; };
+
+  // Locken erzeugen
+  const curly = $('hairCurly');
+  const NS = 'http://www.w3.org/2000/svg';
+  const base = document.createElementNS(NS, 'path');
+  base.setAttribute('class', 'hair');
+  base.setAttribute('d', $('hairShort').getAttribute('d'));
+  curly.appendChild(base);
+  for (let a = 178; a <= 362; a += 15) {
+    const r = a * Math.PI / 180;
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', (200 + 90 * Math.cos(r)).toFixed(1));
+    c.setAttribute('cy', (168 + 92 * Math.sin(r)).toFixed(1));
+    c.setAttribute('r', a < 195 || a > 345 ? 17 : 23);
+    c.setAttribute('class', 'hair ol');
+    curly.appendChild(c);
+  }
+
+  // Posen
+  const poses = $('poses');
+  poses.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    poses.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b));
+    fig.classList.forEach(c => { if (c.startsWith('mode-')) fig.classList.remove(c); });
+    fig.classList.add('mode-' + b.dataset.mode);
+  });
+  $('talking').addEventListener('change', e => fig.classList.toggle('talking', e.target.checked));
+  $('pointerOn').addEventListener('change', e => fig.classList.toggle('pointer-on', e.target.checked));
+
+  // Farben
+  document.querySelectorAll('input[data-var]').forEach(inp => {
+    inp.addEventListener('input', () => {
+      fig.style.setProperty(inp.dataset.var, inp.value);
+      if (inp.dataset.var === '--skin') fig.style.setProperty('--skin-shade', shade(inp.value, -0.1));
+    });
+  });
+  function shade(hex, amt) {
+    const n = parseInt(hex.slice(1), 16);
+    const f = (v) => Math.max(0, Math.min(255, Math.round(v + 255 * amt)));
+    return '#' + [f(n >> 16), f((n >> 8) & 255), f(n & 255)].map(v => v.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Frisur, Bart, Brille, Helm
+  const hairIds = ['hairShort', 'hairSide', 'hairCurly', 'hairThin'];
+  $('hairStyle').addEventListener('change', e => hairIds.forEach(id => show(id, id === e.target.value)));
+  $('beard').addEventListener('change', e => {
+    show('beardFull', e.target.value === 'full');
+    show('beardStubble', e.target.value === 'stubble');
+    show('beardShort', e.target.value === 'short');
+  });
+  $('mustacheOn').addEventListener('change', e => show('mustache', e.target.checked));
+  $('glasses').addEventListener('change', e => ['glassesRound', 'glassesSquare'].forEach(id => show(id, id === e.target.value)));
+  $('helmetOn').addEventListener('change', e => show('helmet', e.target.checked));
+  $('belly').addEventListener('input', e => fig.style.setProperty('--belly', e.target.value));
+  $('name').addEventListener('input', e => { $('nameText').textContent = e.target.value.toUpperCase(); });
+
+  // Hintergrund
+  const stage = $('stage');
+  $('bg').addEventListener('change', e => { stage.className = 'stage bg-' + e.target.value; });
+
+  // ---------- Export ----------
+  function svgString() {
+    const clone = fig.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.setAttribute('id', 'figur');
+    clone.setAttribute('width', '1120');
+    clone.setAttribute('height', '1140');
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(clone);
+  }
+  function download(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+  async function loadImage(str) {
+    const img = new Image();
+    img.src = URL.createObjectURL(new Blob([str], { type: 'image/svg+xml' }));
+    await img.decode();
+    return img;
+  }
+  const W = 1120, H = 1140;
+
+  $('exportSvg').addEventListener('click', () => {
+    download(new Blob([svgString()], { type: 'image/svg+xml' }), 'wasser-meister.svg');
+  });
+
+  // Momentaufnahme der laufenden Animation als statisches SVG
+  function snapshot(scale = 1) {
+    const clone = fig.cloneNode(true);
+    const src = fig.querySelectorAll('*'), dst = clone.querySelectorAll('*');
+    src.forEach((el, i) => {
+      const t = getComputedStyle(el).transform;
+      if (t && t !== 'none') dst[i].style.transform = t;
+    });
+    clone.querySelector('style').textContent += '\n#figur *, #figur { animation: none !important; }';
+    clone.setAttribute('width', W * scale); clone.setAttribute('height', H * scale);
+    return new XMLSerializer().serializeToString(clone);
+  }
+
+  $('exportPng').addEventListener('click', async () => {
+    const img = await loadImage(snapshot(2));
+    const c = document.createElement('canvas'); c.width = W * 2; c.height = H * 2;
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    c.toBlob(b => download(b, 'wasser-meister.png'), 'image/png');
+  });
+
+  $('exportVideo').addEventListener('click', async () => {
+    const status = $('status');
+    if (!window.MediaRecorder) { status.textContent = 'Dein Browser unterstützt keine Video-Aufnahme. Bitte Chrome oder Edge verwenden.'; return; }
+    const green = $('bg').value === 'green';
+    const seconds = +$('duration').value;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const ctx = c.getContext('2d');
+    const types = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
+    const mimeType = types.find(t => MediaRecorder.isTypeSupported(t));
+    const rec = new MediaRecorder(c.captureStream(30), { mimeType, videoBitsPerSecond: 8e6 });
+    const chunks = [];
+    rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+    rec.onstop = () => { download(new Blob(chunks, { type: 'video/webm' }), 'wasser-meister.webm'); status.textContent = 'Fertig – Video heruntergeladen.'; };
+    let running = true;
+    const drawLoop = async () => {
+      while (running) {
+        const img = await loadImage(snapshot());
+        ctx.clearRect(0, 0, W, H);
+        if (green) { ctx.fillStyle = '#00b140'; ctx.fillRect(0, 0, W, H); }
+        ctx.drawImage(img, 0, 0, W, H);
+        URL.revokeObjectURL(img.src);
+        await new Promise(r => requestAnimationFrame(r));
+      }
+    };
+    await (async () => { const img = await loadImage(snapshot()); ctx.drawImage(img, 0, 0, W, H); })();
+    drawLoop();
+    rec.start(250);
+    let left = seconds;
+    status.textContent = `Aufnahme läuft … ${left} s`;
+    const iv = setInterval(() => { left--; status.textContent = `Aufnahme läuft … ${left} s`; }, 1000);
+    setTimeout(() => { clearInterval(iv); running = false; rec.stop(); }, seconds * 1000);
+  });
+})();
+</script>
+</body>
+</html>
