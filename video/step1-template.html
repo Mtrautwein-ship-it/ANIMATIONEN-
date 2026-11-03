@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 1 Flüssigkeitskategorien</title>
+<style>
+  :root {
+    --k1: #2d8fe0; --k2: #3aa86b; --k3: #e8b416; --k4: #ef7a1a; --k5: #d7141a;
+    --ink: #1b1f24; --muted: #5b6672; --brand: #d7141a;
+  }
+  html, body { margin: 0; background: #0d0d0f; overflow: hidden; }
+  body { font-family: Inter, "Segoe UI", system-ui, Arial, sans-serif; color: var(--ink); }
+  #wrap { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #scene { position: relative; width: 1920px; height: 1080px; overflow: hidden; transform-origin: center;
+    background:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 60px 60px,
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 60px 60px,
+      radial-gradient(ellipse at 30% 60%, #7a0d12 0%, #3a0709 45%, #120607 100%);
+  }
+  #floor { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(#00000000, #00000066); }
+
+  /* Tafel */
+  #board { position: absolute; left: 640px; top: 60px; width: 1220px; height: 840px; background: #fbfcfd; border-radius: 28px;
+    box-shadow: 0 0 0 10px #1c1c1e, 0 30px 80px rgba(0,0,0,.55); overflow: hidden; }
+  #board .tag { position: absolute; left: 48px; top: 36px; font-weight: 800; font-size: 22px; letter-spacing: .14em; color: var(--brand); text-transform: uppercase; }
+  .slide { position: absolute; inset: 0; padding: 100px 64px 48px; box-sizing: border-box; opacity: 0; }
+  .in { opacity: 0; }
+  h1 { font-size: 76px; line-height: 1.05; margin: 0 0 24px; font-weight: 800; letter-spacing: -.02em; }
+  h2 { font-size: 54px; line-height: 1.1; margin: 0 0 20px; font-weight: 800; letter-spacing: -.01em; }
+  p.lead { font-size: 34px; line-height: 1.35; color: var(--muted); margin: 0; }
+
+  /* Intro */
+  .step { display: inline-block; background: var(--brand); color: #fff; font-weight: 800; font-size: 30px; padding: 10px 22px; border-radius: 12px; margin-bottom: 30px; }
+  .norm { margin-top: 36px; font-size: 30px; color: var(--muted); }
+  .chips { display: flex; gap: 18px; margin-top: 70px; }
+  .chip { width: 150px; height: 150px; border-radius: 26px; color: #fff; font-size: 84px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 0 rgba(0,0,0,.18); }
+
+  /* Rückfluss */
+  #flow { position: absolute; left: 64px; top: 300px; width: 1090px; height: 500px; }
+  .flowlabel { font-size: 28px; font-weight: 700; }
+
+  /* Leiter */
+  .ladder { display: flex; flex-direction: column-reverse; gap: 14px; margin-top: 30px; width: 880px; }
+  .rung { display: flex; align-items: center; gap: 22px; height: 96px; border-radius: 18px; color: #fff; font-size: 32px; font-weight: 700; padding: 0 26px; box-shadow: 0 6px 0 rgba(0,0,0,.15); }
+  .rung b { font-size: 52px; width: 50px; text-align: center; }
+  .danger { position: absolute; right: 70px; top: 230px; width: 160px; height: 560px; }
+
+  /* Kategorie-Karte */
+  .cat-head { display: flex; align-items: center; gap: 28px; margin-bottom: 26px; }
+  .cat-num { width: 130px; height: 130px; border-radius: 28px; color: #fff; font-size: 88px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; box-shadow: 0 8px 0 rgba(0,0,0,.18); }
+  .cat-kicker { font-size: 26px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .cat-title { font-size: 54px; font-weight: 800; line-height: 1.08; letter-spacing: -.01em; }
+  .cat-body { display: flex; gap: 40px; }
+  .cat-text { flex: 1; }
+  .cat-def { font-size: 32px; line-height: 1.38; color: #2f3943; margin: 0 0 30px; }
+  .ex-title { font-size: 24px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .ex { display: flex; align-items: center; gap: 16px; font-size: 32px; font-weight: 600; margin-bottom: 14px; }
+  .ex::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--c); flex: none; }
+  .glass { width: 330px; height: 470px; flex: none; }
+  .risk { display: inline-block; margin-top: 18px; padding: 10px 20px; border-radius: 12px; font-size: 26px; font-weight: 800; color: #fff; background: var(--c); }
+
+  /* Schutz-Tabelle */
+  table { border-collapse: separate; border-spacing: 0 12px; width: 100%; font-size: 30px; }
+  td { padding: 16px 22px; background: #eef2f5; }
+  td:first-child { border-radius: 14px 0 0 14px; width: 120px; color: #fff; font-weight: 800; font-size: 34px; text-align: center; }
+  td:last-child { border-radius: 0 14px 14px 0; }
+  td.code { font-weight: 800; width: 120px; font-size: 34px; }
+  .note { font-size: 24px; color: var(--muted); margin-top: 8px; }
+
+  /* Zusammenfassung */
+  .sum { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 30px; }
+  .sum div { border-radius: 22px; color: #fff; padding: 26px 16px; text-align: center; min-height: 300px; box-sizing: border-box; box-shadow: 0 8px 0 rgba(0,0,0,.15); }
+  .sum b { display: block; font-size: 96px; line-height: 1; margin-bottom: 20px; }
+  .sum span { font-size: 29px; font-weight: 700; line-height: 1.25; }
+
+  /* Figur */
+  #figWrap { position: absolute; left: -70px; bottom: 14px; width: 860px; height: 875px; }
+  #figWrap #figur { width: 100%; height: 100%; }
+
+  /* Untertitel */
+  #caption { position: absolute; left: 640px; width: 1220px; bottom: 34px; text-align: center; }
+  #caption span { display: inline-block; max-width: 1160px; background: rgba(10,10,12,.82); color: #fff; font-size: 38px; font-weight: 600; line-height: 1.3; padding: 12px 28px; border-radius: 14px; }
+  #caption span:empty { display: none; }
+
+  /* Logo-Ecke */
+  #corner { position: absolute; left: 40px; top: 34px; color: #fff; font-weight: 800; font-size: 26px; letter-spacing: .08em; opacity: .9; }
+  #corner i { font-style: normal; color: #ff4a50; }
+
+  #controls { position: fixed; left: 12px; bottom: 12px; z-index: 5; display: flex; gap: 8px; align-items: center; font: 14px system-ui; color: #fff; }
+  #controls button { font: inherit; padding: 6px 12px; border-radius: 6px; border: 0; background: #d7141a; color: #fff; cursor: pointer; }
+  #controls input { width: 320px; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="scene">
+  <div id="floor"></div>
+  <div id="corner">TRINKWASSER<i>HYGIENE</i></div>
+
+  <div id="board">
+    <div class="tag">Step 1 · Flüssigkeitskategorien</div>
+
+    <!-- 1 Intro -->
+    <section class="slide" id="s-intro" data-from="0.6" data-to="9">
+      <div class="step in" data-at="0.4">STEP 1</div>
+      <h1 class="in" data-at="0.8">Die 5 Flüssigkeits&shy;kategorien</h1>
+      <p class="lead in" data-at="1.4">Welche Flüssigkeit gefährdet unser Trinkwasser – und wie stark?</p>
+      <div class="chips">
+        <div class="chip in" data-at="2.0" style="background:var(--k1)">1</div>
+        <div class="chip in" data-at="2.2" style="background:var(--k2)">2</div>
+        <div class="chip in" data-at="2.4" style="background:var(--k3)">3</div>
+        <div class="chip in" data-at="2.6" style="background:var(--k4)">4</div>
+        <div class="chip in" data-at="2.8" style="background:var(--k5)">5</div>
+      </div>
+      <div class="norm in" data-at="4.4">nach DIN EN 1717 und DIN 1988-100</div>
+    </section>
+
+    <!-- 2 Warum -->
+    <section class="slide" id="s-why" data-from="9" data-to="26">
+      <h2 class="in" data-at="0.3">Warum das Ganze?</h2>
+      <p class="lead in" data-at="0.8" style="max-width:1000px">Bei Druckabfall kann Wasser <b style="color:var(--k5)">zurückfließen</b> – und Verschmutzung landet im Trinkwasser.</p>
+      <svg id="flow" viewBox="0 0 1090 500">
+        <!-- Wasserwerk -->
+        <g>
+          <rect x="10" y="150" width="170" height="150" rx="18" fill="#dfeaf5" stroke="#1b1f24" stroke-width="5"/>
+          <path d="M40,150 L95,95 L150,150" fill="#c3d5e8" stroke="#1b1f24" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M95,205 C108,224 114,234 114,244 A19,19 0 0 1 76,244 C76,234 82,224 95,205 Z" fill="var(--k1)" stroke="#1b1f24" stroke-width="4"/>
+          <text x="95" y="345" text-anchor="middle" class="flowlabel">Trinkwasser</text>
+        </g>
+        <!-- Leitung -->
+        <path d="M180,240 H760" stroke="#1b1f24" stroke-width="54" stroke-linecap="round" fill="none"/>
+        <path d="M180,240 H760" stroke="#e9eef3" stroke-width="42" fill="none"/>
+        <path id="flowClean" d="M190,240 H750" stroke="var(--k1)" stroke-width="20" stroke-dasharray="34 26" stroke-linecap="round" fill="none"/>
+        <path id="flowDirty" d="M750,240 H190" stroke="#7a5a2a" stroke-width="20" stroke-dasharray="34 26" stroke-linecap="round" fill="none" opacity="0"/>
+        <!-- Ventil -->
+        <rect x="440" y="196" width="50" height="88" rx="10" fill="#9aa5b0" stroke="#1b1f24" stroke-width="5"/>
+        <rect x="455" y="166" width="20" height="34" fill="#9aa5b0" stroke="#1b1f24" stroke-width="5"/>
+        <rect x="425" y="150" width="80" height="20" rx="8" fill="var(--brand)" stroke="#1b1f24" stroke-width="5"/>
+        <!-- Behälter mit Schmutzwasser -->
+        <path d="M760,240 V300" stroke="#1b1f24" stroke-width="30" fill="none"/>
+        <path d="M760,240 V300" stroke="#e9eef3" stroke-width="18" fill="none"/>
+        <path d="M670,300 H1060 L1030,430 H700 Z" fill="#efe7dc" stroke="#1b1f24" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M683,330 H1047 L1030,425 H700 Z" fill="#8a6a35"/>
+        <g fill="#5d461f">
+          <circle cx="760" cy="370" r="10"/><circle cx="840" cy="395" r="7"/><circle cx="930" cy="360" r="12"/><circle cx="990" cy="400" r="8"/>
+        </g>
+        <text x="865" y="478" text-anchor="middle" class="flowlabel">verschmutztes Wasser</text>
+        <!-- Pfeile -->
+        <g id="arrowFwd">
+          <path d="M300,140 H560" stroke="var(--k1)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M540,118 L568,140 L540,162" fill="none" stroke="var(--k1)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <g id="arrowBack" opacity="0">
+          <path d="M560,140 H300" stroke="var(--k5)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M320,118 L292,140 L320,162" fill="none" stroke="var(--k5)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <g transform="translate(600,60)">
+            <path d="M0,70 L40,0 L80,70 Z" fill="#ffd400" stroke="#1b1f24" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M40,22 V46" stroke="#1b1f24" stroke-width="8" stroke-linecap="round"/><circle cx="40" cy="58" r="5" fill="#1b1f24"/>
+          </g>
+          <text x="700" y="110" class="flowlabel" fill="var(--k5)">Druckabfall!</text>
+        </g>
+        <g id="threeR" opacity="0" font-size="30" font-weight="800">
+          <text x="10" y="478" fill="var(--k5)">Rückfließen · Rückdrücken · Rücksaugen</text>
+        </g>
+      </svg>
+    </section>
+
+    <!-- 3 Leiter -->
+    <section class="slide" id="s-ladder" data-from="26" data-to="35">
+      <h2 class="in" data-at="0.2">Je höher die Kategorie, desto größer die Gefahr</h2>
+      <div class="ladder">
+        <div class="rung in" data-at="0.8" style="background:var(--k1)"><b>1</b> Trinkwasser</div>
+        <div class="rung in" data-at="1.3" style="background:var(--k2)"><b>2</b> Keine Gesundheitsgefährdung</div>
+        <div class="rung in" data-at="1.8" style="background:var(--k3)"><b>3</b> Weniger giftige Stoffe</div>
+        <div class="rung in" data-at="2.3" style="background:var(--k4)"><b>4</b> Giftige Stoffe</div>
+        <div class="rung in" data-at="2.8" style="background:var(--k5)"><b>5</b> Krankheitserreger</div>
+      </div>
+      <svg class="danger in" data-at="3.4" viewBox="0 0 160 560">
+        <defs><linearGradient id="dg" gradientUnits="userSpaceOnUse" x1="0" y1="540" x2="0" y2="90">
+          <stop offset="0" stop-color="#2d8fe0"/><stop offset=".5" stop-color="#e8b416"/><stop offset="1" stop-color="#d7141a"/></linearGradient></defs>
+        <path d="M80,540 V90" stroke="url(#dg)" stroke-width="40" stroke-linecap="round"/>
+        <path d="M30,110 L80,20 L130,110 Z" fill="#d7141a"/>
+        <text x="80" y="300" transform="rotate(-90 80 300)" text-anchor="middle" fill="#fff" font-weight="800" font-size="26" dy="9">GEFAHR</text>
+      </svg>
+    </section>
+
+    <!-- 4–8 Kategorien (per Skript erzeugt) -->
+    <div id="cats"></div>
+
+    <!-- 9 Schutz -->
+    <section class="slide" id="s-protect" data-from="110" data-to="126">
+      <h2 class="in" data-at="0.2">Passende Sicherungseinrichtung</h2>
+      <p class="lead in" data-at="0.6" style="font-size:28px">Mindestens nötig je Kategorie – Beispiele:</p>
+      <table>
+        <tr class="in" data-at="1.2"><td style="background:var(--k1)">1</td><td class="code">–</td><td>Trinkwasser selbst – keine Sicherung nötig</td></tr>
+        <tr class="in" data-at="2.2"><td style="background:var(--k2)">2</td><td class="code">EA</td><td>Kontrollierbarer Rückflussverhinderer</td></tr>
+        <tr class="in" data-at="3.2"><td style="background:var(--k3)">3</td><td class="code">CA</td><td>Systemtrenner mit verschiedenen, nicht kontrollierbaren Druckzonen</td></tr>
+        <tr class="in" data-at="4.2"><td style="background:var(--k4)">4</td><td class="code">BA</td><td>Systemtrenner mit kontrollierbarer Mitteldruckzone</td></tr>
+        <tr class="in" data-at="5.2"><td style="background:var(--k5)">5</td><td class="code">AA/AB</td><td>Freier Auslauf – Wasser fällt frei, keine direkte Verbindung</td></tr>
+      </table>
+      <div class="note in" data-at="6">Die genaue Auswahl regeln DIN EN 1717 und DIN 1988-100 – mehr dazu im nächsten Step.</div>
+    </section>
+
+    <!-- 10 Zusammenfassung -->
+    <section class="slide" id="s-sum" data-from="126" data-to="141">
+      <h2 class="in" data-at="0.2">Kurz zusammengefasst</h2>
+      <div class="sum">
+        <div class="in" data-at="0.8" style="background:var(--k1)"><b>1</b><span>Trink&shy;wasser</span></div>
+        <div class="in" data-at="1.6" style="background:var(--k2)"><b>2</b><span>verändert, aber harmlos</span></div>
+        <div class="in" data-at="2.4" style="background:var(--k3)"><b>3</b><span>wenig giftig</span></div>
+        <div class="in" data-at="3.2" style="background:var(--k4)"><b>4</b><span>giftig</span></div>
+        <div class="in" data-at="4.0" style="background:var(--k5)"><b>5</b><span>Keime &amp; Erreger</span></div>
+      </div>
+      <p class="lead in" data-at="8.5" style="margin-top:46px;font-weight:700;color:var(--ink)">Nächster Step: Sicherungseinrichtungen ➜</p>
+    </section>
+  </div>
+
+  <div id="figWrap"><!--FIGUR--></div>
+  <div id="caption"><span></span></div>
+</div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ Abspielen</button>
+  <input type="range" id="seek" min="0" max="141" step="0.1" value="0">
+  <span id="time">0.0 s</span>
+</div>
+
+<script>
+// ---------------- Drehbuch ----------------
+const DURATION = 141;
+
+const CATS = [
+  { n: 1, from: 35, c: 'var(--k1)', kicker: 'Kategorie 1', title: 'Trinkwasser',
+    def: 'Wasser für den menschlichen Gebrauch, das direkt aus der Trinkwasser&shy;installation entnommen wird.',
+    ex: ['Kaltes Trinkwasser aus der Leitung'], risk: 'Keine Gefährdung', glass: { fill: '#8cc8f5', extra: 'shine' } },
+  { n: 2, from: 50, c: 'var(--k2)', kicker: 'Kategorie 2', title: 'Keine Gesundheits&shy;gefährdung',
+    def: 'Trinkwasser, das in Geschmack, Geruch, Farbe oder Temperatur verändert ist – aber nicht gesundheits&shy;gefährdend.',
+    ex: ['Erwärmtes Trinkwasser', 'Kaffee und Tee'], risk: 'Ungefährlich', glass: { fill: '#9a6237', extra: 'steam' } },
+  { n: 3, from: 65, c: 'var(--k3)', kicker: 'Kategorie 3', title: 'Weniger giftige Stoffe',
+    def: 'Gesundheits&shy;gefährdung durch einen oder mehrere weniger giftige Stoffe.',
+    ex: ['Heizungswasser ohne Zusätze'], risk: 'Geringe Gefährdung', glass: { fill: '#d9c27a', extra: 'drop' } },
+  { n: 4, from: 80, c: 'var(--k4)', kicker: 'Kategorie 4', title: 'Giftige Stoffe',
+    def: 'Gesundheits&shy;gefährdung durch giftige oder sehr giftige Stoffe – auch radioaktive, krebserregende oder erbgutverändernde.',
+    ex: ['Heizungswasser mit Inhibitoren', 'Pflanzenschutzmittel'], risk: 'Hohe Gefährdung', glass: { fill: '#6c8a2c', extra: 'warn' } },
+  { n: 5, from: 95, c: 'var(--k5)', kicker: 'Kategorie 5', title: 'Krankheitserreger',
+    def: 'Gesundheits&shy;gefährdung durch Mikroorganismen oder Viren übertragbarer Krankheiten.',
+    ex: ['Abwasser, WC und Urinal', 'Regenwasser'], risk: 'Sehr hohe Gefährdung', glass: { fill: '#6b5532', extra: 'germs' } },
+];
+
+// Posen: [von, bis, pose]
+const POSES = [
+  [0, 2.4, 'walk'], [2.4, 9, 'wave'],
+  [9, 17.4, 'explain'], [17.4, 26, 'warn'],
+  [26, 35, 'explain'],
+  [35, 41, 'point'], [41, 50, 'explain'],
+  [50, 56, 'point'], [56, 65, 'explain'],
+  [65, 71, 'point'], [71, 80, 'explain'],
+  [80, 86, 'point'], [86, 95, 'warn'],
+  [95, 101, 'point'], [101, 110, 'warn'],
+  [110, 116, 'explain'], [116, 126, 'point'],
+  [126, 134.5, 'explain'], [134.5, 141, 'jump'],
+];
+
+// Untertitel = Sprechertext: [von, bis, text]
+const CAPTIONS = [
+  [2.6, 5.4, 'Hallo und herzlich willkommen!'],
+  [5.5, 9.0, 'Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
+  [9.4, 13.3, 'Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.'],
+  [13.4, 17.3, 'Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.'],
+  [17.5, 21.6, 'Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!'],
+  [21.7, 25.8, 'Deshalb ordnen wir jede Flüssigkeit einer von 5 Kategorien zu.'],
+  [26.3, 30.6, 'Die Faustregel: Je höher die Kategorie, desto gefährlicher die Flüssigkeit.'],
+  [30.7, 34.8, 'Schauen wir uns alle fünf genauer an.'],
+  [35.3, 39.6, 'Kategorie 1 ist unser Trinkwasser – direkt aus der Leitung.'],
+  [39.7, 44.6, 'Genau das Wasser, das wir schützen wollen.'],
+  [44.7, 49.7, 'Hier besteht also keine Gefahr.'],
+  [50.3, 54.8, 'Kategorie 2: Flüssigkeiten, die die Gesundheit nicht gefährden.'],
+  [54.9, 59.8, 'Das Trinkwasser ist nur verändert – in Geschmack, Geruch, Farbe oder Temperatur.'],
+  [59.9, 64.8, 'Zum Beispiel erwärmtes Trinkwasser oder Kaffee und Tee.'],
+  [65.3, 69.8, 'Kategorie 3: Hier wird es gesundheitsgefährdend – durch weniger giftige Stoffe.'],
+  [69.9, 74.8, 'Ein typisches Beispiel ist Heizungswasser ohne Zusätze.'],
+  [74.9, 79.8, 'Das gehört auf keinen Fall zurück ins Trinkwasser!'],
+  [80.3, 84.8, 'Kategorie 4: Jetzt wird es ernst – giftige oder sehr giftige Stoffe.'],
+  [84.9, 89.8, 'Dazu zählen auch radioaktive, krebserregende oder erbgutverändernde Stoffe.'],
+  [89.9, 94.8, 'Zum Beispiel Heizungswasser mit Inhibitoren oder Pflanzenschutzmittel.'],
+  [95.3, 99.8, 'Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.'],
+  [99.9, 104.8, 'Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.'],
+  [104.9, 109.8, 'Hier braucht es den stärksten Schutz.'],
+  [110.3, 115.3, 'Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.'],
+  [115.4, 120.8, 'Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.'],
+  [120.9, 125.8, 'Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.'],
+  [126.3, 130.3, 'Kurz zusammengefasst:'],
+  [130.4, 134.4, '1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.'],
+  [134.6, 140.6, 'Bis zum nächsten Step – und bleib sauber!'],
+];
+
+const KCOL = { 1: '#2d8fe0', 2: '#3aa86b', 3: '#e8b416', 4: '#ef7a1a', 5: '#d7141a' };
+
+// ---------------- Glas-Grafik ----------------
+function glassSVG(g, color) {
+  let extra = '';
+  if (g.extra === 'shine') extra = '<path d="M95,170 Q90,290 105,380" stroke="#fff" stroke-opacity=".7" stroke-width="12" fill="none" stroke-linecap="round"/>';
+  if (g.extra === 'steam') extra = '<g fill="none" stroke="#9aa5b0" stroke-width="9" stroke-linecap="round" class="steam"><path d="M120,90 q-18,-25 0,-50 q18,-25 0,-50"/><path d="M170,95 q-18,-25 0,-50 q18,-25 0,-50"/><path d="M220,90 q-18,-25 0,-50 q18,-25 0,-50"/></g>';
+  if (g.extra === 'drop') extra = '<path d="M165,230 C185,262 195,278 195,295 A30,30 0 0 1 135,295 C135,278 145,262 165,230 Z" fill="#fff" fill-opacity=".45"/>';
+  if (g.extra === 'warn') extra = '<g transform="translate(110,215)"><path d="M0,100 L55,0 L110,100 Z" fill="#ffd400" stroke="#1b1f24" stroke-width="6" stroke-linejoin="round"/><path d="M55,30 V64" stroke="#1b1f24" stroke-width="11" stroke-linecap="round"/><circle cx="55" cy="82" r="7" fill="#1b1f24"/></g>';
+  if (g.extra === 'germs') extra = [[120,240,22],[200,280,28],[150,350,18],[230,370,20],[120,410,14]].map(([x,y,r]) =>
+      `<g class="germ"><circle cx="${x}" cy="${y}" r="${r}" fill="#9bd14a" stroke="#1b1f24" stroke-width="5"/>` +
+      [0,60,120,180,240,300].map(a => { const rad = a*Math.PI/180; return `<line x1="${x+Math.cos(rad)*r}" y1="${y+Math.sin(rad)*r}" x2="${x+Math.cos(rad)*(r+11)}" y2="${y+Math.sin(rad)*(r+11)}" stroke="#1b1f24" stroke-width="5" stroke-linecap="round"/>`; }).join('') +
+      `<circle cx="${x-r/3}" cy="${y-r/4}" r="${r/5}" fill="#1b1f24"/><circle cx="${x+r/3}" cy="${y-r/4}" r="${r/5}" fill="#1b1f24"/></g>`).join('');
+  return `<svg class="glass" viewBox="0 0 330 470">
+    <ellipse cx="165" cy="452" rx="120" ry="14" fill="#000" fill-opacity=".12"/>
+    <path d="M60,120 L90,440 H240 L270,120 Z" fill="#e8f1f8" stroke="#1b1f24" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M70,170 L93,430 H237 L260,170 Z" fill="${g.fill}"/>
+    <path d="M70,170 Q165,185 260,170" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="6"/>
+    ${extra}
+    <path d="M60,120 L90,440 H240 L270,120" fill="none" stroke="#1b1f24" stroke-width="8" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+const catsEl = document.getElementById('cats');
+CATS.forEach(k => {
+  const ex = k.ex.map((e, i) => `<div class="ex in" data-at="${5.2 + i * 1.2}">${e}</div>`).join('');
+  catsEl.insertAdjacentHTML('beforeend', `
+    <section class="slide" data-from="${k.from}" data-to="${k.from + 15}" style="--c:${k.c}">
+      <div class="cat-head">
+        <div class="cat-num in" data-at="0.2" style="background:${k.c}">${k.n}</div>
+        <div class="in" data-at="0.5"><div class="cat-kicker" style="color:${k.c}">${k.kicker}</div><div class="cat-title">${k.title}</div></div>
+      </div>
+      <div class="cat-body">
+        <div class="cat-text">
+          <p class="cat-def in" data-at="1.4">${k.def}</p>
+          <div class="ex-title in" data-at="4.8">Beispiele</div>
+          ${ex}
+          <div class="risk in" data-at="9">${k.risk}</div>
+        </div>
+        <div class="in" data-at="1.0">${glassSVG(k.glass, KCOL[k.n])}</div>
+      </div>
+    </section>`);
+});
+
+// ---------------- Figur vorbereiten (Marcel-Look) ----------------
+const fig = document.getElementById('figur');
+const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; };
+['hairShort', 'hairSide', 'hairCurly', 'hairThin', 'glassesRound', 'glassesSquare', 'helmet', 'beardStubble', 'beardShort'].forEach(id => show(id, false));
+['hairSides', 'beardFull', 'beardStrands', 'mustache', 'glassesBold', 'cap', 'tunnels'].forEach(id => show(id, true));
+fig.classList.remove('pointer-on');
+
+// ---------------- Rendern zum Zeitpunkt t ----------------
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
+const slides = [...document.querySelectorAll('.slide')];
+const capEl = document.querySelector('#caption span');
+const figWrap = document.getElementById('figWrap');
+let currentPose = '', currentTalk = null;
+
+function render(t) {
+  // Folien
+  for (const s of slides) {
+    const from = +s.dataset.from, to = +s.dataset.to;
+    const a = Math.min(ease((t - from) / 0.5), 1 - ease((t - (to - 0.4)) / 0.4));
+    s.style.opacity = Math.max(0, a);
+    s.style.visibility = a > 0 ? 'visible' : 'hidden';
+    if (a <= 0) continue;
+    for (const el of s.querySelectorAll('.in')) {
+      const p = ease((t - from - +el.dataset.at) / 0.45);
+      el.style.opacity = p;
+      el.style.transform = `translateY(${(1 - p) * 30}px)`;
+    }
+  }
+  // Rückfluss-Animation
+  const back = t >= 15.2;
+  document.getElementById('flowClean').style.strokeDashoffset = -t * 160;
+  document.getElementById('flowClean').style.opacity = back ? Math.max(0, 1 - (t - 15.2) / 0.5) : 1;
+  document.getElementById('flowDirty').style.strokeDashoffset = -t * 160;
+  document.getElementById('flowDirty').style.opacity = back ? Math.min(1, (t - 15.2) / 0.5) : 0;
+  document.getElementById('arrowFwd').style.opacity = back ? 0 : 1;
+  document.getElementById('arrowBack').style.opacity = back ? 1 : 0;
+  document.getElementById('threeR').style.opacity = ease((t - 17.6) / 0.5);
+  // Dampf & Keime wackeln
+  document.querySelectorAll('.steam').forEach(el => el.style.transform = `translateY(${Math.sin(t * 3) * 6}px)`);
+  document.querySelectorAll('.germ').forEach((el, i) => el.style.transform = `translate(${Math.sin(t * 2 + i) * 6}px, ${Math.cos(t * 2.5 + i) * 6}px)`);
+
+  // Figur: Auftritt
+  const walkIn = ease(t / 2.4);
+  figWrap.style.transform = `translateX(${(1 - walkIn) * -760}px)`;
+  // Pose
+  const pose = (POSES.find(([a, b]) => t >= a && t < b) || POSES[POSES.length - 1])[2];
+  if (pose !== currentPose) {
+    fig.classList.forEach(c => c.startsWith('mode-') && fig.classList.remove(c));
+    fig.classList.add('mode-' + pose); currentPose = pose;
+  }
+  // Untertitel + Sprechen
+  const cap = CAPTIONS.find(([a, b]) => t >= a && t < b);
+  const text = cap ? cap[2] : '';
+  if (capEl.textContent !== text) capEl.textContent = text;
+  const talk = !!cap && t < cap[1] - 0.25;
+  if (talk !== currentTalk) { fig.classList.toggle('talking', talk); currentTalk = talk; }
+
+  // CSS-Animationen der Figur auf Zeitpunkt t setzen (deterministisch)
+  getComputedStyle(fig).transform;
+  for (const an of fig.getAnimations({ subtree: true })) { an.pause(); an.currentTime = t * 1000; }
+}
+window.render = render;
+window.DURATION = DURATION;
+
+// ---------------- Vorschau-Player ----------------
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById('scene').style.transform = `scale(${s})`;
+}
+addEventListener('resize', fit); fit();
+let playing = false, t0 = 0, start = 0;
+const seek = document.getElementById('seek'), timeEl = document.getElementById('time'), playBtn = document.getElementById('play');
+function frame(now) {
+  if (!playing) return;
+  const t = start + (now - t0) / 1000;
+  if (t >= DURATION) { playing = false; playBtn.textContent = '▶ Abspielen'; return; }
+  render(t); seek.value = t; timeEl.textContent = t.toFixed(1) + ' s';
+  requestAnimationFrame(frame);
+}
+playBtn.onclick = () => {
+  playing = !playing; playBtn.textContent = playing ? '❚❚ Pause' : '▶ Abspielen';
+  if (playing) { start = +seek.value >= DURATION - 0.1 ? 0 : +seek.value; t0 = performance.now(); requestAnimationFrame(frame); }
+};
+seek.oninput = () => { playing = false; playBtn.textContent = '▶ Abspielen'; render(+seek.value); timeEl.textContent = (+seek.value).toFixed(1) + ' s'; };
+if (location.search.includes('render')) document.body.classList.add('render');
+render(0);
+</script>
+</body>
+</html>

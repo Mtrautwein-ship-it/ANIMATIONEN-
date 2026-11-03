@@ -29,3 +29,23 @@ tätowierte Unterarme, Rot als Akzentfarbe. Alternativ: Arbeitsjacke und Schutzh
 | `figur/lehrer-figur.html` | Figuren-Studio mit allen Posen, Anpassungen und Export |
 | `figur/wasser-meister.svg` | Figur als animierte SVG (Standard-Look) |
 | `figur/vorschau-*.png` | Vorschaubilder |
+
+## Videos
+
+### Step 1 – Die 5 Flüssigkeitskategorien (DIN EN 1717)
+
+| Datei | Inhalt |
+|---|---|
+| `video/step1-fluessigkeitskategorien.mp4` | Fertiges Video, 1920 × 1080, 30 fps, ca. 2:21 min, Untertitel eingebrannt, ohne Ton |
+| `video/step1-fluessigkeitskategorien.html` | Szene im Browser abspielen und vorspulen (Vorschau-Player) |
+| `video/step1-sprechertext.md` | Sprechertext mit Zeitangaben zum Einsprechen |
+| `video/step1-fluessigkeitskategorien.srt` | Untertitel-Datei (z. B. für YouTube) |
+| `video/step1-template.html` | Drehbuch: Texte, Posen und Zeiten (`CATS`, `POSES`, `CAPTIONS`) |
+
+Neu bauen und rendern (Node + Playwright + ffmpeg):
+
+```bash
+cd video
+python3 build.py      # Figur in die Szene einsetzen
+node render.js        # MP4 rendern
+```

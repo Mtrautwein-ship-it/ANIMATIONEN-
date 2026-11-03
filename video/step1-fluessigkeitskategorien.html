@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 1 Flüssigkeitskategorien</title>
+<style>
+  :root {
+    --k1: #2d8fe0; --k2: #3aa86b; --k3: #e8b416; --k4: #ef7a1a; --k5: #d7141a;
+    --ink: #1b1f24; --muted: #5b6672; --brand: #d7141a;
+  }
+  html, body { margin: 0; background: #0d0d0f; overflow: hidden; }
+  body { font-family: Inter, "Segoe UI", system-ui, Arial, sans-serif; color: var(--ink); }
+  #wrap { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #scene { position: relative; width: 1920px; height: 1080px; overflow: hidden; transform-origin: center;
+    background:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 60px 60px,
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 60px 60px,
+      radial-gradient(ellipse at 30% 60%, #7a0d12 0%, #3a0709 45%, #120607 100%);
+  }
+  #floor { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(#00000000, #00000066); }
+
+  /* Tafel */
+  #board { position: absolute; left: 640px; top: 60px; width: 1220px; height: 840px; background: #fbfcfd; border-radius: 28px;
+    box-shadow: 0 0 0 10px #1c1c1e, 0 30px 80px rgba(0,0,0,.55); overflow: hidden; }
+  #board .tag { position: absolute; left: 48px; top: 36px; font-weight: 800; font-size: 22px; letter-spacing: .14em; color: var(--brand); text-transform: uppercase; }
+  .slide { position: absolute; inset: 0; padding: 100px 64px 48px; box-sizing: border-box; opacity: 0; }
+  .in { opacity: 0; }
+  h1 { font-size: 76px; line-height: 1.05; margin: 0 0 24px; font-weight: 800; letter-spacing: -.02em; }
+  h2 { font-size: 54px; line-height: 1.1; margin: 0 0 20px; font-weight: 800; letter-spacing: -.01em; }
+  p.lead { font-size: 34px; line-height: 1.35; color: var(--muted); margin: 0; }
+
+  /* Intro */
+  .step { display: inline-block; background: var(--brand); color: #fff; font-weight: 800; font-size: 30px; padding: 10px 22px; border-radius: 12px; margin-bottom: 30px; }
+  .norm { margin-top: 36px; font-size: 30px; color: var(--muted); }
+  .chips { display: flex; gap: 18px; margin-top: 70px; }
+  .chip { width: 150px; height: 150px; border-radius: 26px; color: #fff; font-size: 84px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 0 rgba(0,0,0,.18); }
+
+  /* Rückfluss */
+  #flow { position: absolute; left: 64px; top: 300px; width: 1090px; height: 500px; }
+  .flowlabel { font-size: 28px; font-weight: 700; }
+
+  /* Leiter */
+  .ladder { display: flex; flex-direction: column-reverse; gap: 14px; margin-top: 30px; width: 880px; }
+  .rung { display: flex; align-items: center; gap: 22px; height: 96px; border-radius: 18px; color: #fff; font-size: 32px; font-weight: 700; padding: 0 26px; box-shadow: 0 6px 0 rgba(0,0,0,.15); }
+  .rung b { font-size: 52px; width: 50px; text-align: center; }
+  .danger { position: absolute; right: 70px; top: 230px; width: 160px; height: 560px; }
+
+  /* Kategorie-Karte */
+  .cat-head { display: flex; align-items: center; gap: 28px; margin-bottom: 26px; }
+  .cat-num { width: 130px; height: 130px; border-radius: 28px; color: #fff; font-size: 88px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; box-shadow: 0 8px 0 rgba(0,0,0,.18); }
+  .cat-kicker { font-size: 26px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .cat-title { font-size: 54px; font-weight: 800; line-height: 1.08; letter-spacing: -.01em; }
+  .cat-body { display: flex; gap: 40px; }
+  .cat-text { flex: 1; }
+  .cat-def { font-size: 32px; line-height: 1.38; color: #2f3943; margin: 0 0 30px; }
+  .ex-title { font-size: 24px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .ex { display: flex; align-items: center; gap: 16px; font-size: 32px; font-weight: 600; margin-bottom: 14px; }
+  .ex::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--c); flex: none; }
+  .glass { width: 330px; height: 470px; flex: none; }
+  .risk { display: inline-block; margin-top: 18px; padding: 10px 20px; border-radius: 12px; font-size: 26px; font-weight: 800; color: #fff; background: var(--c); }
+
+  /* Schutz-Tabelle */
+  table { border-collapse: separate; border-spacing: 0 12px; width: 100%; font-size: 30px; }
+  td { padding: 16px 22px; background: #eef2f5; }
+  td:first-child { border-radius: 14px 0 0 14px; width: 120px; color: #fff; font-weight: 800; font-size: 34px; text-align: center; }
+  td:last-child { border-radius: 0 14px 14px 0; }
+  td.code { font-weight: 800; width: 120px; font-size: 34px; }
+  .note { font-size: 24px; color: var(--muted); margin-top: 8px; }
+
+  /* Zusammenfassung */
+  .sum { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 30px; }
+  .sum div { border-radius: 22px; color: #fff; padding: 26px 16px; text-align: center; min-height: 300px; box-sizing: border-box; box-shadow: 0 8px 0 rgba(0,0,0,.15); }
+  .sum b { display: block; font-size: 96px; line-height: 1; margin-bottom: 20px; }
+  .sum span { font-size: 29px; font-weight: 700; line-height: 1.25; }
+
+  /* Figur */
+  #figWrap { position: absolute; left: -70px; bottom: 14px; width: 860px; height: 875px; }
+  #figWrap #figur { width: 100%; height: 100%; }
+
+  /* Untertitel */
+  #caption { position: absolute; left: 640px; width: 1220px; bottom: 34px; text-align: center; }
+  #caption span { display: inline-block; max-width: 1160px; background: rgba(10,10,12,.82); color: #fff; font-size: 38px; font-weight: 600; line-height: 1.3; padding: 12px 28px; border-radius: 14px; }
+  #caption span:empty { display: none; }
+
+  /* Logo-Ecke */
+  #corner { position: absolute; left: 40px; top: 34px; color: #fff; font-weight: 800; font-size: 26px; letter-spacing: .08em; opacity: .9; }
+  #corner i { font-style: normal; color: #ff4a50; }
+
+  #controls { position: fixed; left: 12px; bottom: 12px; z-index: 5; display: flex; gap: 8px; align-items: center; font: 14px system-ui; color: #fff; }
+  #controls button { font: inherit; padding: 6px 12px; border-radius: 6px; border: 0; background: #d7141a; color: #fff; cursor: pointer; }
+  #controls input { width: 320px; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="scene">
+  <div id="floor"></div>
+  <div id="corner">TRINKWASSER<i>HYGIENE</i></div>
+
+  <div id="board">
+    <div class="tag">Step 1 · Flüssigkeitskategorien</div>
+
+    <!-- 1 Intro -->
+    <section class="slide" id="s-intro" data-from="0.6" data-to="9">
+      <div class="step in" data-at="0.4">STEP 1</div>
+      <h1 class="in" data-at="0.8">Die 5 Flüssigkeits&shy;kategorien</h1>
+      <p class="lead in" data-at="1.4">Welche Flüssigkeit gefährdet unser Trinkwasser – und wie stark?</p>
+      <div class="chips">
+        <div class="chip in" data-at="2.0" style="background:var(--k1)">1</div>
+        <div class="chip in" data-at="2.2" style="background:var(--k2)">2</div>
+        <div class="chip in" data-at="2.4" style="background:var(--k3)">3</div>
+        <div class="chip in" data-at="2.6" style="background:var(--k4)">4</div>
+        <div class="chip in" data-at="2.8" style="background:var(--k5)">5</div>
+      </div>
+      <div class="norm in" data-at="4.4">nach DIN EN 1717 und DIN 1988-100</div>
+    </section>
+
+    <!-- 2 Warum -->
+    <section class="slide" id="s-why" data-from="9" data-to="26">
+      <h2 class="in" data-at="0.3">Warum das Ganze?</h2>
+      <p class="lead in" data-at="0.8" style="max-width:1000px">Bei Druckabfall kann Wasser <b style="color:var(--k5)">zurückfließen</b> – und Verschmutzung landet im Trinkwasser.</p>
+      <svg id="flow" viewBox="0 0 1090 500">
+        <!-- Wasserwerk -->
+        <g>
+          <rect x="10" y="150" width="170" height="150" rx="18" fill="#dfeaf5" stroke="#1b1f24" stroke-width="5"/>
+          <path d="M40,150 L95,95 L150,150" fill="#c3d5e8" stroke="#1b1f24" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M95,205 C108,224 114,234 114,244 A19,19 0 0 1 76,244 C76,234 82,224 95,205 Z" fill="var(--k1)" stroke="#1b1f24" stroke-width="4"/>
+          <text x="95" y="345" text-anchor="middle" class="flowlabel">Trinkwasser</text>
+        </g>
+        <!-- Leitung -->
+        <path d="M180,240 H760" stroke="#1b1f24" stroke-width="54" stroke-linecap="round" fill="none"/>
+        <path d="M180,240 H760" stroke="#e9eef3" stroke-width="42" fill="none"/>
+        <path id="flowClean" d="M190,240 H750" stroke="var(--k1)" stroke-width="20" stroke-dasharray="34 26" stroke-linecap="round" fill="none"/>
+        <path id="flowDirty" d="M750,240 H190" stroke="#7a5a2a" stroke-width="20" stroke-dasharray="34 26" stroke-linecap="round" fill="none" opacity="0"/>
+        <!-- Ventil -->
+        <rect x="440" y="196" width="50" height="88" rx="10" fill="#9aa5b0" stroke="#1b1f24" stroke-width="5"/>
+        <rect x="455" y="166" width="20" height="34" fill="#9aa5b0" stroke="#1b1f24" stroke-width="5"/>
+        <rect x="425" y="150" width="80" height="20" rx="8" fill="var(--brand)" stroke="#1b1f24" stroke-width="5"/>
+        <!-- Behälter mit Schmutzwasser -->
+        <path d="M760,240 V300" stroke="#1b1f24" stroke-width="30" fill="none"/>
+        <path d="M760,240 V300" stroke="#e9eef3" stroke-width="18" fill="none"/>
+        <path d="M670,300 H1060 L1030,430 H700 Z" fill="#efe7dc" stroke="#1b1f24" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M683,330 H1047 L1030,425 H700 Z" fill="#8a6a35"/>
+        <g fill="#5d461f">
+          <circle cx="760" cy="370" r="10"/><circle cx="840" cy="395" r="7"/><circle cx="930" cy="360" r="12"/><circle cx="990" cy="400" r="8"/>
+        </g>
+        <text x="865" y="478" text-anchor="middle" class="flowlabel">verschmutztes Wasser</text>
+        <!-- Pfeile -->
+        <g id="arrowFwd">
+          <path d="M300,140 H560" stroke="var(--k1)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M540,118 L568,140 L540,162" fill="none" stroke="var(--k1)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <g id="arrowBack" opacity="0">
+          <path d="M560,140 H300" stroke="var(--k5)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M320,118 L292,140 L320,162" fill="none" stroke="var(--k5)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <g transform="translate(600,60)">
+            <path d="M0,70 L40,0 L80,70 Z" fill="#ffd400" stroke="#1b1f24" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M40,22 V46" stroke="#1b1f24" stroke-width="8" stroke-linecap="round"/><circle cx="40" cy="58" r="5" fill="#1b1f24"/>
+          </g>
+          <text x="700" y="110" class="flowlabel" fill="var(--k5)">Druckabfall!</text>
+        </g>
+        <g id="threeR" opacity="0" font-size="30" font-weight="800">
+          <text x="10" y="478" fill="var(--k5)">Rückfließen · Rückdrücken · Rücksaugen</text>
+        </g>
+      </svg>
+    </section>
+
+    <!-- 3 Leiter -->
+    <section class="slide" id="s-ladder" data-from="26" data-to="35">
+      <h2 class="in" data-at="0.2">Je höher die Kategorie, desto größer die Gefahr</h2>
+      <div class="ladder">
+        <div class="rung in" data-at="0.8" style="background:var(--k1)"><b>1</b> Trinkwasser</div>
+        <div class="rung in" data-at="1.3" style="background:var(--k2)"><b>2</b> Keine Gesundheitsgefährdung</div>
+        <div class="rung in" data-at="1.8" style="background:var(--k3)"><b>3</b> Weniger giftige Stoffe</div>
+        <div class="rung in" data-at="2.3" style="background:var(--k4)"><b>4</b> Giftige Stoffe</div>
+        <div class="rung in" data-at="2.8" style="background:var(--k5)"><b>5</b> Krankheitserreger</div>
+      </div>
+      <svg class="danger in" data-at="3.4" viewBox="0 0 160 560">
+        <defs><linearGradient id="dg" gradientUnits="userSpaceOnUse" x1="0" y1="540" x2="0" y2="90">
+          <stop offset="0" stop-color="#2d8fe0"/><stop offset=".5" stop-color="#e8b416"/><stop offset="1" stop-color="#d7141a"/></linearGradient></defs>
+        <path d="M80,540 V90" stroke="url(#dg)" stroke-width="40" stroke-linecap="round"/>
+        <path d="M30,110 L80,20 L130,110 Z" fill="#d7141a"/>
+        <text x="80" y="300" transform="rotate(-90 80 300)" text-anchor="middle" fill="#fff" font-weight="800" font-size="26" dy="9">GEFAHR</text>
+      </svg>
+    </section>
+
+    <!-- 4–8 Kategorien (per Skript erzeugt) -->
+    <div id="cats"></div>
+
+    <!-- 9 Schutz -->
+    <section class="slide" id="s-protect" data-from="110" data-to="126">
+      <h2 class="in" data-at="0.2">Passende Sicherungseinrichtung</h2>
+      <p class="lead in" data-at="0.6" style="font-size:28px">Mindestens nötig je Kategorie – Beispiele:</p>
+      <table>
+        <tr class="in" data-at="1.2"><td style="background:var(--k1)">1</td><td class="code">–</td><td>Trinkwasser selbst – keine Sicherung nötig</td></tr>
+        <tr class="in" data-at="2.2"><td style="background:var(--k2)">2</td><td class="code">EA</td><td>Kontrollierbarer Rückflussverhinderer</td></tr>
+        <tr class="in" data-at="3.2"><td style="background:var(--k3)">3</td><td class="code">CA</td><td>Systemtrenner mit verschiedenen, nicht kontrollierbaren Druckzonen</td></tr>
+        <tr class="in" data-at="4.2"><td style="background:var(--k4)">4</td><td class="code">BA</td><td>Systemtrenner mit kontrollierbarer Mitteldruckzone</td></tr>
+        <tr class="in" data-at="5.2"><td style="background:var(--k5)">5</td><td class="code">AA/AB</td><td>Freier Auslauf – Wasser fällt frei, keine direkte Verbindung</td></tr>
+      </table>
+      <div class="note in" data-at="6">Die genaue Auswahl regeln DIN EN 1717 und DIN 1988-100 – mehr dazu im nächsten Step.</div>
+    </section>
+
+    <!-- 10 Zusammenfassung -->
+    <section class="slide" id="s-sum" data-from="126" data-to="141">
+      <h2 class="in" data-at="0.2">Kurz zusammengefasst</h2>
+      <div class="sum">
+        <div class="in" data-at="0.8" style="background:var(--k1)"><b>1</b><span>Trink&shy;wasser</span></div>
+        <div class="in" data-at="1.6" style="background:var(--k2)"><b>2</b><span>verändert, aber harmlos</span></div>
+        <div class="in" data-at="2.4" style="background:var(--k3)"><b>3</b><span>wenig giftig</span></div>
+        <div class="in" data-at="3.2" style="background:var(--k4)"><b>4</b><span>giftig</span></div>
+        <div class="in" data-at="4.0" style="background:var(--k5)"><b>5</b><span>Keime &amp; Erreger</span></div>
+      </div>
+      <p class="lead in" data-at="8.5" style="margin-top:46px;font-weight:700;color:var(--ink)">Nächster Step: Sicherungseinrichtungen ➜</p>
+    </section>
+  </div>
+
+  <div id="figWrap"><svg id="figur" xmlns="http://www.w3.org/2000/svg" viewBox="-80 0 560 570" class="mode-idle talking outfit-tee"
+         style="--skin:#f0c2a2; --skin-shade:#dda587; --hair:#2f2017; --eye:#5a3a22; --jacket:#1c1c1e; --accent:#d7141a; --cap:#141414; --pants:#2b2e33; --boots:#3a2a20; --line:#22262b; --belly:1;">
+      <style>
+        #figur .ol { stroke: var(--line); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+        #figur .skin { fill: var(--skin); }
+        #figur .skin-shade { fill: var(--skin-shade); }
+        #figur .hair { fill: var(--hair); }
+        #figur .jacket { fill: var(--jacket); }
+        #figur .accent { fill: var(--accent); }
+        #figur .pants { fill: var(--pants); }
+        #figur .boots { fill: var(--boots); }
+        #figur .iris { fill: var(--eye); }
+        #figur .white { fill: #ffffff; }
+        #figur .dark { fill: var(--line); }
+        #figur .brow { fill: none; stroke: var(--hair); stroke-width: 9; stroke-linecap: round; }
+        #figur .arm-ol { stroke: var(--line); stroke-width: 46; stroke-linecap: round; }
+        #figur .arm-fill { stroke: var(--jacket); stroke-width: 38; stroke-linecap: round; }
+        #figur .cuff { stroke: var(--accent); stroke-width: 38; stroke-linecap: butt; }
+        #figur .pipe-ol { stroke: var(--line); stroke-width: 12; stroke-linecap: round; }
+        #figur .pipe { stroke: #c8763a; stroke-width: 7; stroke-linecap: round; }
+        #figur .glasses { fill: rgba(255,255,255,.18); stroke: var(--line); stroke-width: 5; }
+
+        /* Drehpunkte (Koordinaten im viewBox) */
+        #figur #armL   { transform-origin: 124px 292px; }
+        #figur #armR   { transform-origin: 276px 292px; }
+        #figur #legL   { transform-origin: 171px 420px; }
+        #figur #legR   { transform-origin: 229px 420px; }
+        #figur #head   { transform-origin: 200px 265px; }
+        #figur #upper  { transform-origin: 200px 450px; }
+        #figur #all    { transform-origin: 200px 530px; }
+        #figur #shadow { transform-origin: 200px 540px; }
+        #figur #mouth  { transform-origin: 200px 228px; }
+        #figur #eyes   { transform-origin: 200px 172px; }
+        #figur #brows  { transform-origin: 200px 140px; }
+        #figur #torsoScale { transform-origin: 200px 360px; transform: scaleX(var(--belly)); }
+        #figur.outfit-tee .jacket-only, #figur.outfit-jacket .tee-only { display: none; }
+        #figur .arm-skin { stroke: var(--skin); stroke-width: 38; stroke-linecap: round; }
+        #figur .sleeve { stroke: var(--jacket); stroke-width: 42; }
+        #figur .tattoo { fill: none; stroke: #3d4a55; stroke-opacity: .75; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+        #figur .cap { fill: var(--cap); }
+        #figur #pointer { display: none; }
+        #figur.pointer-on #pointer, #figur.mode-point #pointer { display: inline; }
+
+        /* Immer: Blinzeln */
+        #figur #eyes { animation: blink 4.2s infinite; }
+        @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
+
+        /* Sprechen (kombinierbar mit jeder Pose) */
+        #figur.talking #mouth { animation: talk .36s infinite alternate ease-in-out; }
+        @keyframes talk { 0% { transform: scaleY(.35); } 40% { transform: scaleY(1.15); } 70% { transform: scaleY(.6); } 100% { transform: scaleY(1.3) scaleX(.9); } }
+
+        /* Pose: Stehen / Atmen */
+        #figur.mode-idle #upper { animation: breathe 3s infinite ease-in-out; }
+        #figur.mode-idle #head  { animation: nod 6s infinite ease-in-out; }
+        @keyframes breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.018) translateY(-1px); } }
+        @keyframes nod { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-2.5deg); } 70% { transform: rotate(2deg); } }
+
+        /* Pose: Erklären (Hände gestikulieren) */
+        #figur.mode-explain #upper { animation: breathe 3s infinite ease-in-out; }
+        #figur.mode-explain #armL { animation: gestureL 2.4s infinite ease-in-out; }
+        #figur.mode-explain #armR { animation: gestureR 2.4s infinite ease-in-out; }
+        #figur.mode-explain #head { animation: explainHead 2.4s infinite ease-in-out; }
+        @keyframes gestureL { 0%, 100% { transform: rotate(35deg); } 25% { transform: rotate(70deg); } 50% { transform: rotate(45deg); } 75% { transform: rotate(60deg); } }
+        @keyframes gestureR { 0%, 100% { transform: rotate(-55deg); } 25% { transform: rotate(-35deg); } 50% { transform: rotate(-75deg); } 75% { transform: rotate(-40deg); } }
+        @keyframes explainHead { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+        /* Pose: Winken */
+        #figur.mode-wave #armR { animation: wave .9s infinite ease-in-out; }
+        #figur.mode-wave #head { transform: rotate(-4deg); }
+        #figur.mode-wave #upper { animation: breathe 3s infinite ease-in-out; }
+        @keyframes wave { 0%, 100% { transform: rotate(-120deg); } 50% { transform: rotate(-150deg); } }
+
+        /* Pose: Zeigen (mit Rohr-Zeigestab) */
+        #figur.mode-point #armR { animation: point 2.2s infinite ease-in-out; }
+        #figur.mode-point #armL { transform: rotate(10deg); }
+        #figur.mode-point #head { transform: rotate(6deg); }
+        #figur.mode-point #upper { animation: breathe 3s infinite ease-in-out; }
+        @keyframes point { 0%, 100% { transform: rotate(-98deg); } 50% { transform: rotate(-106deg); } }
+
+        /* Pose: Achtung! (Finger hoch, Augenbrauen hoch) */
+        #figur.mode-warn #armR { animation: warn 1.2s infinite ease-in-out; }
+        #figur.mode-warn #brows { transform: translateY(-8px); }
+        #figur.mode-warn #head { animation: shake 1.2s infinite ease-in-out; }
+        @keyframes warn { 0%, 100% { transform: rotate(-128deg); } 50% { transform: rotate(-138deg); } }
+        @keyframes shake { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+        /* Pose: Gehen (auf der Stelle – Bewegung im Schnittprogramm) */
+        #figur.mode-walk #legL { animation: legSwing .6s infinite ease-in-out; }
+        #figur.mode-walk #legR { animation: legSwing .6s infinite ease-in-out reverse; }
+        #figur.mode-walk #armL { animation: armSwing .6s infinite ease-in-out; }
+        #figur.mode-walk #armR { animation: armSwing .6s infinite ease-in-out reverse; }
+        #figur.mode-walk #upper { animation: bob .3s infinite alternate ease-in-out; }
+        @keyframes legSwing { 0%, 100% { transform: rotate(14deg); } 50% { transform: rotate(-14deg); } }
+        @keyframes armSwing { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(22deg); } }
+        @keyframes bob { from { transform: translateY(0); } to { transform: translateY(-7px); } }
+
+        /* Pose: Jubeln / Springen */
+        #figur.mode-jump #all { animation: jump 1s infinite cubic-bezier(.3,0,.4,1); }
+        #figur.mode-jump #shadow { animation: shadowJump 1s infinite cubic-bezier(.3,0,.4,1); }
+        #figur.mode-jump #armL { transform: rotate(128deg); }
+        #figur.mode-jump #armR { transform: rotate(-128deg); }
+        #figur.mode-jump #brows { transform: translateY(-6px); }
+        @keyframes jump {
+          0%, 100% { transform: translateY(0) scale(1.06, .92); }
+          15% { transform: translateY(0) scale(.95, 1.06); }
+          50% { transform: translateY(-50px) scale(1, 1); }
+          85% { transform: translateY(0) scale(1.05, .94); }
+        }
+        @keyframes shadowJump { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.6); opacity: .5; } }
+      </style>
+
+      <defs>
+        <clipPath id="torsoClip">
+          <path d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z"/>
+        </clipPath>
+      </defs>
+
+      <ellipse id="shadow" cx="200" cy="540" rx="115" ry="14" fill="#000" fill-opacity=".18"/>
+
+      <g id="all">
+        <!-- Beine + Arbeitsschuhe -->
+        <g id="legs">
+          <g id="legL">
+            <rect class="pants ol" x="148" y="405" width="46" height="95" rx="14"/>
+            <rect class="boots ol" x="120" y="484" width="76" height="42" rx="19"/>
+            <rect class="dark" x="122" y="516" width="72" height="9" rx="4"/>
+            <path d="M130,494 Q138,488 148,490" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+          </g>
+          <g id="legR">
+            <rect class="pants ol" x="206" y="405" width="46" height="95" rx="14"/>
+            <rect class="boots ol" x="204" y="484" width="76" height="42" rx="19"/>
+            <rect class="dark" x="206" y="516" width="72" height="9" rx="4"/>
+            <path d="M252,490 Q262,488 270,494" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <g id="upper">
+          <!-- Rumpf: Arbeitsjacke -->
+          <g id="torso"><g id="torsoScale">
+            <path class="jacket ol" d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z"/>
+            <g clip-path="url(#torsoClip)">
+              <path d="M270,270 C300,320 300,420 270,452 L320,452 L320,270 Z" fill="#000" fill-opacity=".14"/>
+              <g class="jacket-only">
+                <rect x="80" y="372" width="240" height="14" fill="#dfe7ee"/>
+                <rect x="80" y="372" width="240" height="14" class="accent" fill-opacity=".35"/>
+              </g>
+              <rect x="80" y="416" width="240" height="20" fill="#6b4a2b"/>
+            </g>
+            <path d="M138,262 C92,285 88,410 118,445 Q200,462 282,445 C312,410 308,285 262,262 Q200,250 138,262 Z" fill="none" class="ol"/>
+            <line class="jacket-only" x1="200" y1="294" x2="200" y2="414" stroke="#0f1f33" stroke-width="3"/>
+            <rect x="187" y="413" width="26" height="26" rx="5" fill="#d4a640" class="ol" style="stroke-width:3"/>
+<g class="jacket-only">
+            <!-- Kragen -->
+            <path class="skin ol" d="M176,258 L200,294 L224,258 Z"/>
+            <path class="accent ol" d="M158,258 L182,255 L200,294 L170,288 Z"/>
+            <path class="accent ol" d="M242,258 L218,255 L200,294 L230,288 Z"/>
+            <!-- Namensschild -->
+            <rect x="134" y="306" width="64" height="24" rx="5" class="white ol" style="stroke-width:3"/>
+            <text id="nameText" x="166" y="323" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1f3a5f" textLength="54" lengthAdjust="spacingAndGlyphs">MARCEL</text>
+            <!-- Wassertropfen-Abzeichen -->
+            <path class="ol" fill="#4fb3e8" style="stroke-width:3" d="M248,298 C258,312 263,320 263,328 A15,15 0 0 1 233,328 C233,320 238,312 248,298 Z"/>
+            <path d="M241,326 A7,7 0 0 0 247,334" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+</g>
+            <!-- T-Shirt: Rundhals, Namensaufdruck, Wappen -->
+            <g class="tee-only">
+              <path class="skin" d="M166,256 Q200,292 234,256 Z"/>
+              <path d="M164,257 Q200,296 236,257" fill="none" stroke="#3a3a3d" stroke-width="7" stroke-linecap="round"/>
+              <path d="M164,257 Q200,296 236,257" fill="none" class="ol" style="stroke-width:3"/>
+              <text id="namePrint" x="174" y="334" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" textLength="52" lengthAdjust="spacingAndGlyphs">Marcel Trautwein</text>
+              <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M234,302 H266 V322 Q266,338 250,346 Q234,338 234,322 Z"/>
+                <path d="M240,334 L260,310 M240,310 L260,334"/>
+              </g>
+              <path d="M250,312 C254,318 256,321 256,324 A6,6 0 0 1 244,324 C244,321 246,318 250,312 Z" fill="#4fb3e8" stroke="#fff" stroke-width="1.5"/>
+            </g>
+            <!-- Werkzeugtasche mit Rohrzange -->
+            <g id="pouch">
+              <rect x="266" y="388" width="9" height="40" rx="3" fill="#8e99a4" class="ol" style="stroke-width:3"/>
+              <path d="M258,380 h26 v14 h-10 v-6 h-6 v6 h-10 Z" fill="#c33d32" class="ol" style="stroke-width:3"/>
+              <rect x="252" y="418" width="38" height="36" rx="7" fill="#7b5534" class="ol"/>
+              <path d="M254,428 H288" stroke="#5a3d24" stroke-width="3"/>
+            </g>
+          </g></g>
+
+          <!-- Kopf -->
+          <g id="head">
+            <ellipse class="skin ol" cx="110" cy="188" rx="15" ry="21"/>
+            <ellipse class="skin ol" cx="290" cy="188" rx="15" ry="21"/>
+            <path d="M106,180 Q114,188 108,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
+            <path d="M294,180 Q286,188 292,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
+            <g id="tunnels">
+              <circle cx="109" cy="201" r="7" fill="#111" stroke="#555" stroke-width="2.5"/>
+              <circle cx="291" cy="201" r="7" fill="#111" stroke="#555" stroke-width="2.5"/>
+            </g>
+            <ellipse class="skin ol" cx="200" cy="176" rx="92" ry="98"/>
+
+            <!-- Haare: kurz -->
+            <path id="hairShort" class="hair ol" d="M108,180 C98,100 148,70 200,72 C256,70 304,100 292,180 C286,150 272,128 246,120 C232,134 206,132 190,122 C166,132 128,144 108,180 Z"/>
+            <!-- Haare: Seitenscheitel -->
+            <path id="hairSide" class="hair ol" style="display:none" d="M106,182 C94,96 150,66 206,70 C262,72 306,104 294,182 C290,150 280,132 262,124 C230,126 180,118 150,104 C138,126 120,146 106,182 Z"/>
+            <!-- Haare: wenig / Geheimratsecken -->
+            <g id="hairThin" style="display:none">
+              <path class="hair ol" d="M110,192 C102,158 112,132 134,120 C128,142 126,166 126,194 Z"/>
+              <path class="hair ol" d="M290,192 C298,158 288,132 266,120 C272,142 274,166 274,194 Z"/>
+            </g>
+            <!-- Haare: kurze Seiten (passt unter die Cap) -->
+            <g id="hairSides" style="display:none">
+              <path class="hair ol" d="M110,200 C100,170 102,140 114,122 L134,122 C129,150 127,176 127,202 Z"/>
+              <path class="hair ol" d="M290,200 C300,170 298,140 286,122 L266,122 C271,150 273,176 273,202 Z"/>
+            </g>
+            <!-- Haare: Locken (per Skript gefüllt) -->
+            <g id="hairCurly" style="display:none"></g>
+
+            <!-- Bart -->
+            <path id="beardFull" class="hair ol" style="display:none" d="M112,186 C108,272 152,314 200,314 C248,314 292,272 288,186 C282,226 264,244 238,244 C228,264 172,264 162,244 C136,244 118,226 112,186 Z"/>
+            <g id="beardStrands" style="display:none" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="2.5" stroke-linecap="round"><path d="M140,262 q6,14 2,26 M170,276 q4,12 0,24 M200,280 v24 M230,276 q-4,12 0,24 M260,262 q-6,14 -2,26"/></g>
+            <path id="beardStubble" class="hair" style="display:none" fill-opacity=".28" d="M112,196 C114,262 160,282 200,282 C240,282 286,262 288,196 C278,232 258,246 236,244 C226,262 174,262 164,244 C142,246 122,232 112,196 Z"/>
+            <path id="beardShort" class="hair ol" style="display:none" d="M164,248 C170,272 186,284 200,284 C214,284 230,272 236,248 C224,262 176,262 164,248 Z"/>
+
+            <!-- Wangen -->
+            <circle cx="146" cy="212" r="13" fill="#ff7a7a" fill-opacity=".28"/>
+            <circle cx="254" cy="212" r="13" fill="#ff7a7a" fill-opacity=".28"/>
+
+            <!-- Mund -->
+            <g id="mouth">
+              <path class="ol" fill="#7a2230" d="M168,220 Q200,227 232,220 Q229,254 200,256 Q171,254 168,220 Z"/>
+              <path fill="#fff" d="M174,223 Q200,229 226,223 L224,235 Q200,239 176,235 Z"/>
+              <ellipse cx="200" cy="246" rx="12" ry="5" fill="#e0707a"/>
+            </g>
+            <path id="mustache" class="hair ol" style="display:none" d="M160,224 Q180,204 200,214 Q220,204 240,224 Q220,228 200,220 Q180,228 160,224 Z"/>
+
+            <!-- Nase -->
+            <ellipse class="skin-shade ol" cx="200" cy="200" rx="17" ry="14"/>
+            <ellipse cx="194" cy="195" rx="5" ry="3.5" fill="#fff" fill-opacity=".5"/>
+
+            <!-- Augen -->
+            <g id="eyes">
+              <ellipse class="white ol" cx="166" cy="168" rx="16" ry="20"/>
+              <circle class="iris" cx="169" cy="172" r="9"/>
+              <circle class="dark" cx="170" cy="173" r="5"/>
+              <circle class="white" cx="173" cy="168" r="3"/>
+              <ellipse class="white ol" cx="234" cy="168" rx="16" ry="20"/>
+              <circle class="iris" cx="231" cy="172" r="9"/>
+              <circle class="dark" cx="232" cy="173" r="5"/>
+              <circle class="white" cx="235" cy="168" r="3"/>
+            </g>
+
+            <!-- Augenbrauen -->
+            <g id="brows">
+              <path class="brow" d="M146,138 Q164,126 184,136"/>
+              <path class="brow" d="M216,136 Q236,126 254,138"/>
+            </g>
+
+            <!-- Brille -->
+            <g id="glassesRound">
+              <circle class="glasses" cx="166" cy="170" r="27"/>
+              <circle class="glasses" cx="234" cy="170" r="27"/>
+              <path d="M193,166 Q200,160 207,166" fill="none" stroke="var(--line)" stroke-width="5"/>
+              <path d="M139,164 L112,170 M261,164 L288,170" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/>
+            </g>
+            <g id="glassesSquare" style="display:none">
+              <rect class="glasses" x="138" y="146" width="56" height="46" rx="10"/>
+              <rect class="glasses" x="206" y="146" width="56" height="46" rx="10"/>
+              <path d="M194,164 Q200,158 206,164" fill="none" stroke="var(--line)" stroke-width="5"/>
+              <path d="M138,160 L112,168 M262,160 L288,168" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/>
+            </g>
+
+            <g id="glassesBold" style="display:none">
+              <rect class="glasses" style="stroke-width:7" x="135" y="146" width="60" height="48" rx="12"/>
+              <rect class="glasses" style="stroke-width:7" x="205" y="146" width="60" height="48" rx="12"/>
+              <path d="M138,147 H262" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M195,166 Q200,161 205,166" fill="none" stroke="var(--line)" stroke-width="6"/>
+              <path d="M135,158 L110,166 M265,158 L290,166" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M146,156 l10,-6 M216,156 l10,-6" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>
+            </g>
+
+            <!-- Snapback-Cap (gerader Schirm) -->
+            <g id="cap" style="display:none">
+              <path class="cap ol" d="M102,122 C98,26 302,26 298,122 Z"/>
+              <path d="M200,40 V120 M150,54 Q140,82 140,120 M250,54 Q260,82 260,120" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="3"/>
+              <circle class="cap ol" cx="200" cy="40" r="6" style="stroke-width:3"/>
+              <path class="cap ol" d="M80,120 Q200,104 320,120 L322,134 Q200,120 78,134 Z"/>
+              <path d="M90,126 Q200,113 310,126" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2"/>
+              <circle cx="286" cy="125" r="5" fill="#d9b43a"/>
+            </g>
+
+            <!-- Schutzhelm -->
+            <g id="helmet" style="display:none">
+              <path class="white ol" d="M98,152 C98,40 302,40 302,152 Z"/>
+              <path d="M200,70 V150" stroke="#e3e8ec" stroke-width="16"/>
+              <path class="white ol" d="M82,154 Q200,134 318,154 Q322,166 306,166 Q200,150 94,166 Q78,166 82,154 Z"/>
+              <path class="ol" fill="#4fb3e8" style="stroke-width:3" d="M200,90 C210,104 215,112 215,120 A15,15 0 0 1 185,120 C185,112 190,104 200,90 Z"/>
+            </g>
+          </g>
+          <!-- Linker Arm (vom Betrachter aus) -->
+          <g id="armL">
+            <line class="arm-ol" x1="124" y1="292" x2="100" y2="378"/>
+            <g class="jacket-only">
+              <line class="arm-fill" x1="124" y1="292" x2="100" y2="378"/>
+              <line class="cuff" x1="102.5" y1="366" x2="99" y2="380"/>
+            </g>
+            <g class="tee-only">
+              <line class="arm-skin" x1="124" y1="292" x2="100" y2="378"/>
+              <g class="tattoos"><g class="tattoo">
+                <path d="M102,344 q8,-7 16,1 q-5,8 -13,4"/>
+                <path d="M98,360 l18,4 M104,352 l6,17 M99,368 l15,-12"/>
+                <path d="M94,375 q9,5 17,0"/>
+              </g></g>
+              <line class="sleeve" stroke-linecap="round" x1="124" y1="292" x2="119" y2="310"/>
+              <line class="sleeve" stroke-linecap="butt" x1="119" y1="310" x2="113" y2="332"/>
+              <line x1="92" y1="326" x2="134" y2="338" stroke="var(--line)" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+            <circle class="skin ol" cx="98" cy="396" r="21"/>
+            <ellipse class="skin ol" cx="115" cy="388" rx="8" ry="11" transform="rotate(-20 115 388)"/>
+            <path d="M84,404 Q90,409 97,407" fill="none" stroke="#cfd5da" stroke-width="4" stroke-linecap="round"/>
+          </g>
+
+          <!-- Rechter Arm (vom Betrachter aus) mit Rohr-Zeigestab -->
+          <g id="armR">
+            <line class="arm-ol" x1="276" y1="292" x2="300" y2="378"/>
+            <g class="jacket-only">
+              <line class="arm-fill" x1="276" y1="292" x2="300" y2="378"/>
+              <line class="cuff" x1="297.5" y1="366" x2="301" y2="380"/>
+            </g>
+            <g class="tee-only">
+              <line class="arm-skin" x1="276" y1="292" x2="300" y2="378"/>
+              <g class="tattoos"><g class="tattoo" transform="translate(400,0) scale(-1,1)">
+                <path d="M100,340 q10,4 18,-2 M104,350 q4,10 12,8"/>
+                <circle cx="106" cy="364" r="6"/>
+                <path d="M96,374 q8,4 16,0"/>
+              </g></g>
+              <line class="sleeve" stroke-linecap="round" x1="276" y1="292" x2="281" y2="310"/>
+              <line class="sleeve" stroke-linecap="butt" x1="281" y1="310" x2="287" y2="332"/>
+              <line x1="308" y1="326" x2="266" y2="338" stroke="var(--line)" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+            <g id="pointer">
+              <line class="pipe-ol" x1="302" y1="396" x2="328" y2="486"/>
+              <line class="pipe" x1="302" y1="396" x2="328" y2="486"/>
+              <path class="ol" fill="#4fb3e8" style="stroke-width:3" d="M330,476 C338,488 342,494 342,500 A12,12 0 0 1 318,500 C318,494 322,488 330,476 Z" transform="rotate(-16 330 492)"/>
+            </g>
+            <circle class="skin ol" cx="302" cy="396" r="21"/>
+            <ellipse class="skin ol" cx="285" cy="388" rx="8" ry="11" transform="rotate(20 285 388)"/>
+          </g>
+
+        </g>
+      </g>
+    </svg></div>
+  <div id="caption"><span></span></div>
+</div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ Abspielen</button>
+  <input type="range" id="seek" min="0" max="141" step="0.1" value="0">
+  <span id="time">0.0 s</span>
+</div>
+
+<script>
+// ---------------- Drehbuch ----------------
+const DURATION = 141;
+
+const CATS = [
+  { n: 1, from: 35, c: 'var(--k1)', kicker: 'Kategorie 1', title: 'Trinkwasser',
+    def: 'Wasser für den menschlichen Gebrauch, das direkt aus der Trinkwasser&shy;installation entnommen wird.',
+    ex: ['Kaltes Trinkwasser aus der Leitung'], risk: 'Keine Gefährdung', glass: { fill: '#8cc8f5', extra: 'shine' } },
+  { n: 2, from: 50, c: 'var(--k2)', kicker: 'Kategorie 2', title: 'Keine Gesundheits&shy;gefährdung',
+    def: 'Trinkwasser, das in Geschmack, Geruch, Farbe oder Temperatur verändert ist – aber nicht gesundheits&shy;gefährdend.',
+    ex: ['Erwärmtes Trinkwasser', 'Kaffee und Tee'], risk: 'Ungefährlich', glass: { fill: '#9a6237', extra: 'steam' } },
+  { n: 3, from: 65, c: 'var(--k3)', kicker: 'Kategorie 3', title: 'Weniger giftige Stoffe',
+    def: 'Gesundheits&shy;gefährdung durch einen oder mehrere weniger giftige Stoffe.',
+    ex: ['Heizungswasser ohne Zusätze'], risk: 'Geringe Gefährdung', glass: { fill: '#d9c27a', extra: 'drop' } },
+  { n: 4, from: 80, c: 'var(--k4)', kicker: 'Kategorie 4', title: 'Giftige Stoffe',
+    def: 'Gesundheits&shy;gefährdung durch giftige oder sehr giftige Stoffe – auch radioaktive, krebserregende oder erbgutverändernde.',
+    ex: ['Heizungswasser mit Inhibitoren', 'Pflanzenschutzmittel'], risk: 'Hohe Gefährdung', glass: { fill: '#6c8a2c', extra: 'warn' } },
+  { n: 5, from: 95, c: 'var(--k5)', kicker: 'Kategorie 5', title: 'Krankheitserreger',
+    def: 'Gesundheits&shy;gefährdung durch Mikroorganismen oder Viren übertragbarer Krankheiten.',
+    ex: ['Abwasser, WC und Urinal', 'Regenwasser'], risk: 'Sehr hohe Gefährdung', glass: { fill: '#6b5532', extra: 'germs' } },
+];
+
+// Posen: [von, bis, pose]
+const POSES = [
+  [0, 2.4, 'walk'], [2.4, 9, 'wave'],
+  [9, 17.4, 'explain'], [17.4, 26, 'warn'],
+  [26, 35, 'explain'],
+  [35, 41, 'point'], [41, 50, 'explain'],
+  [50, 56, 'point'], [56, 65, 'explain'],
+  [65, 71, 'point'], [71, 80, 'explain'],
+  [80, 86, 'point'], [86, 95, 'warn'],
+  [95, 101, 'point'], [101, 110, 'warn'],
+  [110, 116, 'explain'], [116, 126, 'point'],
+  [126, 134.5, 'explain'], [134.5, 141, 'jump'],
+];
+
+// Untertitel = Sprechertext: [von, bis, text]
+const CAPTIONS = [
+  [2.6, 5.4, 'Hallo und herzlich willkommen!'],
+  [5.5, 9.0, 'Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
+  [9.4, 13.3, 'Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.'],
+  [13.4, 17.3, 'Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.'],
+  [17.5, 21.6, 'Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!'],
+  [21.7, 25.8, 'Deshalb ordnen wir jede Flüssigkeit einer von 5 Kategorien zu.'],
+  [26.3, 30.6, 'Die Faustregel: Je höher die Kategorie, desto gefährlicher die Flüssigkeit.'],
+  [30.7, 34.8, 'Schauen wir uns alle fünf genauer an.'],
+  [35.3, 39.6, 'Kategorie 1 ist unser Trinkwasser – direkt aus der Leitung.'],
+  [39.7, 44.6, 'Genau das Wasser, das wir schützen wollen.'],
+  [44.7, 49.7, 'Hier besteht also keine Gefahr.'],
+  [50.3, 54.8, 'Kategorie 2: Flüssigkeiten, die die Gesundheit nicht gefährden.'],
+  [54.9, 59.8, 'Das Trinkwasser ist nur verändert – in Geschmack, Geruch, Farbe oder Temperatur.'],
+  [59.9, 64.8, 'Zum Beispiel erwärmtes Trinkwasser oder Kaffee und Tee.'],
+  [65.3, 69.8, 'Kategorie 3: Hier wird es gesundheitsgefährdend – durch weniger giftige Stoffe.'],
+  [69.9, 74.8, 'Ein typisches Beispiel ist Heizungswasser ohne Zusätze.'],
+  [74.9, 79.8, 'Das gehört auf keinen Fall zurück ins Trinkwasser!'],
+  [80.3, 84.8, 'Kategorie 4: Jetzt wird es ernst – giftige oder sehr giftige Stoffe.'],
+  [84.9, 89.8, 'Dazu zählen auch radioaktive, krebserregende oder erbgutverändernde Stoffe.'],
+  [89.9, 94.8, 'Zum Beispiel Heizungswasser mit Inhibitoren oder Pflanzenschutzmittel.'],
+  [95.3, 99.8, 'Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.'],
+  [99.9, 104.8, 'Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.'],
+  [104.9, 109.8, 'Hier braucht es den stärksten Schutz.'],
+  [110.3, 115.3, 'Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.'],
+  [115.4, 120.8, 'Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.'],
+  [120.9, 125.8, 'Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.'],
+  [126.3, 130.3, 'Kurz zusammengefasst:'],
+  [130.4, 134.4, '1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.'],
+  [134.6, 140.6, 'Bis zum nächsten Step – und bleib sauber!'],
+];
+
+const KCOL = { 1: '#2d8fe0', 2: '#3aa86b', 3: '#e8b416', 4: '#ef7a1a', 5: '#d7141a' };
+
+// ---------------- Glas-Grafik ----------------
+function glassSVG(g, color) {
+  let extra = '';
+  if (g.extra === 'shine') extra = '<path d="M95,170 Q90,290 105,380" stroke="#fff" stroke-opacity=".7" stroke-width="12" fill="none" stroke-linecap="round"/>';
+  if (g.extra === 'steam') extra = '<g fill="none" stroke="#9aa5b0" stroke-width="9" stroke-linecap="round" class="steam"><path d="M120,90 q-18,-25 0,-50 q18,-25 0,-50"/><path d="M170,95 q-18,-25 0,-50 q18,-25 0,-50"/><path d="M220,90 q-18,-25 0,-50 q18,-25 0,-50"/></g>';
+  if (g.extra === 'drop') extra = '<path d="M165,230 C185,262 195,278 195,295 A30,30 0 0 1 135,295 C135,278 145,262 165,230 Z" fill="#fff" fill-opacity=".45"/>';
+  if (g.extra === 'warn') extra = '<g transform="translate(110,215)"><path d="M0,100 L55,0 L110,100 Z" fill="#ffd400" stroke="#1b1f24" stroke-width="6" stroke-linejoin="round"/><path d="M55,30 V64" stroke="#1b1f24" stroke-width="11" stroke-linecap="round"/><circle cx="55" cy="82" r="7" fill="#1b1f24"/></g>';
+  if (g.extra === 'germs') extra = [[120,240,22],[200,280,28],[150,350,18],[230,370,20],[120,410,14]].map(([x,y,r]) =>
+      `<g class="germ"><circle cx="${x}" cy="${y}" r="${r}" fill="#9bd14a" stroke="#1b1f24" stroke-width="5"/>` +
+      [0,60,120,180,240,300].map(a => { const rad = a*Math.PI/180; return `<line x1="${x+Math.cos(rad)*r}" y1="${y+Math.sin(rad)*r}" x2="${x+Math.cos(rad)*(r+11)}" y2="${y+Math.sin(rad)*(r+11)}" stroke="#1b1f24" stroke-width="5" stroke-linecap="round"/>`; }).join('') +
+      `<circle cx="${x-r/3}" cy="${y-r/4}" r="${r/5}" fill="#1b1f24"/><circle cx="${x+r/3}" cy="${y-r/4}" r="${r/5}" fill="#1b1f24"/></g>`).join('');
+  return `<svg class="glass" viewBox="0 0 330 470">
+    <ellipse cx="165" cy="452" rx="120" ry="14" fill="#000" fill-opacity=".12"/>
+    <path d="M60,120 L90,440 H240 L270,120 Z" fill="#e8f1f8" stroke="#1b1f24" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M70,170 L93,430 H237 L260,170 Z" fill="${g.fill}"/>
+    <path d="M70,170 Q165,185 260,170" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="6"/>
+    ${extra}
+    <path d="M60,120 L90,440 H240 L270,120" fill="none" stroke="#1b1f24" stroke-width="8" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+const catsEl = document.getElementById('cats');
+CATS.forEach(k => {
+  const ex = k.ex.map((e, i) => `<div class="ex in" data-at="${5.2 + i * 1.2}">${e}</div>`).join('');
+  catsEl.insertAdjacentHTML('beforeend', `
+    <section class="slide" data-from="${k.from}" data-to="${k.from + 15}" style="--c:${k.c}">
+      <div class="cat-head">
+        <div class="cat-num in" data-at="0.2" style="background:${k.c}">${k.n}</div>
+        <div class="in" data-at="0.5"><div class="cat-kicker" style="color:${k.c}">${k.kicker}</div><div class="cat-title">${k.title}</div></div>
+      </div>
+      <div class="cat-body">
+        <div class="cat-text">
+          <p class="cat-def in" data-at="1.4">${k.def}</p>
+          <div class="ex-title in" data-at="4.8">Beispiele</div>
+          ${ex}
+          <div class="risk in" data-at="9">${k.risk}</div>
+        </div>
+        <div class="in" data-at="1.0">${glassSVG(k.glass, KCOL[k.n])}</div>
+      </div>
+    </section>`);
+});
+
+// ---------------- Figur vorbereiten (Marcel-Look) ----------------
+const fig = document.getElementById('figur');
+const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; };
+['hairShort', 'hairSide', 'hairCurly', 'hairThin', 'glassesRound', 'glassesSquare', 'helmet', 'beardStubble', 'beardShort'].forEach(id => show(id, false));
+['hairSides', 'beardFull', 'beardStrands', 'mustache', 'glassesBold', 'cap', 'tunnels'].forEach(id => show(id, true));
+fig.classList.remove('pointer-on');
+
+// ---------------- Rendern zum Zeitpunkt t ----------------
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
+const slides = [...document.querySelectorAll('.slide')];
+const capEl = document.querySelector('#caption span');
+const figWrap = document.getElementById('figWrap');
+let currentPose = '', currentTalk = null;
+
+function render(t) {
+  // Folien
+  for (const s of slides) {
+    const from = +s.dataset.from, to = +s.dataset.to;
+    const a = Math.min(ease((t - from) / 0.5), 1 - ease((t - (to - 0.4)) / 0.4));
+    s.style.opacity = Math.max(0, a);
+    s.style.visibility = a > 0 ? 'visible' : 'hidden';
+    if (a <= 0) continue;
+    for (const el of s.querySelectorAll('.in')) {
+      const p = ease((t - from - +el.dataset.at) / 0.45);
+      el.style.opacity = p;
+      el.style.transform = `translateY(${(1 - p) * 30}px)`;
+    }
+  }
+  // Rückfluss-Animation
+  const back = t >= 15.2;
+  document.getElementById('flowClean').style.strokeDashoffset = -t * 160;
+  document.getElementById('flowClean').style.opacity = back ? Math.max(0, 1 - (t - 15.2) / 0.5) : 1;
+  document.getElementById('flowDirty').style.strokeDashoffset = -t * 160;
+  document.getElementById('flowDirty').style.opacity = back ? Math.min(1, (t - 15.2) / 0.5) : 0;
+  document.getElementById('arrowFwd').style.opacity = back ? 0 : 1;
+  document.getElementById('arrowBack').style.opacity = back ? 1 : 0;
+  document.getElementById('threeR').style.opacity = ease((t - 17.6) / 0.5);
+  // Dampf & Keime wackeln
+  document.querySelectorAll('.steam').forEach(el => el.style.transform = `translateY(${Math.sin(t * 3) * 6}px)`);
+  document.querySelectorAll('.germ').forEach((el, i) => el.style.transform = `translate(${Math.sin(t * 2 + i) * 6}px, ${Math.cos(t * 2.5 + i) * 6}px)`);
+
+  // Figur: Auftritt
+  const walkIn = ease(t / 2.4);
+  figWrap.style.transform = `translateX(${(1 - walkIn) * -760}px)`;
+  // Pose
+  const pose = (POSES.find(([a, b]) => t >= a && t < b) || POSES[POSES.length - 1])[2];
+  if (pose !== currentPose) {
+    fig.classList.forEach(c => c.startsWith('mode-') && fig.classList.remove(c));
+    fig.classList.add('mode-' + pose); currentPose = pose;
+  }
+  // Untertitel + Sprechen
+  const cap = CAPTIONS.find(([a, b]) => t >= a && t < b);
+  const text = cap ? cap[2] : '';
+  if (capEl.textContent !== text) capEl.textContent = text;
+  const talk = !!cap && t < cap[1] - 0.25;
+  if (talk !== currentTalk) { fig.classList.toggle('talking', talk); currentTalk = talk; }
+
+  // CSS-Animationen der Figur auf Zeitpunkt t setzen (deterministisch)
+  getComputedStyle(fig).transform;
+  for (const an of fig.getAnimations({ subtree: true })) { an.pause(); an.currentTime = t * 1000; }
+}
+window.render = render;
+window.DURATION = DURATION;
+
+// ---------------- Vorschau-Player ----------------
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById('scene').style.transform = `scale(${s})`;
+}
+addEventListener('resize', fit); fit();
+let playing = false, t0 = 0, start = 0;
+const seek = document.getElementById('seek'), timeEl = document.getElementById('time'), playBtn = document.getElementById('play');
+function frame(now) {
+  if (!playing) return;
+  const t = start + (now - t0) / 1000;
+  if (t >= DURATION) { playing = false; playBtn.textContent = '▶ Abspielen'; return; }
+  render(t); seek.value = t; timeEl.textContent = t.toFixed(1) + ' s';
+  requestAnimationFrame(frame);
+}
+playBtn.onclick = () => {
+  playing = !playing; playBtn.textContent = playing ? '❚❚ Pause' : '▶ Abspielen';
+  if (playing) { start = +seek.value >= DURATION - 0.1 ? 0 : +seek.value; t0 = performance.now(); requestAnimationFrame(frame); }
+};
+seek.oninput = () => { playing = false; playBtn.textContent = '▶ Abspielen'; render(+seek.value); timeEl.textContent = (+seek.value).toFixed(1) + ' s'; };
+if (location.search.includes('render')) document.body.classList.add('render');
+render(0);
+</script>
+</body>
+</html>
