@@ -31,7 +31,7 @@ def srt_t(t):
     return f'{h:02d}:{m:02d}:{s:02d},{ms:03d}'
 def mm(t):
     return f'{int(t // 60)}:{t % 60:04.1f}'
-srt, md = [], ['# Sprechertext – Step 1: Die 5 Flüssigkeitskategorien', '',
+srt, md = [], ['# Sprechertext – Folge 1: Die 5 Flüssigkeitskategorien', '',
                'Stimme: KI-Stimme „Chris“ (vidIQ Voiceover). Zeiten entsprechen dem fertigen Video.', '',
                '| Zeit | Text |', '|---|---|']
 for k, l in enumerate(zeiten['lines'], 1):

@@ -32,11 +32,11 @@ tätowierte Unterarme, Rot als Akzentfarbe. Alternativ: Arbeitsjacke und Schutzh
 
 ## Videos
 
-### Step 1 – Die 5 Flüssigkeitskategorien (DIN EN 1717)
+### Folge 1 – Die 5 Flüssigkeitskategorien (DIN EN 1717)
 
 | Datei | Inhalt |
 |---|---|
-| `video/step1-fluessigkeitskategorien.mp4` | Fertiges Video, 1920 × 1080, 30 fps, ca. 2:08 min, KI-Stimme „Chris“, Untertitel eingebrannt |
+| `video/step1-fluessigkeitskategorien.mp4` | Fertiges Video, 1920 × 1080, 30 fps, ca. 1:58 min, KI-Stimme „Chris“, Untertitel eingebrannt |
 | `video/step1-fluessigkeitskategorien.html` | Szene im Browser abspielen und vorspulen (Vorschau-Player) |
 | `video/step1-template.html` | Drehbuch: Sätze, Folien und Posen (`SCRIPT`), Pausen (`GAP_LINE`, `GAP_SCENE`) |
 | `video/step1-stimme-chris.mp3` | Original-Sprachaufnahme (vidIQ Voiceover, Stimme „Chris“) |
