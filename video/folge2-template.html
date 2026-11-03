@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folge 2 Sicherungseinrichtungen</title>
+<style>
+  :root {
+    --k1: #2d8fe0; --k2: #3aa86b; --k3: #e8b416; --k4: #ef7a1a; --k5: #d7141a;
+    --ink: #1b1f24; --muted: #5b6672; --brand: #d7141a;
+  }
+  html, body { margin: 0; background: #0d0d0f; overflow: hidden; }
+  body { font-family: Inter, "Segoe UI", system-ui, Arial, sans-serif; color: var(--ink); }
+  #wrap { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #scene { position: relative; width: 1920px; height: 1080px; overflow: hidden; transform-origin: center;
+    background:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 60px 60px,
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 60px 60px,
+      radial-gradient(ellipse at 30% 60%, #7a0d12 0%, #3a0709 45%, #120607 100%);
+  }
+  #floor { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(#00000000, #00000066); }
+
+  /* Tafel */
+  #board { position: absolute; left: 640px; top: 60px; width: 1220px; height: 840px; background: #fbfcfd; border-radius: 28px;
+    box-shadow: 0 0 0 10px #1c1c1e, 0 30px 80px rgba(0,0,0,.55); overflow: hidden; }
+  #board .tag { position: absolute; left: 48px; top: 36px; font-weight: 800; font-size: 22px; letter-spacing: .14em; color: var(--brand); text-transform: uppercase; }
+  .slide { position: absolute; inset: 0; padding: 100px 64px 48px; box-sizing: border-box; opacity: 0; }
+  .in { opacity: 0; }
+  h1 { font-size: 76px; line-height: 1.05; margin: 0 0 24px; font-weight: 800; letter-spacing: -.02em; }
+  h2 { font-size: 54px; line-height: 1.1; margin: 0 0 20px; font-weight: 800; letter-spacing: -.01em; }
+  p.lead { font-size: 34px; line-height: 1.35; color: var(--muted); margin: 0; }
+
+  /* Intro */
+  .step { display: inline-block; background: var(--brand); color: #fff; font-weight: 800; font-size: 30px; padding: 10px 22px; border-radius: 12px; margin-bottom: 30px; }
+  .norm { margin-top: 36px; font-size: 30px; color: var(--muted); }
+  .chips { display: flex; gap: 18px; margin-top: 70px; }
+  .chip { width: 150px; height: 150px; border-radius: 26px; color: #fff; font-size: 84px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 0 rgba(0,0,0,.18); }
+
+  /* Rückfluss */
+  #flow { position: absolute; left: 64px; top: 300px; width: 1090px; height: 500px; }
+  .flowlabel { font-size: 28px; font-weight: 700; }
+
+  /* Leiter */
+  .ladder { display: flex; flex-direction: column-reverse; gap: 14px; margin-top: 30px; width: 880px; }
+  .rung { display: flex; align-items: center; gap: 22px; height: 96px; border-radius: 18px; color: #fff; font-size: 32px; font-weight: 700; padding: 0 26px; box-shadow: 0 6px 0 rgba(0,0,0,.15); }
+  .rung b { font-size: 52px; width: 50px; text-align: center; }
+  .danger { position: absolute; right: 70px; top: 230px; width: 160px; height: 560px; }
+
+  /* Kategorie-Karte */
+  .cat-head { display: flex; align-items: center; gap: 28px; margin-bottom: 26px; }
+  .cat-num { width: 130px; height: 130px; border-radius: 28px; color: #fff; font-size: 88px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; box-shadow: 0 8px 0 rgba(0,0,0,.18); }
+  .cat-kicker { font-size: 26px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .cat-title { font-size: 54px; font-weight: 800; line-height: 1.08; letter-spacing: -.01em; }
+  .cat-body { display: flex; gap: 40px; }
+  .cat-text { flex: 1; }
+  .cat-def { font-size: 32px; line-height: 1.38; color: #2f3943; margin: 0 0 30px; }
+  .ex-title { font-size: 24px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .ex { display: flex; align-items: center; gap: 16px; font-size: 32px; font-weight: 600; margin-bottom: 14px; }
+  .ex::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--c); flex: none; }
+  .glass { width: 330px; height: 470px; flex: none; }
+  .risk { display: inline-block; margin-top: 18px; padding: 10px 20px; border-radius: 12px; font-size: 26px; font-weight: 800; color: #fff; background: var(--c); }
+
+  /* Schutz-Tabelle */
+  table { border-collapse: separate; border-spacing: 0 12px; width: 100%; font-size: 30px; }
+  td { padding: 16px 22px; background: #eef2f5; }
+  td:first-child { border-radius: 14px 0 0 14px; width: 120px; color: #fff; font-weight: 800; font-size: 34px; text-align: center; }
+  td:last-child { border-radius: 0 14px 14px 0; }
+  td.code { font-weight: 800; width: 120px; font-size: 34px; }
+  .note { font-size: 24px; color: var(--muted); margin-top: 8px; }
+
+  /* Zusammenfassung */
+  .sum { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 30px; }
+  .sum div { border-radius: 22px; color: #fff; padding: 26px 16px; text-align: center; min-height: 300px; box-sizing: border-box; box-shadow: 0 8px 0 rgba(0,0,0,.15); }
+  .sum b { display: block; font-size: 96px; line-height: 1; margin-bottom: 20px; }
+  .sum span { font-size: 29px; font-weight: 700; line-height: 1.25; }
+
+  /* Geräte-Folien */
+  .dev-head { display: flex; align-items: center; gap: 22px; margin-bottom: 22px; }
+  .dev-cat { width: 96px; height: 96px; border-radius: 22px; color: #fff; font-size: 62px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; box-shadow: 0 6px 0 rgba(0,0,0,.18); }
+  .dev-code { height: 96px; min-width: 120px; padding: 0 22px; box-sizing: border-box; border-radius: 22px; background: #1c1c1e; color: #fff; font-size: 56px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; letter-spacing: .02em; }
+  .dev-kicker { font-size: 24px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .dev-title { font-size: 50px; font-weight: 800; line-height: 1.05; }
+  .dev-sub { font-size: 26px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+  .dev-body { display: flex; gap: 28px; }
+  .dev-text { flex: 1; min-width: 0; }
+  .dev-box-title { font-size: 22px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 6px 0 10px; }
+  .pt { display: flex; gap: 14px; font-size: 29px; line-height: 1.3; font-weight: 600; margin-bottom: 12px; color: #26303a; }
+  .pt::before { content: ""; width: 16px; height: 16px; border-radius: 50%; background: var(--c); flex: none; margin-top: 11px; }
+  .pt.home::before { border-radius: 4px; background: #1c1c1e; }
+  .dev-note { display: inline-block; margin-top: 8px; padding: 10px 18px; border-radius: 12px; font-size: 24px; font-weight: 800; color: #fff; background: var(--c); }
+  .dev-small { font-size: 20px; color: var(--muted); margin-top: 10px; line-height: 1.35; }
+  .dev-ill { width: 580px; height: 490px; flex: none; margin-top: -10px; }
+  .chip { flex-direction: column; }
+  .chip small { font-size: 28px; font-weight: 800; margin-top: -6px; opacity: .95; }
+  .rule-arrow { position: absolute; right: 70px; top: 250px; width: 120px; height: 520px; }
+  .sum div i { display: block; font-style: normal; font-size: 22px; font-weight: 700; margin-top: 10px; line-height: 1.25; opacity: .95; }
+
+  /* Figur */
+  #figWrap { position: absolute; left: -70px; bottom: 14px; width: 860px; height: 875px; }
+  #figWrap #figur { width: 100%; height: 100%; }
+
+  /* Untertitel */
+  #caption { position: absolute; left: 640px; width: 1220px; bottom: 34px; text-align: center; }
+  #caption span { display: inline-block; max-width: 1160px; background: rgba(10,10,12,.82); color: #fff; font-size: 38px; font-weight: 600; line-height: 1.3; padding: 12px 28px; border-radius: 14px; }
+  #caption span:empty { display: none; }
+
+  /* Logo-Ecke */
+  #corner { position: absolute; left: 40px; top: 34px; color: #fff; font-weight: 800; font-size: 26px; letter-spacing: .08em; opacity: .9; }
+  #corner i { font-style: normal; color: #ff4a50; }
+
+  #controls { position: fixed; left: 12px; bottom: 12px; z-index: 5; display: flex; gap: 8px; align-items: center; font: 14px system-ui; color: #fff; }
+  #controls button { font: inherit; padding: 6px 12px; border-radius: 6px; border: 0; background: #d7141a; color: #fff; cursor: pointer; }
+  #controls input { width: 320px; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="scene">
+  <div id="floor"></div>
+  <div id="corner">TRINKWASSER<i>HYGIENE</i></div>
+
+  <div id="board">
+    <div class="tag">Folge 2 · Sicherungseinrichtungen</div>
+
+    <!-- Intro -->
+    <section class="slide" id="s-intro">
+      <div class="step in" data-at="0.4">FOLGE 2</div>
+      <h1 class="in" data-at="0.8">Richtig absichern</h1>
+      <p class="lead in" data-at="1.4">Die passende Sicherungseinrichtung für jede Flüssigkeitskategorie</p>
+      <div class="chips">
+        <div class="chip in" data-at="2.0" style="background:var(--k1)">1<small>–</small></div>
+        <div class="chip in" data-at="2.2" style="background:var(--k2)">2<small>EA</small></div>
+        <div class="chip in" data-at="2.4" style="background:var(--k3)">3<small>CA</small></div>
+        <div class="chip in" data-at="2.6" style="background:var(--k4)">4<small>BA</small></div>
+        <div class="chip in" data-at="2.8" style="background:var(--k5)">5<small>AA/AB</small></div>
+      </div>
+      <div class="norm in" data-at="4.4">nach DIN EN 1717 und DIN 1988-100</div>
+    </section>
+
+    <!-- Regel -->
+    <section class="slide" id="s-rule">
+      <h2 class="in" data-line="0">Für jede Kategorie die passende Sicherung</h2>
+      <table style="width:900px">
+        <tr class="in" data-line="3"><td style="background:var(--k1)">1</td><td class="code">–</td><td>Trinkwasser – keine Sicherung nötig</td></tr>
+        <tr class="in" data-line="1" data-delay="0.6"><td style="background:var(--k2)">2</td><td class="code">EA</td><td>Rückflussverhinderer</td></tr>
+        <tr class="in" data-line="1" data-delay="1.1"><td style="background:var(--k3)">3</td><td class="code">CA</td><td>Systemtrenner, nicht kontrollierbar</td></tr>
+        <tr class="in" data-line="1" data-delay="1.6"><td style="background:var(--k4)">4</td><td class="code">BA</td><td>Systemtrenner, kontrollierbar</td></tr>
+        <tr class="in" data-line="1" data-delay="2.1"><td style="background:var(--k5)">5</td><td class="code">AA/AB</td><td>Freier Auslauf</td></tr>
+      </table>
+      <svg class="rule-arrow in" data-line="2" viewBox="0 0 120 520">
+        <defs><linearGradient id="rg" gradientUnits="userSpaceOnUse" x1="0" y1="40" x2="0" y2="500">
+          <stop offset="0" stop-color="#2d8fe0"/><stop offset=".5" stop-color="#e8b416"/><stop offset="1" stop-color="#d7141a"/></linearGradient></defs>
+        <path d="M60,40 V430" stroke="url(#rg)" stroke-width="34" stroke-linecap="round"/>
+        <path d="M18,420 L60,505 L102,420 Z" fill="#d7141a"/>
+        <text x="60" y="235" transform="rotate(90 60 235)" text-anchor="middle" fill="#fff" font-weight="800" font-size="22" dy="8">STÄRKERE TRENNUNG</text>
+      </svg>
+    </section>
+
+    <!-- Geräte (per Skript erzeugt) -->
+    <div id="devs"></div>
+
+    <!-- Zusammenfassung -->
+    <section class="slide" id="s-sum">
+      <h2 class="in" data-line="0">Kurz zusammengefasst</h2>
+      <div class="sum">
+        <div class="in" data-line="0" data-delay="0.4" style="background:var(--k1)"><b>1</b><span>–</span><i>keine Sicherung</i></div>
+        <div class="in" data-line="1" data-delay="0.0" style="background:var(--k2)"><b>2</b><span>EA</span><i>Rückfluss&shy;verhinderer</i></div>
+        <div class="in" data-line="1" data-delay="1.2" style="background:var(--k3)"><b>3</b><span>CA</span><i>System&shy;trenner</i></div>
+        <div class="in" data-line="1" data-delay="2.4" style="background:var(--k4)"><b>4</b><span>BA</span><i>System&shy;trenner, kontrollierbar</i></div>
+        <div class="in" data-line="1" data-delay="3.6" style="background:var(--k5)"><b>5</b><span>AA/AB</span><i>Freier Auslauf</i></div>
+      </div>
+      <p class="lead in" data-line="2" style="margin-top:40px;font-weight:700;color:var(--ink)">Einbau und Wartung: immer durch den Fachbetrieb.</p>
+    </section>
+  </div>
+
+  <div id="figWrap"><!--FIGUR--></div>
+  <div id="caption"><span></span></div>
+</div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ Abspielen</button>
+  <input type="range" id="seek" min="0" max="200" step="0.1" value="0">
+  <span id="time">0.0 s</span>
+</div>
+
+<script>
+// ---------------- Drehbuch ----------------
+// Jede Zeile: [Folie, Pose, Sprechertext]. Die Zeiten ergeben sich aus der Sprachaufnahme
+// (TIMING, erzeugt von voice_align.py) – ohne Aufnahme werden sie aus der Textlänge geschätzt.
+const SCRIPT = [
+  ['s-intro', 'wave', 'Hallo und herzlich willkommen!'],
+  ['s-intro', 'wave', 'Folge 2 der Trinkwasserhygiene: Wie sicherst du jede Flüssigkeitskategorie richtig ab?'],
+  ['s-rule', 'explain', 'In Folge 1 hast du die fünf Flüssigkeitskategorien kennengelernt.'],
+  ['s-rule', 'explain', 'Heute zeige ich dir die passende Sicherungseinrichtung für jede Kategorie.'],
+  ['s-rule', 'point', 'Die Regel: Je gefährlicher die Flüssigkeit, desto stärker die Trennung.'],
+  ['s-rule', 'explain', 'Für Kategorie 1, also reines Trinkwasser, brauchst du keine Sicherung.'],
+  ['dev-ea', 'point', 'Kategorie 2 sicherst du mit einem Rückflussverhinderer, Typ EA.'],
+  ['dev-ea', 'point', 'Eine Feder drückt ein Ventil zu, sobald das Wasser rückwärts fließen will.'],
+  ['dev-ea', 'explain', 'Kontrollierbar heißt: Über einen Prüfstopfen kann man die Funktion testen.'],
+  ['dev-ea', 'explain', 'Den findest du zum Beispiel direkt hinter deinem Wasserzähler.'],
+  ['dev-ea', 'point', 'Und im Kaltwasserzulauf von deinem Warmwasserspeicher.'],
+  ['dev-ca', 'point', 'Für Kategorie 3 brauchst du einen Systemtrenner, Typ CA.'],
+  ['dev-ca', 'point', 'Er hat drei Druckzonen: vorne, in der Mitte und hinten.'],
+  ['dev-ca', 'explain', 'Fällt vorne der Druck ab, öffnet die Mitte und das Wasser läuft in den Abfluss.'],
+  ['dev-ca', 'explain', 'Damit ist die Verbindung getrennt, und nichts kann zurück ins Trinkwasser.'],
+  ['dev-ca', 'point', 'Typisch ist der CA in der Füllarmatur deiner Heizung.'],
+  ['dev-ba', 'point', 'Kategorie 4 sicherst du mit einem Systemtrenner, Typ BA.'],
+  ['dev-ba', 'point', 'Er funktioniert wie der CA, aber jede Druckzone hat einen Prüfanschluss.'],
+  ['dev-ba', 'explain', 'So kann der Fachbetrieb messen, ob er wirklich sicher trennt.'],
+  ['dev-ba', 'explain', 'Du findest ihn bei Heizungen mit Inhibitoren oder Frostschutz, bei Solaranlagen mit Glykol oder in Gärtnereien.'],
+  ['dev-ba', 'warn', 'Wichtig: Ein BA muss regelmäßig geprüft und jedes Jahr gewartet werden.'],
+  ['dev-aa', 'point', 'Bei Kategorie 5, also Krankheitserregern, hilft nur noch Luft: der freie Auslauf, Typ AA oder AB.'],
+  ['dev-aa', 'explain', 'Das Wasser fällt frei durch die Luft – es gibt keine Verbindung, durch die etwas zurück kann.'],
+  ['dev-aa', 'point', 'Das Prinzip kennst du vom Waschbecken: der Abstand zwischen Wasserhahn und Beckenrand.'],
+  ['dev-aa', 'explain', 'Auch Regenwasseranlagen werden so mit Trinkwasser nachgespeist.'],
+  ['s-sum', 'explain', 'Kurz zusammengefasst:'],
+  ['s-sum', 'point', 'Kategorie 2: EA. Kategorie 3: CA. Kategorie 4: BA. Kategorie 5: freier Auslauf.'],
+  ['s-sum', 'explain', 'Und denk dran: Einbau und Wartung gehören immer in die Hände vom Fachbetrieb.'],
+  ['s-sum', 'wave', 'Bis zur nächsten Folge – und bleib sauber!'],
+];
+
+// Ursprüngliche Folienlänge, auf die die Einblend-Zeiten (data-at) ausgelegt sind
+const DESIGN_LEN = { 's-intro': 8.4 };
+
+// Pausen (Sekunden)
+const WALK_IN = 2.55;      // Auftritt
+const GAP_LINE = 0.35;     // zwischen zwei Sätzen
+const GAP_SCENE = 0.5;     // Folienwechsel: Ende Satz -> neue Folie
+const LEAD_SCENE = 0.5;    // neue Folie -> erster Satz
+const OUTRO = 1.8;
+
+const TIMING = /*TIMING*/null;
+
+// ---------------- Zeitplan berechnen ----------------
+const LINES = [];
+const SCENES = [];
+{
+  let t = WALK_IN + 0.15;
+  SCRIPT.forEach(([scene, pose, text], i) => {
+    const dur = TIMING ? TIMING.lines[i].dur : 1.2 + text.length * 0.055;
+    const prev = LINES[i - 1];
+    if (!prev || prev.scene !== scene) {
+      const from = prev ? prev.end + GAP_SCENE : 0.6;
+      if (SCENES.length) SCENES[SCENES.length - 1].to = from + 0.3;
+      SCENES.push({ id: scene, from, to: 0 });
+      t = prev ? from + LEAD_SCENE : t;
+    } else {
+      t = prev.end + GAP_LINE;
+    }
+    LINES.push({ i, scene, pose, text, start: +t.toFixed(3), end: +(t + dur).toFixed(3), dur });
+  });
+}
+const DURATION = +(LINES[LINES.length - 1].end + OUTRO).toFixed(2);
+SCENES[SCENES.length - 1].to = DURATION + 1;
+// Posen-Zeitplan: [ab, pose]
+const POSES = [[0, 'walk'], [WALK_IN, 'wave']];
+LINES.forEach((l, i) => {
+  if (l.scene === 's-intro') return;
+  const first = i === 0 || LINES[i - 1].scene !== l.scene;
+  POSES.push([first ? SCENES.find(s => s.id === l.scene).from : l.start - 0.2, l.pose]);
+});
+
+const KCOL = { 1: '#2d8fe0', 2: '#3aa86b', 3: '#e8b416', 4: '#ef7a1a', 5: '#d7141a' };
+
+// ---------------- Sicherungseinrichtungen ----------------
+// Punkte: [Satz-Nr. innerhalb der Folie, Text, Verzögerung]
+const DEVICES = [
+  { id: 'dev-ea', n: 2, code: 'EA', title: 'Rückflussverhinderer', sub: 'kontrollierbar', ill: 'ea',
+    how: [[1, 'Eine Feder drückt das Ventil zu, sobald Wasser zurückfließen will'], [2, 'Prüfstopfen: Die Funktion lässt sich testen']],
+    home: [[3, 'Hinter dem Wasserzähler'], [4, 'Kaltwasserzulauf am Warmwasserspeicher']] },
+  { id: 'dev-ca', n: 3, code: 'CA', title: 'Systemtrenner', sub: 'nicht kontrollierbare Druckzonen', ill: 'ca',
+    how: [[1, 'Drei Druckzonen: vorne, Mitte, hinten'], [2, 'Druck fällt vorne ab: Die Mitte öffnet zum Abfluss'], [3, 'Verbindung getrennt – nichts fließt zurück']],
+    home: [[4, 'Füllarmatur der Heizung']],
+    small: [4, 'Braucht einen Ablauf (Trichter) für das Wasser aus der Mitte.'] },
+  { id: 'dev-ba', n: 4, code: 'BA', title: 'Systemtrenner', sub: 'kontrollierbare Mitteldruckzone', ill: 'ba',
+    how: [[1, 'Wie der CA – plus Prüfanschluss an jeder Druckzone'], [2, 'Der Fachbetrieb misst, ob er sicher trennt']],
+    home: [[3, 'Heizung mit Inhibitoren oder Frostschutz'], [3, 'Solaranlage mit Glykol', 1.4], [3, 'Gärtnerei', 2.8]],
+    note: [4, 'Inspektion halbjährlich · Wartung jährlich'] },
+  { id: 'dev-aa', n: 5, code: 'AA/AB', title: 'Freier Auslauf', sub: 'Luftstrecke statt Verbindung', ill: 'aa',
+    how: [[0, 'Wasser fällt frei durch die Luft', 2.5], [1, 'Keine Verbindung – nichts kann zurück', 1.5]],
+    home: [[2, 'Waschbecken: Abstand zwischen Hahn und Beckenrand'], [3, 'Nachspeisung von Regenwasseranlagen']],
+    small: [3, 'AA: ungehinderter freier Auslauf · AB: freier Auslauf mit nicht kreisförmigem Überlauf', 1.5] },
+];
+
+const INK = '#1b1f24', WATER = '#2d8fe0', DIRTY = '#8a6a35';
+const arrow = (x1, x2, y, col, id) => {
+  const d = x2 > x1 ? 1 : -1;
+  return `<g id="${id}"><path d="M${x1},${y} H${x2 - d * 6}" stroke="${col}" stroke-width="9" stroke-linecap="round"/>
+    <path d="M${x2 - d * 22},${y - 18} L${x2},${y} L${x2 - d * 22},${y + 18}" fill="none" stroke="${col}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+};
+
+const ILL = {
+  ea: () => `<svg class="dev-ill" viewBox="0 0 520 440">
+    ${arrow(120, 400, 80, WATER, 'fwd')}
+    <text class="lblFwd" x="260" y="50" text-anchor="middle" font-size="24" font-weight="700" fill="${WATER}">Fließrichtung</text>
+    <rect x="10" y="190" width="500" height="70" rx="10" fill="#e9eef3" stroke="${INK}" stroke-width="6"/>
+    <path class="wL" d="M22,225 H232" stroke="${WATER}" stroke-width="20" stroke-dasharray="30 22" fill="none"/>
+    <path class="wR" d="M262,225 H498" stroke="${WATER}" stroke-width="20" stroke-dasharray="30 22" fill="none"/>
+    <rect x="165" y="148" width="190" height="154" rx="24" fill="#d8b04a" stroke="${INK}" stroke-width="6"/>
+    <rect x="182" y="188" width="156" height="74" fill="#e9eef3"/>
+    <path class="wM" d="M184,225 H336" stroke="${WATER}" stroke-width="20" fill="none"/>
+    <rect x="228" y="186" width="14" height="26" fill="#8a6d1f"/><rect x="228" y="238" width="14" height="26" fill="#8a6d1f"/>
+    <polyline class="spring" fill="none" stroke="#5b6672" stroke-width="5" stroke-linejoin="round"/>
+    <rect class="disc" x="244" y="198" width="14" height="54" rx="4" fill="#4a4f55"/>
+    <rect x="292" y="120" width="34" height="30" rx="5" fill="#c33d32" stroke="${INK}" stroke-width="4"/>
+    <text x="309" y="108" text-anchor="middle" font-size="20" font-weight="700" fill="${INK}">Prüfstopfen</text>
+    <g class="back" opacity="0">${arrow(470, 360, 340, '#d7141a', 'bk')}
+      <g transform="translate(232,318)" stroke="#d7141a" stroke-width="10" stroke-linecap="round"><path d="M0,0 L40,40 M40,0 L0,40"/></g>
+      <text x="260" y="410" text-anchor="middle" font-size="26" font-weight="800" fill="#d7141a">Rückfluss gesperrt!</text></g>
+  </svg>`,
+  sep: (ba) => `<svg class="dev-ill" viewBox="0 0 520 440">
+    ${arrow(ba ? 40 : 140, ba ? 170 : 380, ba ? 330 : 40, WATER, 'fwd')}
+    <rect x="0" y="168" width="44" height="54" fill="#e9eef3" stroke="${INK}" stroke-width="5"/>
+    <rect x="476" y="168" width="44" height="54" fill="#e9eef3" stroke="${INK}" stroke-width="5"/>
+    <rect class="pin" x="4" y="180" width="40" height="30" fill="${WATER}"/>
+    <rect class="pout" x="476" y="180" width="40" height="30" fill="${WATER}"/>
+    <rect x="40" y="110" width="440" height="170" rx="28" fill="${ba ? '#3f8f5a' : '#c9cfd6'}" stroke="${INK}" stroke-width="6"/>
+    ${[60, 200, 340].map((x, k) => `<rect x="${x}" y="135" width="120" height="120" rx="10" fill="#f4f7fa" stroke="${INK}" stroke-width="3"/>
+      <rect class="z z${k}" x="${x + 3}" y="138" width="114" height="114" rx="8" fill="${WATER}"/>
+      <text x="${x + 60}" y="242" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">${['vorne', 'Mitte', 'hinten'][k]}</text>`).join('')}
+    <rect class="cv cv0" x="183" y="160" width="12" height="70" rx="4" fill="#4a4f55"/>
+    <rect class="cv cv1" x="323" y="160" width="12" height="70" rx="4" fill="#4a4f55"/>
+    <rect class="drain" x="236" y="262" width="48" height="12" rx="4" fill="#4a4f55"/>
+    <path d="M200,350 H320 L280,392 V430 H240 V392 Z" fill="#e9eef3" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+    <text x="340" y="380" font-size="20" font-weight="700" fill="${INK}">Ablauf</text>
+    ${[0, 1, 2, 3].map(k => `<circle class="drop" data-k="${k}" cx="${248 + k * 8}" cy="290" r="7" fill="${WATER}" opacity="0"/>`).join('')}
+    ${ba ? [120, 260, 400].map(x => `<g><rect x="${x - 9}" y="84" width="18" height="28" fill="#c9cfd6" stroke="${INK}" stroke-width="3"/><circle cx="${x}" cy="76" r="15" fill="#fff" stroke="${INK}" stroke-width="4"/><path class="needle" d="M${x},76 L${x + 10},68" stroke="#d7141a" stroke-width="3" stroke-linecap="round"/></g>`).join('') +
+      `<text x="260" y="40" text-anchor="middle" font-size="22" font-weight="800" fill="#3f8f5a" class="lblTest">Prüfanschlüsse</text>` : ''}
+    <g class="back" opacity="0">
+      <text x="30" y="${ba ? 330 : 80}" font-size="24" font-weight="800" fill="#d7141a">Druck fällt ↓</text>
+      <text x="380" y="${ba ? 330 : 80}" font-size="26" font-weight="800" fill="#d7141a">getrennt!</text>
+    </g>
+  </svg>`,
+  aa: () => `<svg class="dev-ill" viewBox="0 0 520 440">
+    <rect x="70" y="22" width="70" height="20" rx="8" fill="#9aa5b0" stroke="${INK}" stroke-width="4"/>
+    <rect x="30" y="52" width="200" height="38" rx="12" fill="#c9cfd6" stroke="${INK}" stroke-width="5"/>
+    <rect x="190" y="52" width="40" height="80" rx="10" fill="#c9cfd6" stroke="${INK}" stroke-width="5"/>
+    <rect x="95" y="40" width="20" height="14" fill="#9aa5b0" stroke="${INK}" stroke-width="3"/>
+    <rect class="stream" x="202" y="132" width="16" height="230" fill="${WATER}"/>
+    <path d="M110,300 H470 Q462,425 290,425 Q118,425 110,300 Z" fill="#fff" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>
+    <clipPath id="basinClip"><path d="M113,302 H467 Q459,421 290,421 Q121,421 113,302 Z"/></clipPath>
+    <g clip-path="url(#basinClip)"><rect class="basinW" x="100" y="380" width="380" height="60" fill="${WATER}"/>
+      ${[[180, 400], [300, 395], [390, 405]].map(([x, y]) => `<circle class="germ2" cx="${x}" cy="${y}" r="9" fill="#9bd14a" stroke="${INK}" stroke-width="3" opacity="0"/>`).join('')}</g>
+    <path d="M96,300 H484" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>
+    <g class="gap"><path d="M300,134 V296" stroke="#d7141a" stroke-width="5" stroke-dasharray="10 8"/>
+      <path d="M288,148 L300,132 L312,148 M288,282 L300,298 L312,282" fill="none" stroke="#d7141a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="318" y="210" font-size="26" font-weight="800" fill="#d7141a">Luftstrecke</text>
+      <text x="318" y="240" font-size="20" font-weight="600" fill="${INK}">keine Verbindung</text></g>
+  </svg>`,
+};
+ILL.ca = () => ILL.sep(false);
+ILL.ba = () => ILL.sep(true);
+
+const devsEl = document.getElementById('devs');
+DEVICES.forEach(d => {
+  const pts = (arr, cls) => arr.map(([ln, txt, dl]) => `<div class="pt ${cls} in" data-line="${ln}" data-delay="${dl || 0.3}">${txt}</div>`).join('');
+  devsEl.insertAdjacentHTML('beforeend', `
+    <section class="slide" id="${d.id}" data-ill="${d.ill}" style="--c:${KCOL[d.n]}">
+      <div class="dev-head">
+        <div class="dev-cat in" data-line="0" style="background:${KCOL[d.n]}">${d.n}</div>
+        <div class="dev-code in" data-line="0" data-delay="0.15">${d.code}</div>
+        <div class="in" data-line="0" data-delay="0.3"><div class="dev-kicker" style="color:${KCOL[d.n]}">Kategorie ${d.n}</div><div class="dev-title">${d.title}</div><div class="dev-sub">${d.sub}</div></div>
+      </div>
+      <div class="dev-body">
+        <div class="dev-text">
+          <div class="dev-box-title in" data-line="${d.how[0][0]}">So funktioniert's</div>
+          ${pts(d.how, '')}
+          <div class="dev-box-title in" data-line="${d.home[0][0]}" style="margin-top:18px">Im Alltag</div>
+          ${pts(d.home, 'home')}
+          ${d.note ? `<div class="dev-note in" data-line="${d.note[0]}">${d.note[1]}</div>` : ''}
+          ${d.small ? `<div class="dev-small in" data-line="${d.small[0]}" data-delay="${d.small[2] || 0.6}">${d.small[1]}</div>` : ''}
+        </div>
+        <div class="in" data-line="0" data-delay="0.6">${ILL[d.ill]()}</div>
+      </div>
+    </section>`);
+});
+
+// Animation der Schaubilder: Zyklus aus normalem Fließen und Störfall (Druckabfall / Rückfluss)
+const mix = (a, b, k) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * k)).join(',')})`; };
+function animDevice(sl, tau) {
+  const P = 6.5, ph = ((tau % P) + P) % P;
+  const ev = Math.min(ease((ph - 3.2) / 0.5), 1 - ease((ph - 6.0) / 0.5));   // 0 = normal, 1 = Störfall
+  const q = sel => sl.querySelector(sel), qa = sel => sl.querySelectorAll(sel);
+  const back = q('.back'); if (back) back.setAttribute('opacity', ev.toFixed(2));
+  const fwd = q('#fwd'); if (fwd) fwd.setAttribute('opacity', (1 - ev).toFixed(2));
+  const kind = sl.dataset.ill;
+  if (kind === 'ea') {
+    const flow = -tau * 120 * (1 - ev);
+    q('.wL').style.strokeDashoffset = flow;
+    q('.wR').style.strokeDashoffset = flow + ev * 18;
+    q('.wR').setAttribute('stroke', mix(WATER, DIRTY, ev));
+    q('.wM').setAttribute('stroke', mix(WATER, DIRTY, ev * 0.6));
+    const x = 244 + 28 * (1 - ev);                      // Ventilteller: offen -> zu
+    q('.disc').setAttribute('x', x.toFixed(1));
+    const x0 = x + 14, x1 = 336, n = 8, pts = [];
+    for (let k = 0; k <= n; k++) pts.push(`${(x0 + (x1 - x0) * k / n).toFixed(1)},${k === 0 || k === n ? 225 : (k % 2 ? 203 : 247)}`);
+    q('.spring').setAttribute('points', pts.join(' '));
+  } else if (kind === 'ca' || kind === 'ba') {
+    q('.pin').setAttribute('opacity', (1 - 0.6 * ev).toFixed(2));
+    q('.z0').setAttribute('opacity', (1 - 0.55 * ev).toFixed(2));
+    const h = 114 * (1 - 0.85 * ev);                    // Mitte läuft leer
+    q('.z1').setAttribute('y', (138 + 114 - h).toFixed(1)); q('.z1').setAttribute('height', h.toFixed(1));
+    q('.z2').setAttribute('fill', mix(WATER, DIRTY, ev)); q('.pout').setAttribute('fill', mix(WATER, DIRTY, ev));
+    q('.cv0').setAttribute('x', (183 - 6 * ev).toFixed(1)); q('.cv1').setAttribute('x', (323 - 6 * ev).toFixed(1));
+    q('.drain').setAttribute('y', (262 + 12 * ev).toFixed(1));
+    qa('.drop').forEach(c => { const k = +c.dataset.k; const f = ((tau * 1.6 + k * 0.25) % 1); c.setAttribute('cy', (285 + f * 70).toFixed(1)); c.setAttribute('opacity', (ev * (1 - f * 0.3)).toFixed(2)); });
+    qa('.needle').forEach((n, k) => { const a = (k === 1 ? -50 * ev : -15 * ev) + Math.sin(tau * 2 + k) * 3; n.setAttribute('transform', `rotate(${a.toFixed(1)} ${120 + k * 140} 76)`); });
+  } else if (kind === 'aa') {
+    q('.stream').setAttribute('opacity', (1 - ev).toFixed(2));
+    q('.stream').setAttribute('y', (132 + ev * 60).toFixed(1));
+    const lvl = 380 - 50 * ev;                          // Schmutzwasser steigt – erreicht den Hahn nie
+    q('.basinW').setAttribute('y', lvl.toFixed(1)); q('.basinW').setAttribute('fill', mix(WATER, DIRTY, ev));
+    qa('.germ2').forEach((g, k) => { g.setAttribute('opacity', ev.toFixed(2)); g.setAttribute('transform', `translate(${Math.sin(tau * 2 + k) * 6},${-40 * ev})`); });
+    q('.gap').setAttribute('opacity', (0.55 + 0.45 * ev).toFixed(2));
+  }
+}
+
+// ---------------- Figur vorbereiten ----------------
+const fig = document.getElementById('figur');
+const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; };
+['hairShort', 'hairSide', 'hairCurly', 'hairThin', 'glassesRound', 'glassesSquare', 'helmet', 'beardStubble', 'beardShort'].forEach(id => show(id, false));
+['hairSides', 'beardFull', 'beardStrands', 'mustache', 'glassesBold', 'cap', 'tunnels'].forEach(id => show(id, true));
+fig.classList.remove('pointer-on');
+
+// ---------------- Rendern zum Zeitpunkt t ----------------
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
+const slides = [...document.querySelectorAll('.slide')];
+for (const sl of slides) {
+  const sc = SCENES.find(x => x.id === sl.id);
+  sl.dataset.from = sc.from; sl.dataset.to = sc.to;
+  sl.dataset.k = Math.min(1, (sc.to - sc.from) / (DESIGN_LEN[sl.id] || 15));
+}
+for (const sl of slides) sl._lines = LINES.filter(l => l.scene === sl.id);
+const capEl = document.querySelector('#caption span');
+const figWrap = document.getElementById('figWrap');
+let currentPose = '', currentTalk = null, blend = null;
+const mouth = document.getElementById('mouth');
+const PARTS = [['armL', 'armLwrap'], ['armR', 'armRwrap'], ['head', 'headWrap']].map(([a, b]) => [document.getElementById(a), document.getElementById(b)]);
+
+function render(t) {
+  // Folien
+  for (const s of slides) {
+    const from = +s.dataset.from, to = +s.dataset.to;
+    const a = Math.min(ease((t - from) / 0.5), 1 - ease((t - (to - 0.4)) / 0.4));
+    s.style.opacity = Math.max(0, a);
+    s.style.visibility = a > 0 ? 'visible' : 'hidden';
+    if (a <= 0) continue;
+    for (const el of s.querySelectorAll('.in')) {
+      const at = el.dataset.line != null
+        ? s._lines[+el.dataset.line].start - 0.25 + +(el.dataset.delay || 0)
+        : from + +el.dataset.at * +s.dataset.k;
+      const p = ease((t - at) / 0.45);
+      el.style.opacity = p;
+      el.style.transform = `translateY(${(1 - p) * 30}px)`;
+    }
+  }
+  // Schaubilder der Sicherungseinrichtungen
+  for (const s of slides) if (s.dataset.ill && s.style.visibility !== 'hidden') animDevice(s, t - +s.dataset.from);
+
+  // Figur: Auftritt
+  const walkIn = ease(t / WALK_IN);
+  figWrap.style.transform = `translateX(${(1 - walkIn) * -760}px)`;
+  // Pose (mit weichem Übergang: Arme und Kopf drehen sanft in die neue Haltung)
+  let pose = POSES[0][1];
+  for (const [a, p] of POSES) if (t >= a) pose = p;
+  if (pose !== currentPose) {
+    const before = PARTS.map(([el]) => angleOf(el));
+    fig.classList.forEach(c => c.startsWith('mode-') && fig.classList.remove(c));
+    fig.classList.add('mode-' + pose); currentPose = pose;
+    syncAnimations(t);
+    const after = PARTS.map(([el]) => angleOf(el));
+    blend = { t, delta: before.map((b, k) => { let d = b - after[k]; while (d > 180) d -= 360; while (d < -180) d += 360; return d; }) };
+  }
+  const bk = blend ? 1 - ease((t - blend.t) / 0.9) : 0;
+  PARTS.forEach(([, wrap], k) => { wrap.style.transform = bk > 0 && t >= blend.t ? `rotate(${blend.delta[k] * bk}deg)` : ''; });
+
+  // Untertitel + Mund (folgt der Lautstärke der Stimme)
+  const line = LINES.find(l => t >= l.start && t < l.end + 0.15);
+  const text = line ? line.text : '';
+  if (capEl.textContent !== text) capEl.textContent = text;
+  if (TIMING) {
+    let open = 0, speaking = false;
+    const cur = LINES.find(l => t >= l.start && t < l.end);
+    if (cur) {
+      speaking = true;
+      const env = TIMING.lines[cur.i].env;
+      open = env[Math.min(env.length - 1, Math.floor((t - cur.start) * TIMING.fps))] || 0;
+    }
+    mouth.style.transform = `scaleY(${speaking ? 0.4 + 0.5 * open : 0.55})`;
+  } else {
+    const talk = !!line && t < line.end;
+    if (talk !== currentTalk) { fig.classList.toggle('talking', talk); currentTalk = talk; }
+  }
+
+  syncAnimations(t);
+}
+// CSS-Animationen der Figur auf Zeitpunkt t setzen (deterministisch)
+function syncAnimations(t) {
+  getComputedStyle(fig).transform;
+  for (const an of fig.getAnimations({ subtree: true })) { an.pause(); an.currentTime = t * 1000; }
+}
+function angleOf(el) {
+  const m = getComputedStyle(el).transform;
+  if (!m || m === 'none') return 0;
+  const v = m.slice(m.indexOf('(') + 1, -1).split(',').map(Number);
+  return Math.atan2(v[1], v[0]) * 180 / Math.PI;
+}
+window.render = render;
+window.DURATION = DURATION;
+window.LINES = LINES;
+
+// ---------------- Vorschau-Player ----------------
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById('scene').style.transform = `scale(${s})`;
+}
+addEventListener('resize', fit); fit();
+let playing = false, t0 = 0, start = 0;
+const seek = document.getElementById('seek'), timeEl = document.getElementById('time'), playBtn = document.getElementById('play');
+function frame(now) {
+  if (!playing) return;
+  const t = start + (now - t0) / 1000;
+  if (t >= DURATION) { playing = false; playBtn.textContent = '▶ Abspielen'; return; }
+  render(t); seek.value = t; timeEl.textContent = t.toFixed(1) + ' s';
+  requestAnimationFrame(frame);
+}
+playBtn.onclick = () => {
+  playing = !playing; playBtn.textContent = playing ? '❚❚ Pause' : '▶ Abspielen';
+  if (playing) { start = +seek.value >= DURATION - 0.1 ? 0 : +seek.value; t0 = performance.now(); requestAnimationFrame(frame); }
+};
+seek.oninput = () => { playing = false; playBtn.textContent = '▶ Abspielen'; render(+seek.value); timeEl.textContent = (+seek.value).toFixed(1) + ' s'; };
+seek.max = DURATION;
+if (location.search.includes('render')) document.body.classList.add('render');
+render(0);
+</script>
+</body>
+</html>

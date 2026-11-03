@@ -13,7 +13,7 @@ const path = require('path');
   await page.evaluate(() => document.fonts.ready);
   const duration = await page.evaluate(() => window.DURATION);
   const lines = await page.evaluate(() => window.LINES.map(l => ({ text: l.text, start: l.start, end: l.end })));
-  require('fs').writeFileSync(path.join(path.dirname(input), 'step1-zeiten.json'), JSON.stringify({ duration, lines }, null, 1));
+  require('fs').writeFileSync(path.join(path.dirname(input), path.basename(input).split('-')[0] + '-zeiten.json'), JSON.stringify({ duration, lines }, null, 1));
   const frames = Math.round(duration * fps);
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
     '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', output], { stdio: ['pipe', 'inherit', 'inherit'] });
