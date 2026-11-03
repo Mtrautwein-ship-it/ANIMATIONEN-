@@ -1,5 +1,5 @@
 {
- "duration": 128.02,
+ "duration": 118.05,
  "lines": [
   {
    "text": "Hallo und herzlich willkommen!",
@@ -7,144 +7,134 @@
    "end": 4.303
   },
   {
-   "text": "Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.",
+   "text": "Folge 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.",
    "start": 4.653,
-   "end": 9.197
+   "end": 9.31
   },
   {
    "text": "Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.",
-   "start": 10.197,
-   "end": 13.955
+   "start": 10.31,
+   "end": 14.068
   },
   {
    "text": "Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.",
-   "start": 14.305,
-   "end": 17.77
+   "start": 14.418,
+   "end": 17.881
   },
   {
    "text": "Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!",
-   "start": 18.12,
-   "end": 23.856
+   "start": 18.231,
+   "end": 23.966
   },
   {
    "text": "Deshalb ordnen wir jede Flüssigkeit einer von 5 Kategorien zu.",
-   "start": 24.206,
-   "end": 28.192
+   "start": 24.316,
+   "end": 28.302
   },
   {
    "text": "Die Faustregel: Je höher die Kategorie, desto gefährlicher die Flüssigkeit.",
-   "start": 29.192,
-   "end": 33.803
+   "start": 29.302,
+   "end": 33.913
   },
   {
    "text": "Schauen wir uns alle fünf genauer an.",
-   "start": 34.153,
-   "end": 35.919
+   "start": 34.263,
+   "end": 36.012
   },
   {
    "text": "Kategorie 1 ist unser Trinkwasser – direkt aus der Leitung.",
-   "start": 36.919,
-   "end": 40.296
+   "start": 37.012,
+   "end": 40.356
   },
   {
    "text": "Genau das Wasser, das wir schützen wollen.",
-   "start": 40.646,
-   "end": 42.585
+   "start": 40.706,
+   "end": 42.645
   },
   {
    "text": "Hier besteht also keine Gefahr.",
-   "start": 42.935,
-   "end": 44.624
+   "start": 42.995,
+   "end": 44.684
   },
   {
    "text": "Kategorie 2: Flüssigkeiten, die die Gesundheit nicht gefährden.",
-   "start": 45.624,
-   "end": 49.611
+   "start": 45.684,
+   "end": 49.669
   },
   {
    "text": "Das Trinkwasser ist nur verändert – in Geschmack, Geruch, Farbe oder Temperatur.",
-   "start": 49.961,
-   "end": 54.183
+   "start": 50.019,
+   "end": 54.24
   },
   {
    "text": "Zum Beispiel erwärmtes Trinkwasser oder Kaffee und Tee.",
-   "start": 54.533,
-   "end": 57.579
+   "start": 54.59,
+   "end": 57.621
   },
   {
    "text": "Kategorie 3: Hier wird es gesundheitsgefährdend – durch weniger giftige Stoffe.",
-   "start": 58.579,
-   "end": 63.701
+   "start": 58.621,
+   "end": 63.743
   },
   {
    "text": "Ein typisches Beispiel ist Heizungswasser ohne Zusätze.",
-   "start": 64.051,
-   "end": 67.2
+   "start": 64.093,
+   "end": 67.236
   },
   {
    "text": "Das gehört auf keinen Fall zurück ins Trinkwasser!",
-   "start": 67.55,
-   "end": 69.876
+   "start": 67.586,
+   "end": 69.899
   },
   {
    "text": "Kategorie 4: Jetzt wird es ernst – giftige oder sehr giftige Stoffe.",
-   "start": 70.876,
-   "end": 76.181
+   "start": 70.899,
+   "end": 76.204
   },
   {
    "text": "Dazu zählen auch radioaktive, krebserregende oder erbgutverändernde Stoffe.",
-   "start": 76.531,
-   "end": 81.287
+   "start": 76.554,
+   "end": 81.31
   },
   {
    "text": "Zum Beispiel Heizungswasser mit Inhibitoren oder Pflanzenschutzmittel.",
-   "start": 81.637,
-   "end": 85.319
+   "start": 81.66,
+   "end": 85.343
   },
   {
    "text": "Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.",
-   "start": 86.319,
-   "end": 91.547
+   "start": 86.343,
+   "end": 91.572
   },
   {
    "text": "Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.",
-   "start": 91.897,
-   "end": 95.197
+   "start": 91.922,
+   "end": 95.222
   },
   {
    "text": "Hier braucht es den stärksten Schutz.",
-   "start": 95.547,
-   "end": 97.437
-  },
-  {
-   "text": "Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.",
-   "start": 98.437,
-   "end": 102.469
-  },
-  {
-   "text": "Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.",
-   "start": 102.819,
-   "end": 107.325
-  },
-  {
-   "text": "Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.",
-   "start": 107.675,
-   "end": 112.723
+   "start": 95.572,
+   "end": 97.462
   },
   {
    "text": "Kurz zusammengefasst:",
-   "start": 113.723,
-   "end": 115.236
+   "start": 98.462,
+   "end": 99.974
   },
   {
    "text": "1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.",
-   "start": 115.586,
-   "end": 121.882
+   "start": 100.324,
+   "end": 106.618
   },
   {
-   "text": "Bis zum nächsten Step – und bleib sauber!",
-   "start": 122.232,
-   "end": 126.219
+   "text": "Im nächsten Video zeige ich dir, wie du jede Flüssigkeitskategorie richtig absicherst – mit den passenden Armaturen.",
+   "start": 106.968,
+   "end": 113.1
+  },
+  {
+   "text": "Bis zur nächsten Folge – und bleib sauber!",
+   "start": 113.45,
+   "end": 116.251
   }
  ]
 }
