@@ -1,0 +1,150 @@
+{
+ "duration": 161.3,
+ "lines": [
+  {
+   "text": "Hallo und herzlich willkommen!",
+   "start": 2.7,
+   "end": 5.55
+  },
+  {
+   "text": "Folge 2 der Trinkwasserhygiene: Wie sicherst du jede Flüssigkeitskategorie richtig ab?",
+   "start": 5.9,
+   "end": 11.83
+  },
+  {
+   "text": "In Folge 1 hast du die fünf Flüssigkeitskategorien kennengelernt.",
+   "start": 12.83,
+   "end": 17.605
+  },
+  {
+   "text": "Heute zeige ich dir die passende Sicherungseinrichtung für jede Kategorie.",
+   "start": 17.955,
+   "end": 23.225
+  },
+  {
+   "text": "Die Regel: Je gefährlicher die Flüssigkeit, desto stärker die Trennung.",
+   "start": 23.575,
+   "end": 28.68
+  },
+  {
+   "text": "Für Kategorie 1, also reines Trinkwasser, brauchst du keine Sicherung.",
+   "start": 29.03,
+   "end": 34.08
+  },
+  {
+   "text": "Kategorie 2 sicherst du mit einem Rückflussverhinderer, Typ EA.",
+   "start": 35.08,
+   "end": 39.745
+  },
+  {
+   "text": "Eine Feder drückt ein Ventil zu, sobald das Wasser rückwärts fließen will.",
+   "start": 40.095,
+   "end": 45.365
+  },
+  {
+   "text": "Kontrollierbar heißt: Über einen Prüfstopfen kann man die Funktion testen.",
+   "start": 45.715,
+   "end": 50.985
+  },
+  {
+   "text": "Den findest du zum Beispiel direkt hinter deinem Wasserzähler.",
+   "start": 51.335,
+   "end": 55.945
+  },
+  {
+   "text": "Und im Kaltwasserzulauf von deinem Warmwasserspeicher.",
+   "start": 56.295,
+   "end": 60.465
+  },
+  {
+   "text": "Für Kategorie 3 brauchst du einen Systemtrenner, Typ CA.",
+   "start": 61.465,
+   "end": 65.745
+  },
+  {
+   "text": "Er hat drei Druckzonen: vorne, in der Mitte und hinten.",
+   "start": 66.095,
+   "end": 70.32
+  },
+  {
+   "text": "Fällt vorne der Druck ab, öffnet die Mitte und das Wasser läuft in den Abfluss.",
+   "start": 70.67,
+   "end": 76.215
+  },
+  {
+   "text": "Damit ist die Verbindung getrennt, und nichts kann zurück ins Trinkwasser.",
+   "start": 76.565,
+   "end": 81.835
+  },
+  {
+   "text": "Typisch ist der CA in der Füllarmatur deiner Heizung.",
+   "start": 82.185,
+   "end": 86.3
+  },
+  {
+   "text": "Kategorie 4 sicherst du mit einem Systemtrenner, Typ BA.",
+   "start": 87.3,
+   "end": 91.58
+  },
+  {
+   "text": "Er funktioniert wie der CA, aber jede Druckzone hat einen Prüfanschluss.",
+   "start": 91.93,
+   "end": 97.09
+  },
+  {
+   "text": "So kann der Fachbetrieb messen, ob er wirklich sicher trennt.",
+   "start": 97.44,
+   "end": 101.995
+  },
+  {
+   "text": "Du findest ihn bei Heizungen mit Inhibitoren oder Frostschutz, bei Solaranlagen mit Glykol oder in Gärtnereien.",
+   "start": 102.345,
+   "end": 109.65
+  },
+  {
+   "text": "Wichtig: Ein BA muss regelmäßig geprüft und jedes Jahr gewartet werden.",
+   "start": 110,
+   "end": 115.105
+  },
+  {
+   "text": "Bei Kategorie 5, also Krankheitserregern, hilft nur noch Luft: der freie Auslauf, Typ AA oder AB.",
+   "start": 116.105,
+   "end": 122.64
+  },
+  {
+   "text": "Das Wasser fällt frei durch die Luft – es gibt keine Verbindung, durch die etwas zurück kann.",
+   "start": 122.99,
+   "end": 129.305
+  },
+  {
+   "text": "Das Prinzip kennst du vom Waschbecken: der Abstand zwischen Wasserhahn und Beckenrand.",
+   "start": 129.655,
+   "end": 135.585
+  },
+  {
+   "text": "Auch Regenwasseranlagen werden so mit Trinkwasser nachgespeist.",
+   "start": 135.935,
+   "end": 140.6
+  },
+  {
+   "text": "Kurz zusammengefasst:",
+   "start": 141.6,
+   "end": 143.955
+  },
+  {
+   "text": "Kategorie 2: EA. Kategorie 3: CA. Kategorie 4: BA. Kategorie 5: freier Auslauf.",
+   "start": 144.305,
+   "end": 149.85
+  },
+  {
+   "text": "Und denk dran: Einbau und Wartung gehören immer in die Hände vom Fachbetrieb.",
+   "start": 150.2,
+   "end": 155.635
+  },
+  {
+   "text": "Bis zur nächsten Folge – und bleib sauber!",
+   "start": 155.985,
+   "end": 159.495
+  }
+ ]
+}
