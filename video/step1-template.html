@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Step 1 Flüssigkeitskategorien</title>
+<title>Folge 1 Flüssigkeitskategorien</title>
 <style>
   :root {
     --k1: #2d8fe0; --k2: #3aa86b; --k3: #e8b416; --k4: #ef7a1a; --k5: #d7141a;
@@ -100,11 +100,11 @@
   <div id="corner">TRINKWASSER<i>HYGIENE</i></div>
 
   <div id="board">
-    <div class="tag">Step 1 · Flüssigkeitskategorien</div>
+    <div class="tag">Folge 1 · Flüssigkeitskategorien</div>
 
     <!-- 1 Intro -->
     <section class="slide" id="s-intro">
-      <div class="step in" data-at="0.4">STEP 1</div>
+      <div class="step in" data-at="0.4">FOLGE 1</div>
       <h1 class="in" data-at="0.8">Die 5 Flüssigkeits&shy;kategorien</h1>
       <p class="lead in" data-at="1.4">Welche Flüssigkeit gefährdet unser Trinkwasser – und wie stark?</p>
       <div class="chips">
@@ -189,20 +189,6 @@
     <!-- 4–8 Kategorien (per Skript erzeugt) -->
     <div id="cats"></div>
 
-    <!-- 9 Schutz -->
-    <section class="slide" id="s-protect">
-      <h2 class="in" data-at="0.2">Passende Sicherungseinrichtung</h2>
-      <p class="lead in" data-at="0.6" style="font-size:28px">Mindestens nötig je Kategorie – Beispiele:</p>
-      <table>
-        <tr class="in" data-at="1.2"><td style="background:var(--k1)">1</td><td class="code">–</td><td>Trinkwasser selbst – keine Sicherung nötig</td></tr>
-        <tr class="in" data-at="2.2"><td style="background:var(--k2)">2</td><td class="code">EA</td><td>Kontrollierbarer Rückflussverhinderer</td></tr>
-        <tr class="in" data-at="3.2"><td style="background:var(--k3)">3</td><td class="code">CA</td><td>Systemtrenner mit verschiedenen, nicht kontrollierbaren Druckzonen</td></tr>
-        <tr class="in" data-at="4.2"><td style="background:var(--k4)">4</td><td class="code">BA</td><td>Systemtrenner mit kontrollierbarer Mitteldruckzone</td></tr>
-        <tr class="in" data-at="5.2"><td style="background:var(--k5)">5</td><td class="code">AA/AB</td><td>Freier Auslauf – Wasser fällt frei, keine direkte Verbindung</td></tr>
-      </table>
-      <div class="note in" data-at="6">Die genaue Auswahl regeln DIN EN 1717 und DIN 1988-100 – mehr dazu im nächsten Step.</div>
-    </section>
-
     <!-- 10 Zusammenfassung -->
     <section class="slide" id="s-sum">
       <h2 class="in" data-at="0.2">Kurz zusammengefasst</h2>
@@ -213,7 +199,7 @@
         <div class="in" data-at="3.2" style="background:var(--k4)"><b>4</b><span>giftig</span></div>
         <div class="in" data-at="4.0" style="background:var(--k5)"><b>5</b><span>Keime &amp; Erreger</span></div>
       </div>
-      <p class="lead in" data-at="8.5" style="margin-top:46px;font-weight:700;color:var(--ink)">Nächster Step: Sicherungseinrichtungen ➜</p>
+      <p class="lead in" data-at="8.5" style="margin-top:46px;font-weight:700;color:var(--ink)">Nächste Folge: Richtig absichern &amp; passende Armaturen ➜</p>
     </section>
   </div>
 
@@ -234,7 +220,7 @@
 // (TIMING, erzeugt von voice_align.py) – Sätze folgen direkt aufeinander, ohne lange Pausen.
 const SCRIPT = [
   ['s-intro', 'wave', 'Hallo und herzlich willkommen!'],
-  ['s-intro', 'wave', 'Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
+  ['s-intro', 'wave', 'Folge 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
   ['s-why', 'explain', 'Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.'],
   ['s-why', 'explain', 'Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.'],
   ['s-why', 'warn', 'Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!'],
@@ -256,16 +242,14 @@ const SCRIPT = [
   ['cat-5', 'point', 'Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.'],
   ['cat-5', 'point', 'Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.'],
   ['cat-5', 'warn', 'Hier braucht es den stärksten Schutz.'],
-  ['s-protect', 'explain', 'Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.'],
-  ['s-protect', 'point', 'Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.'],
-  ['s-protect', 'explain', 'Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.'],
   ['s-sum', 'explain', 'Kurz zusammengefasst:'],
   ['s-sum', 'point', '1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.'],
-  ['s-sum', 'wave', 'Bis zum nächsten Step – und bleib sauber!'],
+  ['s-sum', 'explain', 'Im nächsten Video zeige ich dir, wie du jede Flüssigkeitskategorie richtig absicherst – mit den passenden Armaturen.'],
+  ['s-sum', 'wave', 'Bis zur nächsten Folge – und bleib sauber!'],
 ];
 
 // Ursprüngliche Folienlänge, auf die die Einblend-Zeiten (data-at) ausgelegt sind
-const DESIGN_LEN = { 's-intro': 8.4, 's-why': 17, 's-ladder': 9, 's-protect': 16, 's-sum': 15 };
+const DESIGN_LEN = { 's-intro': 8.4, 's-why': 17, 's-ladder': 9, 's-sum': 15 };
 
 // Pausen (Sekunden)
 const WALK_IN = 2.55;      // Auftritt
