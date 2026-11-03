@@ -42,7 +42,7 @@
 </head>
 <body>
 <header>
-  <h1>Wasser-Meister Marcel – Lehrer-Figur für Erklärvideos</h1>
+  <h1>Wasser-Meister – Lehrer-Figur für Erklärvideos</h1>
   <p>Trinkwasserhygiene &amp; Installation · Pose wählen, Aussehen anpassen, als PNG / SVG / Video exportieren.</p>
 </header>
 
@@ -99,7 +99,9 @@
         #figur #armR   { transform-origin: 276px 292px; }
         #figur #legL   { transform-origin: 171px 420px; }
         #figur #legR   { transform-origin: 229px 420px; }
-        #figur #head   { transform-origin: 200px 265px; }
+        #figur #head, #figur #headWrap { transform-origin: 200px 265px; }
+        #figur #armLwrap { transform-origin: 124px 292px; }
+        #figur #armRwrap { transform-origin: 276px 292px; }
         #figur #upper  { transform-origin: 200px 450px; }
         #figur #all    { transform-origin: 200px 530px; }
         #figur #shadow { transform-origin: 200px 540px; }
@@ -120,8 +122,8 @@
         @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
 
         /* Sprechen (kombinierbar mit jeder Pose) */
-        #figur.talking #mouth { animation: talk .36s infinite alternate ease-in-out; }
-        @keyframes talk { 0% { transform: scaleY(.35); } 40% { transform: scaleY(1.15); } 70% { transform: scaleY(.6); } 100% { transform: scaleY(1.3) scaleX(.9); } }
+        #figur.talking #mouth { animation: talk .6s infinite alternate ease-in-out; }
+        @keyframes talk { 0% { transform: scaleY(.5); } 50% { transform: scaleY(.85); } 100% { transform: scaleY(.6); } }
 
         /* Pose: Stehen / Atmen */
         #figur.mode-idle #upper { animation: breathe 3s infinite ease-in-out; }
@@ -131,32 +133,32 @@
 
         /* Pose: Erklären (Hände gestikulieren) */
         #figur.mode-explain #upper { animation: breathe 3s infinite ease-in-out; }
-        #figur.mode-explain #armL { animation: gestureL 2.4s infinite ease-in-out; }
-        #figur.mode-explain #armR { animation: gestureR 2.4s infinite ease-in-out; }
-        #figur.mode-explain #head { animation: explainHead 2.4s infinite ease-in-out; }
-        @keyframes gestureL { 0%, 100% { transform: rotate(35deg); } 25% { transform: rotate(70deg); } 50% { transform: rotate(45deg); } 75% { transform: rotate(60deg); } }
-        @keyframes gestureR { 0%, 100% { transform: rotate(-55deg); } 25% { transform: rotate(-35deg); } 50% { transform: rotate(-75deg); } 75% { transform: rotate(-40deg); } }
-        @keyframes explainHead { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+        #figur.mode-explain #armL { animation: gestureL 5s infinite ease-in-out; }
+        #figur.mode-explain #armR { animation: gestureR 5s infinite ease-in-out; }
+        #figur.mode-explain #head { animation: explainHead 5s infinite ease-in-out; }
+        @keyframes gestureL { 0%, 100% { transform: rotate(28deg); } 25% { transform: rotate(42deg); } 50% { transform: rotate(32deg); } 75% { transform: rotate(38deg); } }
+        @keyframes gestureR { 0%, 100% { transform: rotate(-38deg); } 25% { transform: rotate(-30deg); } 50% { transform: rotate(-48deg); } 75% { transform: rotate(-34deg); } }
+        @keyframes explainHead { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
 
         /* Pose: Winken */
-        #figur.mode-wave #armR { animation: wave .9s infinite ease-in-out; }
+        #figur.mode-wave #armR { animation: wave 1.6s infinite ease-in-out; }
         #figur.mode-wave #head { transform: rotate(-4deg); }
         #figur.mode-wave #upper { animation: breathe 3s infinite ease-in-out; }
-        @keyframes wave { 0%, 100% { transform: rotate(-120deg); } 50% { transform: rotate(-150deg); } }
+        @keyframes wave { 0%, 100% { transform: rotate(-124deg); } 50% { transform: rotate(-144deg); } }
 
         /* Pose: Zeigen (mit Rohr-Zeigestab) */
-        #figur.mode-point #armR { animation: point 2.2s infinite ease-in-out; }
+        #figur.mode-point #armR { animation: point 4s infinite ease-in-out; }
         #figur.mode-point #armL { transform: rotate(10deg); }
         #figur.mode-point #head { transform: rotate(6deg); }
         #figur.mode-point #upper { animation: breathe 3s infinite ease-in-out; }
-        @keyframes point { 0%, 100% { transform: rotate(-98deg); } 50% { transform: rotate(-106deg); } }
+        @keyframes point { 0%, 100% { transform: rotate(-99deg); } 50% { transform: rotate(-103deg); } }
 
         /* Pose: Achtung! (Finger hoch, Augenbrauen hoch) */
-        #figur.mode-warn #armR { animation: warn 1.2s infinite ease-in-out; }
+        #figur.mode-warn #armR { animation: warn 2.4s infinite ease-in-out; }
         #figur.mode-warn #brows { transform: translateY(-8px); }
-        #figur.mode-warn #head { animation: shake 1.2s infinite ease-in-out; }
-        @keyframes warn { 0%, 100% { transform: rotate(-128deg); } 50% { transform: rotate(-138deg); } }
-        @keyframes shake { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+        #figur.mode-warn #head { animation: shake 2.4s infinite ease-in-out; }
+        @keyframes warn { 0%, 100% { transform: rotate(-129deg); } 50% { transform: rotate(-134deg); } }
+        @keyframes shake { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
 
         /* Pose: Gehen (auf der Stelle – Bewegung im Schnittprogramm) */
         #figur.mode-walk #legL { animation: legSwing .6s infinite ease-in-out; }
@@ -235,17 +237,14 @@
             <path class="ol" fill="#4fb3e8" style="stroke-width:3" d="M248,298 C258,312 263,320 263,328 A15,15 0 0 1 233,328 C233,320 238,312 248,298 Z"/>
             <path d="M241,326 A7,7 0 0 0 247,334" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 </g>
-            <!-- T-Shirt: Rundhals, Namensaufdruck, Wappen -->
+            <!-- T-Shirt: Rundhals, Schriftzug -->
             <g class="tee-only">
               <path class="skin" d="M166,256 Q200,292 234,256 Z"/>
               <path d="M164,257 Q200,296 236,257" fill="none" stroke="#3a3a3d" stroke-width="7" stroke-linecap="round"/>
               <path d="M164,257 Q200,296 236,257" fill="none" class="ol" style="stroke-width:3"/>
-              <text id="namePrint" x="174" y="334" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" textLength="52" lengthAdjust="spacingAndGlyphs">Marcel Trautwein</text>
-              <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M234,302 H266 V322 Q266,338 250,346 Q234,338 234,322 Z"/>
-                <path d="M240,334 L260,310 M240,310 L260,334"/>
-              </g>
-              <path d="M250,312 C254,318 256,321 256,324 A6,6 0 0 1 244,324 C244,321 246,318 250,312 Z" fill="#4fb3e8" stroke="#fff" stroke-width="1.5"/>
+              <!-- Schriftzug: weiß auf rotem Balken -->
+              <rect x="147" y="320" width="106" height="30" rx="2" fill="#d7141a"/>
+              <text id="brandText" x="200" y="345" text-anchor="middle" font-family="'Arial Black', 'Inter', Arial, sans-serif" font-size="26" font-weight="900" fill="#ffffff" textLength="96" lengthAdjust="spacingAndGlyphs">PMPNZNG</text>
             </g>
             <!-- Werkzeugtasche mit Rohrzange -->
             <g id="pouch">
@@ -257,7 +256,7 @@
           </g></g>
 
           <!-- Kopf -->
-          <g id="head">
+          <g id="headWrap"><g id="head">
             <ellipse class="skin ol" cx="110" cy="188" rx="15" ry="21"/>
             <ellipse class="skin ol" cx="290" cy="188" rx="15" ry="21"/>
             <path d="M106,180 Q114,188 108,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
@@ -365,9 +364,9 @@
               <path class="white ol" d="M82,154 Q200,134 318,154 Q322,166 306,166 Q200,150 94,166 Q78,166 82,154 Z"/>
               <path class="ol" fill="#4fb3e8" style="stroke-width:3" d="M200,90 C210,104 215,112 215,120 A15,15 0 0 1 185,120 C185,112 190,104 200,90 Z"/>
             </g>
-          </g>
+          </g></g>
           <!-- Linker Arm (vom Betrachter aus) -->
-          <g id="armL">
+          <g id="armLwrap"><g id="armL">
             <line class="arm-ol" x1="124" y1="292" x2="100" y2="378"/>
             <g class="jacket-only">
               <line class="arm-fill" x1="124" y1="292" x2="100" y2="378"/>
@@ -387,10 +386,10 @@
             <circle class="skin ol" cx="98" cy="396" r="21"/>
             <ellipse class="skin ol" cx="115" cy="388" rx="8" ry="11" transform="rotate(-20 115 388)"/>
             <path d="M84,404 Q90,409 97,407" fill="none" stroke="#cfd5da" stroke-width="4" stroke-linecap="round"/>
-          </g>
+          </g></g>
 
           <!-- Rechter Arm (vom Betrachter aus) mit Rohr-Zeigestab -->
-          <g id="armR">
+          <g id="armRwrap"><g id="armR">
             <line class="arm-ol" x1="276" y1="292" x2="300" y2="378"/>
             <g class="jacket-only">
               <line class="arm-fill" x1="276" y1="292" x2="300" y2="378"/>
@@ -414,7 +413,7 @@
             </g>
             <circle class="skin ol" cx="302" cy="396" r="21"/>
             <ellipse class="skin ol" cx="285" cy="388" rx="8" ry="11" transform="rotate(20 285 388)"/>
-          </g>
+          </g></g>
 
         </g>
       </g>
@@ -481,7 +480,7 @@
     <label class="row">Ohr-Tunnel <input type="checkbox" id="tunnelsOn" checked></label>
     <label class="row">Tattoos <input type="checkbox" id="tattoosOn" checked></label>
     <label class="row">Statur <input type="range" id="belly" min="0.85" max="1.15" step="0.01" value="1"></label>
-    <label class="row">Namensschild <input type="text" id="name" value="Marcel Trautwein" maxlength="24"></label>
+    <label class="row">Schriftzug <input type="text" id="name" value="PMPNZNG" maxlength="12"></label>
   </fieldset>
 
   <fieldset>
@@ -590,9 +589,9 @@
   $('belly').addEventListener('input', e => fig.style.setProperty('--belly', e.target.value));
   $('name').addEventListener('input', e => {
     const v = e.target.value.trim();
-    $('namePrint').textContent = v;
-    $('namePrint').setAttribute('textLength', Math.min(52, Math.max(16, v.length * 3.6)));
-    $('nameText').textContent = (v.split(/\s+/)[0] || '').toUpperCase();
+    $('brandText').textContent = v.toUpperCase();
+    $('brandText').setAttribute('textLength', Math.min(96, Math.max(20, v.length * 14)));
+    $('nameText').textContent = v.toUpperCase();
   });
   // Startzustand aus den Bedienelementen übernehmen
   ['hairStyle', 'beard', 'mustacheOn', 'glasses', 'headwear', 'tunnelsOn', 'tattoosOn', 'outfit'].forEach(id => $(id).dispatchEvent(new Event('change')));

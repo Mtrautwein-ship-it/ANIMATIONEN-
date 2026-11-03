@@ -103,7 +103,7 @@
     <div class="tag">Step 1 · Flüssigkeitskategorien</div>
 
     <!-- 1 Intro -->
-    <section class="slide" id="s-intro" data-from="0.6" data-to="9">
+    <section class="slide" id="s-intro">
       <div class="step in" data-at="0.4">STEP 1</div>
       <h1 class="in" data-at="0.8">Die 5 Flüssigkeits&shy;kategorien</h1>
       <p class="lead in" data-at="1.4">Welche Flüssigkeit gefährdet unser Trinkwasser – und wie stark?</p>
@@ -118,7 +118,7 @@
     </section>
 
     <!-- 2 Warum -->
-    <section class="slide" id="s-why" data-from="9" data-to="26">
+    <section class="slide" id="s-why">
       <h2 class="in" data-at="0.3">Warum das Ganze?</h2>
       <p class="lead in" data-at="0.8" style="max-width:1000px">Bei Druckabfall kann Wasser <b style="color:var(--k5)">zurückfließen</b> – und Verschmutzung landet im Trinkwasser.</p>
       <svg id="flow" viewBox="0 0 1090 500">
@@ -168,7 +168,7 @@
     </section>
 
     <!-- 3 Leiter -->
-    <section class="slide" id="s-ladder" data-from="26" data-to="35">
+    <section class="slide" id="s-ladder">
       <h2 class="in" data-at="0.2">Je höher die Kategorie, desto größer die Gefahr</h2>
       <div class="ladder">
         <div class="rung in" data-at="0.8" style="background:var(--k1)"><b>1</b> Trinkwasser</div>
@@ -190,7 +190,7 @@
     <div id="cats"></div>
 
     <!-- 9 Schutz -->
-    <section class="slide" id="s-protect" data-from="110" data-to="126">
+    <section class="slide" id="s-protect">
       <h2 class="in" data-at="0.2">Passende Sicherungseinrichtung</h2>
       <p class="lead in" data-at="0.6" style="font-size:28px">Mindestens nötig je Kategorie – Beispiele:</p>
       <table>
@@ -204,7 +204,7 @@
     </section>
 
     <!-- 10 Zusammenfassung -->
-    <section class="slide" id="s-sum" data-from="126" data-to="141">
+    <section class="slide" id="s-sum">
       <h2 class="in" data-at="0.2">Kurz zusammengefasst</h2>
       <div class="sum">
         <div class="in" data-at="0.8" style="background:var(--k1)"><b>1</b><span>Trink&shy;wasser</span></div>
@@ -224,78 +224,105 @@
 
 <div id="controls">
   <button id="play">▶ Abspielen</button>
-  <input type="range" id="seek" min="0" max="141" step="0.1" value="0">
+  <input type="range" id="seek" min="0" max="200" step="0.1" value="0">
   <span id="time">0.0 s</span>
 </div>
 
 <script>
 // ---------------- Drehbuch ----------------
-const DURATION = 141;
+// Jede Zeile: [Folie, Pose, Sprechertext]. Die Zeiten ergeben sich aus der Sprachaufnahme
+// (TIMING, erzeugt von voice_align.py) – Sätze folgen direkt aufeinander, ohne lange Pausen.
+const SCRIPT = [
+  ['s-intro', 'wave', 'Hallo und herzlich willkommen!'],
+  ['s-intro', 'wave', 'Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
+  ['s-why', 'explain', 'Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.'],
+  ['s-why', 'explain', 'Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.'],
+  ['s-why', 'warn', 'Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!'],
+  ['s-why', 'explain', 'Deshalb ordnen wir jede Flüssigkeit einer von 5 Kategorien zu.'],
+  ['s-ladder', 'explain', 'Die Faustregel: Je höher die Kategorie, desto gefährlicher die Flüssigkeit.'],
+  ['s-ladder', 'explain', 'Schauen wir uns alle fünf genauer an.'],
+  ['cat-1', 'point', 'Kategorie 1 ist unser Trinkwasser – direkt aus der Leitung.'],
+  ['cat-1', 'point', 'Genau das Wasser, das wir schützen wollen.'],
+  ['cat-1', 'explain', 'Hier besteht also keine Gefahr.'],
+  ['cat-2', 'point', 'Kategorie 2: Flüssigkeiten, die die Gesundheit nicht gefährden.'],
+  ['cat-2', 'point', 'Das Trinkwasser ist nur verändert – in Geschmack, Geruch, Farbe oder Temperatur.'],
+  ['cat-2', 'explain', 'Zum Beispiel erwärmtes Trinkwasser oder Kaffee und Tee.'],
+  ['cat-3', 'point', 'Kategorie 3: Hier wird es gesundheitsgefährdend – durch weniger giftige Stoffe.'],
+  ['cat-3', 'point', 'Ein typisches Beispiel ist Heizungswasser ohne Zusätze.'],
+  ['cat-3', 'warn', 'Das gehört auf keinen Fall zurück ins Trinkwasser!'],
+  ['cat-4', 'point', 'Kategorie 4: Jetzt wird es ernst – giftige oder sehr giftige Stoffe.'],
+  ['cat-4', 'point', 'Dazu zählen auch radioaktive, krebserregende oder erbgutverändernde Stoffe.'],
+  ['cat-4', 'explain', 'Zum Beispiel Heizungswasser mit Inhibitoren oder Pflanzenschutzmittel.'],
+  ['cat-5', 'point', 'Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.'],
+  ['cat-5', 'point', 'Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.'],
+  ['cat-5', 'warn', 'Hier braucht es den stärksten Schutz.'],
+  ['s-protect', 'explain', 'Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.'],
+  ['s-protect', 'point', 'Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.'],
+  ['s-protect', 'explain', 'Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.'],
+  ['s-sum', 'explain', 'Kurz zusammengefasst:'],
+  ['s-sum', 'point', '1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.'],
+  ['s-sum', 'wave', 'Bis zum nächsten Step – und bleib sauber!'],
+];
+
+// Ursprüngliche Folienlänge, auf die die Einblend-Zeiten (data-at) ausgelegt sind
+const DESIGN_LEN = { 's-intro': 8.4, 's-why': 17, 's-ladder': 9, 's-protect': 16, 's-sum': 15 };
+
+// Pausen (Sekunden)
+const WALK_IN = 2.55;      // Auftritt
+const GAP_LINE = 0.35;     // zwischen zwei Sätzen
+const GAP_SCENE = 0.5;     // Folienwechsel: Ende Satz -> neue Folie
+const LEAD_SCENE = 0.5;    // neue Folie -> erster Satz
+const OUTRO = 1.8;
+
+const TIMING = /*TIMING*/null;
+
+// ---------------- Zeitplan berechnen ----------------
+const LINES = [];
+const SCENES = [];
+{
+  let t = WALK_IN + 0.15;
+  SCRIPT.forEach(([scene, pose, text], i) => {
+    const dur = TIMING ? TIMING.lines[i].dur : 1.2 + text.length * 0.055;
+    const prev = LINES[i - 1];
+    if (!prev || prev.scene !== scene) {
+      const from = prev ? prev.end + GAP_SCENE : 0.6;
+      if (SCENES.length) SCENES[SCENES.length - 1].to = from + 0.3;
+      SCENES.push({ id: scene, from, to: 0 });
+      t = prev ? from + LEAD_SCENE : t;
+    } else {
+      t = prev.end + GAP_LINE;
+    }
+    LINES.push({ i, scene, pose, text, start: +t.toFixed(3), end: +(t + dur).toFixed(3), dur });
+  });
+}
+const DURATION = +(LINES[LINES.length - 1].end + OUTRO).toFixed(2);
+SCENES[SCENES.length - 1].to = DURATION + 1;
+// Posen-Zeitplan: [ab, pose]
+const POSES = [[0, 'walk'], [WALK_IN, 'wave']];
+LINES.forEach((l, i) => {
+  if (l.scene === 's-intro') return;
+  const first = i === 0 || LINES[i - 1].scene !== l.scene;
+  POSES.push([first ? SCENES.find(s => s.id === l.scene).from : l.start - 0.2, l.pose]);
+});
 
 const CATS = [
-  { n: 1, from: 35, c: 'var(--k1)', kicker: 'Kategorie 1', title: 'Trinkwasser',
+  { n: 1, c: 'var(--k1)', kicker: 'Kategorie 1', title: 'Trinkwasser',
     def: 'Wasser für den menschlichen Gebrauch, das direkt aus der Trinkwasser&shy;installation entnommen wird.',
     ex: ['Kaltes Trinkwasser aus der Leitung'], risk: 'Keine Gefährdung', glass: { fill: '#8cc8f5', extra: 'shine' } },
-  { n: 2, from: 50, c: 'var(--k2)', kicker: 'Kategorie 2', title: 'Keine Gesundheits&shy;gefährdung',
+  { n: 2, c: 'var(--k2)', kicker: 'Kategorie 2', title: 'Keine Gesundheits&shy;gefährdung',
     def: 'Trinkwasser, das in Geschmack, Geruch, Farbe oder Temperatur verändert ist – aber nicht gesundheits&shy;gefährdend.',
     ex: ['Erwärmtes Trinkwasser', 'Kaffee und Tee'], risk: 'Ungefährlich', glass: { fill: '#9a6237', extra: 'steam' } },
-  { n: 3, from: 65, c: 'var(--k3)', kicker: 'Kategorie 3', title: 'Weniger giftige Stoffe',
+  { n: 3, c: 'var(--k3)', kicker: 'Kategorie 3', title: 'Weniger giftige Stoffe',
     def: 'Gesundheits&shy;gefährdung durch einen oder mehrere weniger giftige Stoffe.',
     ex: ['Heizungswasser ohne Zusätze'], risk: 'Geringe Gefährdung', glass: { fill: '#d9c27a', extra: 'drop' } },
-  { n: 4, from: 80, c: 'var(--k4)', kicker: 'Kategorie 4', title: 'Giftige Stoffe',
+  { n: 4, c: 'var(--k4)', kicker: 'Kategorie 4', title: 'Giftige Stoffe',
     def: 'Gesundheits&shy;gefährdung durch giftige oder sehr giftige Stoffe – auch radioaktive, krebserregende oder erbgutverändernde.',
     ex: ['Heizungswasser mit Inhibitoren', 'Pflanzenschutzmittel'], risk: 'Hohe Gefährdung', glass: { fill: '#6c8a2c', extra: 'warn' } },
-  { n: 5, from: 95, c: 'var(--k5)', kicker: 'Kategorie 5', title: 'Krankheitserreger',
+  { n: 5, c: 'var(--k5)', kicker: 'Kategorie 5', title: 'Krankheitserreger',
     def: 'Gesundheits&shy;gefährdung durch Mikroorganismen oder Viren übertragbarer Krankheiten.',
     ex: ['Abwasser, WC und Urinal', 'Regenwasser'], risk: 'Sehr hohe Gefährdung', glass: { fill: '#6b5532', extra: 'germs' } },
 ];
 
-// Posen: [von, bis, pose]
-const POSES = [
-  [0, 2.4, 'walk'], [2.4, 9, 'wave'],
-  [9, 17.4, 'explain'], [17.4, 26, 'warn'],
-  [26, 35, 'explain'],
-  [35, 41, 'point'], [41, 50, 'explain'],
-  [50, 56, 'point'], [56, 65, 'explain'],
-  [65, 71, 'point'], [71, 80, 'explain'],
-  [80, 86, 'point'], [86, 95, 'warn'],
-  [95, 101, 'point'], [101, 110, 'warn'],
-  [110, 116, 'explain'], [116, 126, 'point'],
-  [126, 134.5, 'explain'], [134.5, 141, 'jump'],
-];
-
-// Untertitel = Sprechertext: [von, bis, text]
-const CAPTIONS = [
-  [2.6, 4.45, 'Hallo und herzlich willkommen!'],
-  [4.71, 9.45, 'Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
-  [9.5, 13.45, 'Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.'],
-  [13.5, 17.17, 'Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.'],
-  [17.22, 22.4, 'Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!'],
-  [22.45, 26.35, 'Deshalb ordnen wir jede Flüssigkeit einer von 5 Kategorien zu.'],
-  [26.4, 30.75, 'Die Faustregel: Je höher die Kategorie, desto gefährlicher die Flüssigkeit.'],
-  [30.8, 32.82, 'Schauen wir uns alle fünf genauer an.'],
-  [35.3, 38.93, 'Kategorie 1 ist unser Trinkwasser – direkt aus der Leitung.'],
-  [39.7, 41.89, 'Genau das Wasser, das wir schützen wollen.'],
-  [44.7, 46.64, 'Hier besteht also keine Gefahr.'],
-  [50.3, 54.54, 'Kategorie 2: Flüssigkeiten, die die Gesundheit nicht gefährden.'],
-  [54.9, 59.37, 'Das Trinkwasser ist nur verändert – in Geschmack, Geruch, Farbe oder Temperatur.'],
-  [59.9, 63.2, 'Zum Beispiel erwärmtes Trinkwasser oder Kaffee und Tee.'],
-  [64.63, 69.95, 'Kategorie 3: Hier wird es gesundheitsgefährdend – durch weniger giftige Stoffe.'],
-  [70.0, 73.4, 'Ein typisches Beispiel ist Heizungswasser ohne Zusätze.'],
-  [74.9, 77.48, 'Das gehört auf keinen Fall zurück ins Trinkwasser!'],
-  [79.45, 84.95, 'Kategorie 4: Jetzt wird es ernst – giftige oder sehr giftige Stoffe.'],
-  [85.0, 89.95, 'Dazu zählen auch radioaktive, krebserregende oder erbgutverändernde Stoffe.'],
-  [90.0, 93.93, 'Zum Beispiel Heizungswasser mit Inhibitoren oder Pflanzenschutzmittel.'],
-  [94.52, 99.95, 'Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.'],
-  [100.0, 103.55, 'Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.'],
-  [104.9, 107.04, 'Hier braucht es den stärksten Schutz.'],
-  [110.3, 114.58, 'Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.'],
-  [115.4, 120.16, 'Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.'],
-  [120.9, 126.2, 'Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.'],
-  [126.3, 128.06, 'Kurz zusammengefasst:'],
-  [128.15, 134.65, '1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.'],
-  [134.7, 138.94, 'Bis zum nächsten Step – und bleib sauber!'],
-];
 
 const KCOL = { 1: '#2d8fe0', 2: '#3aa86b', 3: '#e8b416', 4: '#ef7a1a', 5: '#d7141a' };
 
@@ -324,7 +351,7 @@ const catsEl = document.getElementById('cats');
 CATS.forEach(k => {
   const ex = k.ex.map((e, i) => `<div class="ex in" data-at="${5.2 + i * 1.2}">${e}</div>`).join('');
   catsEl.insertAdjacentHTML('beforeend', `
-    <section class="slide" data-from="${k.from}" data-to="${k.from + 15}" style="--c:${k.c}">
+    <section class="slide" id="cat-${k.n}" style="--c:${k.c}">
       <div class="cat-head">
         <div class="cat-num in" data-at="0.2" style="background:${k.c}">${k.n}</div>
         <div class="in" data-at="0.5"><div class="cat-kicker" style="color:${k.c}">${k.kicker}</div><div class="cat-title">${k.title}</div></div>
@@ -341,7 +368,7 @@ CATS.forEach(k => {
     </section>`);
 });
 
-// ---------------- Figur vorbereiten (Marcel-Look) ----------------
+// ---------------- Figur vorbereiten ----------------
 const fig = document.getElementById('figur');
 const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; };
 ['hairShort', 'hairSide', 'hairCurly', 'hairThin', 'glassesRound', 'glassesSquare', 'helmet', 'beardStubble', 'beardShort'].forEach(id => show(id, false));
@@ -351,9 +378,18 @@ fig.classList.remove('pointer-on');
 // ---------------- Rendern zum Zeitpunkt t ----------------
 const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
 const slides = [...document.querySelectorAll('.slide')];
+for (const sl of slides) {
+  const sc = SCENES.find(x => x.id === sl.id);
+  sl.dataset.from = sc.from; sl.dataset.to = sc.to;
+  sl.dataset.k = Math.min(1, (sc.to - sc.from) / (DESIGN_LEN[sl.id] || 15));
+}
+const lineAt = id => LINES.filter(l => l.scene === id);
+const T_BACK = lineAt('s-why')[1].start + 1.4, T_THREE = lineAt('s-why')[2].start;
 const capEl = document.querySelector('#caption span');
 const figWrap = document.getElementById('figWrap');
-let currentPose = '', currentTalk = null;
+let currentPose = '', currentTalk = null, blend = null;
+const mouth = document.getElementById('mouth');
+const PARTS = [['armL', 'armLwrap'], ['armR', 'armRwrap'], ['head', 'headWrap']].map(([a, b]) => [document.getElementById(a), document.getElementById(b)]);
 
 function render(t) {
   // Folien
@@ -364,46 +400,75 @@ function render(t) {
     s.style.visibility = a > 0 ? 'visible' : 'hidden';
     if (a <= 0) continue;
     for (const el of s.querySelectorAll('.in')) {
-      const p = ease((t - from - +el.dataset.at) / 0.45);
+      const p = ease((t - from - +el.dataset.at * +s.dataset.k) / 0.45);
       el.style.opacity = p;
       el.style.transform = `translateY(${(1 - p) * 30}px)`;
     }
   }
   // Rückfluss-Animation
-  const back = t >= 15.2;
+  const back = t >= T_BACK;
   document.getElementById('flowClean').style.strokeDashoffset = -t * 160;
-  document.getElementById('flowClean').style.opacity = back ? Math.max(0, 1 - (t - 15.2) / 0.5) : 1;
+  document.getElementById('flowClean').style.opacity = back ? Math.max(0, 1 - (t - T_BACK) / 0.5) : 1;
   document.getElementById('flowDirty').style.strokeDashoffset = -t * 160;
-  document.getElementById('flowDirty').style.opacity = back ? Math.min(1, (t - 15.2) / 0.5) : 0;
+  document.getElementById('flowDirty').style.opacity = back ? Math.min(1, (t - T_BACK) / 0.5) : 0;
   document.getElementById('arrowFwd').style.opacity = back ? 0 : 1;
   document.getElementById('arrowBack').style.opacity = back ? 1 : 0;
-  document.getElementById('threeR').style.opacity = ease((t - 17.6) / 0.5);
+  document.getElementById('threeR').style.opacity = ease((t - T_THREE) / 0.5);
   // Dampf & Keime wackeln
   document.querySelectorAll('.steam').forEach(el => el.style.transform = `translateY(${Math.sin(t * 3) * 6}px)`);
   document.querySelectorAll('.germ').forEach((el, i) => el.style.transform = `translate(${Math.sin(t * 2 + i) * 6}px, ${Math.cos(t * 2.5 + i) * 6}px)`);
 
   // Figur: Auftritt
-  const walkIn = ease(t / 2.4);
+  const walkIn = ease(t / WALK_IN);
   figWrap.style.transform = `translateX(${(1 - walkIn) * -760}px)`;
-  // Pose
-  const pose = (POSES.find(([a, b]) => t >= a && t < b) || POSES[POSES.length - 1])[2];
+  // Pose (mit weichem Übergang: Arme und Kopf drehen sanft in die neue Haltung)
+  let pose = POSES[0][1];
+  for (const [a, p] of POSES) if (t >= a) pose = p;
   if (pose !== currentPose) {
+    const before = PARTS.map(([el]) => angleOf(el));
     fig.classList.forEach(c => c.startsWith('mode-') && fig.classList.remove(c));
     fig.classList.add('mode-' + pose); currentPose = pose;
+    syncAnimations(t);
+    const after = PARTS.map(([el]) => angleOf(el));
+    blend = { t, delta: before.map((b, k) => { let d = b - after[k]; while (d > 180) d -= 360; while (d < -180) d += 360; return d; }) };
   }
-  // Untertitel + Sprechen
-  const cap = CAPTIONS.find(([a, b]) => t >= a && t < b);
-  const text = cap ? cap[2] : '';
-  if (capEl.textContent !== text) capEl.textContent = text;
-  const talk = !!cap && t < cap[1] - 0.25;
-  if (talk !== currentTalk) { fig.classList.toggle('talking', talk); currentTalk = talk; }
+  const bk = blend ? 1 - ease((t - blend.t) / 0.9) : 0;
+  PARTS.forEach(([, wrap], k) => { wrap.style.transform = bk > 0 && t >= blend.t ? `rotate(${blend.delta[k] * bk}deg)` : ''; });
 
-  // CSS-Animationen der Figur auf Zeitpunkt t setzen (deterministisch)
+  // Untertitel + Mund (folgt der Lautstärke der Stimme)
+  const line = LINES.find(l => t >= l.start && t < l.end + 0.15);
+  const text = line ? line.text : '';
+  if (capEl.textContent !== text) capEl.textContent = text;
+  if (TIMING) {
+    let open = 0, speaking = false;
+    const cur = LINES.find(l => t >= l.start && t < l.end);
+    if (cur) {
+      speaking = true;
+      const env = TIMING.lines[cur.i].env;
+      open = env[Math.min(env.length - 1, Math.floor((t - cur.start) * TIMING.fps))] || 0;
+    }
+    mouth.style.transform = `scaleY(${speaking ? 0.4 + 0.5 * open : 0.55})`;
+  } else {
+    const talk = !!line && t < line.end;
+    if (talk !== currentTalk) { fig.classList.toggle('talking', talk); currentTalk = talk; }
+  }
+
+  syncAnimations(t);
+}
+// CSS-Animationen der Figur auf Zeitpunkt t setzen (deterministisch)
+function syncAnimations(t) {
   getComputedStyle(fig).transform;
   for (const an of fig.getAnimations({ subtree: true })) { an.pause(); an.currentTime = t * 1000; }
 }
+function angleOf(el) {
+  const m = getComputedStyle(el).transform;
+  if (!m || m === 'none') return 0;
+  const v = m.slice(m.indexOf('(') + 1, -1).split(',').map(Number);
+  return Math.atan2(v[1], v[0]) * 180 / Math.PI;
+}
 window.render = render;
 window.DURATION = DURATION;
+window.LINES = LINES;
 
 // ---------------- Vorschau-Player ----------------
 function fit() {
@@ -425,6 +490,7 @@ playBtn.onclick = () => {
   if (playing) { start = +seek.value >= DURATION - 0.1 ? 0 : +seek.value; t0 = performance.now(); requestAnimationFrame(frame); }
 };
 seek.oninput = () => { playing = false; playBtn.textContent = '▶ Abspielen'; render(+seek.value); timeEl.textContent = (+seek.value).toFixed(1) + ' s'; };
+seek.max = DURATION;
 if (location.search.includes('render')) document.body.classList.add('render');
 render(0);
 </script>

@@ -1,25 +1,21 @@
-"""Legt eine KI-Sprachaufnahme passend unter das Video.
+"""Bereitet eine KI-Sprachaufnahme (eine MP3 mit dem ganzen Sprechertext) für das Video vor.
 
-1. Findet in der MP3 die einzelnen Sätze (über Sprechpausen).
-2. Setzt jeden Satz auf den Startzeitpunkt seines Untertitels (CAPTIONS im Template).
-   Ist ein Satz zu lang, beginnt er etwas früher oder wird leicht beschleunigt (max. 15 %).
-3. Passt die Untertitel-Endzeiten an die echte Sprechdauer an (Mundbewegung synchron).
-4. Schreibt die fertige Tonspur als WAV.
+1. Findet in der MP3 die einzelnen Sätze (über Sprechpausen, optimal zugeordnet zur Textlänge).
+2. Berechnet für jeden Satz die Lautstärke-Kurve (steuert die Mundbewegung der Figur).
+3. Schreibt step1-timing.json – build.py baut das ins Video ein; die Zeiten ergeben sich daraus.
 
-Aufruf: python3 voice_align.py stimme.mp3 tonspur.wav
+Aufruf: python3 voice_align.py stimme.mp3
 """
-import re, subprocess, sys
+import json, re, subprocess, sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parent
-src, out = Path(sys.argv[1]), Path(sys.argv[2])
-tpl_path = root / 'step1-template.html'
-tpl = tpl_path.read_text(encoding='utf-8')
-
-m = re.search(r'const CAPTIONS = \[\n(.*?)\n\];', tpl, re.S)
-cap_lines = m.group(1).split('\n')
-caps = [[float(a), float(b), t] for a, b, t in (re.match(r"\s*\[([\d.]+), ([\d.]+), '(.*)'\],?", l).groups() for l in cap_lines)]
+src = Path(sys.argv[1]).resolve()
+tpl = (root / 'step1-template.html').read_text(encoding='utf-8')
+block = re.search(r'const SCRIPT = \[\n(.*?)\n\];', tpl, re.S).group(1)
+caps = [m.group(1) for m in re.finditer(r"\['[^']+', '[^']+', '(.*)'\],", block)]
 n = len(caps)
+FPS = 30
 
 # Sprechpausen finden
 log = subprocess.run(['ffmpeg', '-i', str(src), '-af', 'silencedetect=noise=-40dB:d=0.15', '-f', 'null', '-'],
@@ -33,7 +29,7 @@ lead = ends[0] if starts and starts[0] <= 0.05 else 0.0
 
 # Optimale Zuordnung: n-1 Schnitte aus den Pausen wählen, sodass die Satzlängen
 # möglichst gut zur Textlänge passen und bevorzugt an langen Pausen geschnitten wird.
-chars = [len(t) for _, _, t in caps]
+chars = [len(t) for t in caps]
 speech = total - lead - sum(e - s for s, e in pauses)
 rate = speech / sum(chars)
 P = len(pauses)
@@ -71,40 +67,28 @@ for i in range(n, 0, -1):
     k = k0
 segs.reverse()
 
-parts, new_caps, report = [], [], []
-prev_end = 0.0
-for i, ((a, b, text), (s, e)) in enumerate(zip(caps, segs)):
+# Lautstärke-Kurve je Satz (für den Mund)
+pcm = subprocess.run(['ffmpeg', '-loglevel', 'error', '-i', str(src), '-ac', '1', '-ar', '16000', '-f', 's16le', '-'],
+                     capture_output=True, check=True).stdout
+import array
+samples = array.array('h', pcm)
+SR, hop = 16000, 16000 // FPS
+def rms(a, b):
+    seg = samples[a:b]
+    return (sum(x * x for x in seg) / max(len(seg), 1)) ** 0.5
+lines, allv = [], []
+for (s, e) in segs:
     s, e = max(0, s - 0.05), min(total, e + 0.08)
-    dur = e - s
-    limit = (caps[i + 1][0] if i + 1 < n else 141.0) - 0.15   # spätestens hier fertig
-    start, tempo = max(a, prev_end + 0.25), 1.0
-    if start + dur > limit:                       # früher anfangen, wenn davor Platz ist
-        start = max(prev_end + 0.25, limit - dur)
-    if start + dur > limit:                       # sonst leicht beschleunigen
-        tempo = min(1.15, dur / max(limit - start, 0.1))
-    spoken = dur / tempo
-    prev_end = start + spoken
-    clip = root / f'.voice_{i:02d}.wav'
-    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', f'{s:.3f}', '-to', f'{e:.3f}', '-i', str(src),
-                    '-af', f'atempo={tempo:.4f},adelay={int(start * 1000)}:all=1', '-ar', '48000', '-ac', '2', str(clip)], check=True)
-    parts.append(clip)
-    new_caps.append([round(start, 2), round(start + spoken + 0.25, 2), text])
-    report.append(f'{start:6.1f}s  {spoken:5.2f}s  x{tempo:.2f}  {text[:50]}')
+    vals = [rms(int((s + k / FPS) * SR) - hop // 2, int((s + k / FPS) * SR) + hop) for k in range(int((e - s) * FPS) + 1)]
+    lines.append({'s': round(s, 3), 'e': round(e, 3), 'dur': round(e - s, 3), 'raw': vals})
+    allv += vals
+ref = sorted(allv)[int(len(allv) * 0.95)] or 1
+for l in lines:
+    v = [min(1.0, (x / ref) ** 0.7) for x in l.pop('raw')]
+    sm = [(v[max(0, k - 1)] + 2 * v[k] + v[min(len(v) - 1, k + 1)]) / 4 for k in range(len(v))]
+    l['env'] = [round(x, 2) for x in sm]
 
-# Untertitel dürfen sich nicht überlappen
-for i in range(len(new_caps) - 1):
-    new_caps[i][1] = min(new_caps[i][1], round(new_caps[i + 1][0] - 0.05, 2))
-
-# Mischen
-inputs = sum([['-i', str(p)] for p in parts], [])
-subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', *inputs, '-filter_complex',
-                f'amix=inputs={len(parts)}:normalize=0,apad=whole_dur=141,loudnorm=I=-16:TP=-1.5:LRA=11',
-                '-ar', '48000', str(out)], check=True)
-for p in parts:
-    p.unlink()
-
-# Untertitel-Endzeiten an die Sprache anpassen
-new_lines = [f"  [{a}, {e}, '{t}']," for a, e, t in new_caps]
-tpl = tpl[:m.start(1)] + '\n'.join(new_lines) + tpl[m.end(1):]
-tpl_path.write_text(tpl, encoding='utf-8')
-print('\n'.join(report))
+out = {'source': src.name, 'fps': FPS, 'lines': lines}
+(root / 'step1-timing.json').write_text(json.dumps(out, ensure_ascii=False), encoding='utf-8')
+for t, l in zip(caps, lines):
+    print(f"{l['dur']:5.2f}s  {t[:60]}")

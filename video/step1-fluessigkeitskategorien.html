@@ -103,7 +103,7 @@
     <div class="tag">Step 1 · Flüssigkeitskategorien</div>
 
     <!-- 1 Intro -->
-    <section class="slide" id="s-intro" data-from="0.6" data-to="9">
+    <section class="slide" id="s-intro">
       <div class="step in" data-at="0.4">STEP 1</div>
       <h1 class="in" data-at="0.8">Die 5 Flüssigkeits&shy;kategorien</h1>
       <p class="lead in" data-at="1.4">Welche Flüssigkeit gefährdet unser Trinkwasser – und wie stark?</p>
@@ -118,7 +118,7 @@
     </section>
 
     <!-- 2 Warum -->
-    <section class="slide" id="s-why" data-from="9" data-to="26">
+    <section class="slide" id="s-why">
       <h2 class="in" data-at="0.3">Warum das Ganze?</h2>
       <p class="lead in" data-at="0.8" style="max-width:1000px">Bei Druckabfall kann Wasser <b style="color:var(--k5)">zurückfließen</b> – und Verschmutzung landet im Trinkwasser.</p>
       <svg id="flow" viewBox="0 0 1090 500">
@@ -168,7 +168,7 @@
     </section>
 
     <!-- 3 Leiter -->
-    <section class="slide" id="s-ladder" data-from="26" data-to="35">
+    <section class="slide" id="s-ladder">
       <h2 class="in" data-at="0.2">Je höher die Kategorie, desto größer die Gefahr</h2>
       <div class="ladder">
         <div class="rung in" data-at="0.8" style="background:var(--k1)"><b>1</b> Trinkwasser</div>
@@ -190,7 +190,7 @@
     <div id="cats"></div>
 
     <!-- 9 Schutz -->
-    <section class="slide" id="s-protect" data-from="110" data-to="126">
+    <section class="slide" id="s-protect">
       <h2 class="in" data-at="0.2">Passende Sicherungseinrichtung</h2>
       <p class="lead in" data-at="0.6" style="font-size:28px">Mindestens nötig je Kategorie – Beispiele:</p>
       <table>
@@ -204,7 +204,7 @@
     </section>
 
     <!-- 10 Zusammenfassung -->
-    <section class="slide" id="s-sum" data-from="126" data-to="141">
+    <section class="slide" id="s-sum">
       <h2 class="in" data-at="0.2">Kurz zusammengefasst</h2>
       <div class="sum">
         <div class="in" data-at="0.8" style="background:var(--k1)"><b>1</b><span>Trink&shy;wasser</span></div>
@@ -244,7 +244,9 @@
         #figur #armR   { transform-origin: 276px 292px; }
         #figur #legL   { transform-origin: 171px 420px; }
         #figur #legR   { transform-origin: 229px 420px; }
-        #figur #head   { transform-origin: 200px 265px; }
+        #figur #head, #figur #headWrap { transform-origin: 200px 265px; }
+        #figur #armLwrap { transform-origin: 124px 292px; }
+        #figur #armRwrap { transform-origin: 276px 292px; }
         #figur #upper  { transform-origin: 200px 450px; }
         #figur #all    { transform-origin: 200px 530px; }
         #figur #shadow { transform-origin: 200px 540px; }
@@ -265,8 +267,8 @@
         @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
 
         /* Sprechen (kombinierbar mit jeder Pose) */
-        #figur.talking #mouth { animation: talk .36s infinite alternate ease-in-out; }
-        @keyframes talk { 0% { transform: scaleY(.35); } 40% { transform: scaleY(1.15); } 70% { transform: scaleY(.6); } 100% { transform: scaleY(1.3) scaleX(.9); } }
+        #figur.talking #mouth { animation: talk .6s infinite alternate ease-in-out; }
+        @keyframes talk { 0% { transform: scaleY(.5); } 50% { transform: scaleY(.85); } 100% { transform: scaleY(.6); } }
 
         /* Pose: Stehen / Atmen */
         #figur.mode-idle #upper { animation: breathe 3s infinite ease-in-out; }
@@ -276,32 +278,32 @@
 
         /* Pose: Erklären (Hände gestikulieren) */
         #figur.mode-explain #upper { animation: breathe 3s infinite ease-in-out; }
-        #figur.mode-explain #armL { animation: gestureL 2.4s infinite ease-in-out; }
-        #figur.mode-explain #armR { animation: gestureR 2.4s infinite ease-in-out; }
-        #figur.mode-explain #head { animation: explainHead 2.4s infinite ease-in-out; }
-        @keyframes gestureL { 0%, 100% { transform: rotate(35deg); } 25% { transform: rotate(70deg); } 50% { transform: rotate(45deg); } 75% { transform: rotate(60deg); } }
-        @keyframes gestureR { 0%, 100% { transform: rotate(-55deg); } 25% { transform: rotate(-35deg); } 50% { transform: rotate(-75deg); } 75% { transform: rotate(-40deg); } }
-        @keyframes explainHead { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+        #figur.mode-explain #armL { animation: gestureL 5s infinite ease-in-out; }
+        #figur.mode-explain #armR { animation: gestureR 5s infinite ease-in-out; }
+        #figur.mode-explain #head { animation: explainHead 5s infinite ease-in-out; }
+        @keyframes gestureL { 0%, 100% { transform: rotate(28deg); } 25% { transform: rotate(42deg); } 50% { transform: rotate(32deg); } 75% { transform: rotate(38deg); } }
+        @keyframes gestureR { 0%, 100% { transform: rotate(-38deg); } 25% { transform: rotate(-30deg); } 50% { transform: rotate(-48deg); } 75% { transform: rotate(-34deg); } }
+        @keyframes explainHead { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
 
         /* Pose: Winken */
-        #figur.mode-wave #armR { animation: wave .9s infinite ease-in-out; }
+        #figur.mode-wave #armR { animation: wave 1.6s infinite ease-in-out; }
         #figur.mode-wave #head { transform: rotate(-4deg); }
         #figur.mode-wave #upper { animation: breathe 3s infinite ease-in-out; }
-        @keyframes wave { 0%, 100% { transform: rotate(-120deg); } 50% { transform: rotate(-150deg); } }
+        @keyframes wave { 0%, 100% { transform: rotate(-124deg); } 50% { transform: rotate(-144deg); } }
 
         /* Pose: Zeigen (mit Rohr-Zeigestab) */
-        #figur.mode-point #armR { animation: point 2.2s infinite ease-in-out; }
+        #figur.mode-point #armR { animation: point 4s infinite ease-in-out; }
         #figur.mode-point #armL { transform: rotate(10deg); }
         #figur.mode-point #head { transform: rotate(6deg); }
         #figur.mode-point #upper { animation: breathe 3s infinite ease-in-out; }
-        @keyframes point { 0%, 100% { transform: rotate(-98deg); } 50% { transform: rotate(-106deg); } }
+        @keyframes point { 0%, 100% { transform: rotate(-99deg); } 50% { transform: rotate(-103deg); } }
 
         /* Pose: Achtung! (Finger hoch, Augenbrauen hoch) */
-        #figur.mode-warn #armR { animation: warn 1.2s infinite ease-in-out; }
+        #figur.mode-warn #armR { animation: warn 2.4s infinite ease-in-out; }
         #figur.mode-warn #brows { transform: translateY(-8px); }
-        #figur.mode-warn #head { animation: shake 1.2s infinite ease-in-out; }
-        @keyframes warn { 0%, 100% { transform: rotate(-128deg); } 50% { transform: rotate(-138deg); } }
-        @keyframes shake { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+        #figur.mode-warn #head { animation: shake 2.4s infinite ease-in-out; }
+        @keyframes warn { 0%, 100% { transform: rotate(-129deg); } 50% { transform: rotate(-134deg); } }
+        @keyframes shake { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
 
         /* Pose: Gehen (auf der Stelle – Bewegung im Schnittprogramm) */
         #figur.mode-walk #legL { animation: legSwing .6s infinite ease-in-out; }
@@ -380,17 +382,14 @@
             <path class="ol" fill="#4fb3e8" style="stroke-width:3" d="M248,298 C258,312 263,320 263,328 A15,15 0 0 1 233,328 C233,320 238,312 248,298 Z"/>
             <path d="M241,326 A7,7 0 0 0 247,334" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 </g>
-            <!-- T-Shirt: Rundhals, Namensaufdruck, Wappen -->
+            <!-- T-Shirt: Rundhals, Schriftzug -->
             <g class="tee-only">
               <path class="skin" d="M166,256 Q200,292 234,256 Z"/>
               <path d="M164,257 Q200,296 236,257" fill="none" stroke="#3a3a3d" stroke-width="7" stroke-linecap="round"/>
               <path d="M164,257 Q200,296 236,257" fill="none" class="ol" style="stroke-width:3"/>
-              <text id="namePrint" x="174" y="334" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" textLength="52" lengthAdjust="spacingAndGlyphs">Marcel Trautwein</text>
-              <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M234,302 H266 V322 Q266,338 250,346 Q234,338 234,322 Z"/>
-                <path d="M240,334 L260,310 M240,310 L260,334"/>
-              </g>
-              <path d="M250,312 C254,318 256,321 256,324 A6,6 0 0 1 244,324 C244,321 246,318 250,312 Z" fill="#4fb3e8" stroke="#fff" stroke-width="1.5"/>
+              <!-- Schriftzug: weiß auf rotem Balken -->
+              <rect x="147" y="320" width="106" height="30" rx="2" fill="#d7141a"/>
+              <text id="brandText" x="200" y="345" text-anchor="middle" font-family="'Arial Black', 'Inter', Arial, sans-serif" font-size="26" font-weight="900" fill="#ffffff" textLength="96" lengthAdjust="spacingAndGlyphs">PMPNZNG</text>
             </g>
             <!-- Werkzeugtasche mit Rohrzange -->
             <g id="pouch">
@@ -402,7 +401,7 @@
           </g></g>
 
           <!-- Kopf -->
-          <g id="head">
+          <g id="headWrap"><g id="head">
             <ellipse class="skin ol" cx="110" cy="188" rx="15" ry="21"/>
             <ellipse class="skin ol" cx="290" cy="188" rx="15" ry="21"/>
             <path d="M106,180 Q114,188 108,198" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
@@ -510,9 +509,9 @@
               <path class="white ol" d="M82,154 Q200,134 318,154 Q322,166 306,166 Q200,150 94,166 Q78,166 82,154 Z"/>
               <path class="ol" fill="#4fb3e8" style="stroke-width:3" d="M200,90 C210,104 215,112 215,120 A15,15 0 0 1 185,120 C185,112 190,104 200,90 Z"/>
             </g>
-          </g>
+          </g></g>
           <!-- Linker Arm (vom Betrachter aus) -->
-          <g id="armL">
+          <g id="armLwrap"><g id="armL">
             <line class="arm-ol" x1="124" y1="292" x2="100" y2="378"/>
             <g class="jacket-only">
               <line class="arm-fill" x1="124" y1="292" x2="100" y2="378"/>
@@ -532,10 +531,10 @@
             <circle class="skin ol" cx="98" cy="396" r="21"/>
             <ellipse class="skin ol" cx="115" cy="388" rx="8" ry="11" transform="rotate(-20 115 388)"/>
             <path d="M84,404 Q90,409 97,407" fill="none" stroke="#cfd5da" stroke-width="4" stroke-linecap="round"/>
-          </g>
+          </g></g>
 
           <!-- Rechter Arm (vom Betrachter aus) mit Rohr-Zeigestab -->
-          <g id="armR">
+          <g id="armRwrap"><g id="armR">
             <line class="arm-ol" x1="276" y1="292" x2="300" y2="378"/>
             <g class="jacket-only">
               <line class="arm-fill" x1="276" y1="292" x2="300" y2="378"/>
@@ -559,7 +558,7 @@
             </g>
             <circle class="skin ol" cx="302" cy="396" r="21"/>
             <ellipse class="skin ol" cx="285" cy="388" rx="8" ry="11" transform="rotate(20 285 388)"/>
-          </g>
+          </g></g>
 
         </g>
       </g>
@@ -570,78 +569,105 @@
 
 <div id="controls">
   <button id="play">▶ Abspielen</button>
-  <input type="range" id="seek" min="0" max="141" step="0.1" value="0">
+  <input type="range" id="seek" min="0" max="200" step="0.1" value="0">
   <span id="time">0.0 s</span>
 </div>
 
 <script>
 // ---------------- Drehbuch ----------------
-const DURATION = 141;
+// Jede Zeile: [Folie, Pose, Sprechertext]. Die Zeiten ergeben sich aus der Sprachaufnahme
+// (TIMING, erzeugt von voice_align.py) – Sätze folgen direkt aufeinander, ohne lange Pausen.
+const SCRIPT = [
+  ['s-intro', 'wave', 'Hallo und herzlich willkommen!'],
+  ['s-intro', 'wave', 'Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
+  ['s-why', 'explain', 'Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.'],
+  ['s-why', 'explain', 'Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.'],
+  ['s-why', 'warn', 'Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!'],
+  ['s-why', 'explain', 'Deshalb ordnen wir jede Flüssigkeit einer von 5 Kategorien zu.'],
+  ['s-ladder', 'explain', 'Die Faustregel: Je höher die Kategorie, desto gefährlicher die Flüssigkeit.'],
+  ['s-ladder', 'explain', 'Schauen wir uns alle fünf genauer an.'],
+  ['cat-1', 'point', 'Kategorie 1 ist unser Trinkwasser – direkt aus der Leitung.'],
+  ['cat-1', 'point', 'Genau das Wasser, das wir schützen wollen.'],
+  ['cat-1', 'explain', 'Hier besteht also keine Gefahr.'],
+  ['cat-2', 'point', 'Kategorie 2: Flüssigkeiten, die die Gesundheit nicht gefährden.'],
+  ['cat-2', 'point', 'Das Trinkwasser ist nur verändert – in Geschmack, Geruch, Farbe oder Temperatur.'],
+  ['cat-2', 'explain', 'Zum Beispiel erwärmtes Trinkwasser oder Kaffee und Tee.'],
+  ['cat-3', 'point', 'Kategorie 3: Hier wird es gesundheitsgefährdend – durch weniger giftige Stoffe.'],
+  ['cat-3', 'point', 'Ein typisches Beispiel ist Heizungswasser ohne Zusätze.'],
+  ['cat-3', 'warn', 'Das gehört auf keinen Fall zurück ins Trinkwasser!'],
+  ['cat-4', 'point', 'Kategorie 4: Jetzt wird es ernst – giftige oder sehr giftige Stoffe.'],
+  ['cat-4', 'point', 'Dazu zählen auch radioaktive, krebserregende oder erbgutverändernde Stoffe.'],
+  ['cat-4', 'explain', 'Zum Beispiel Heizungswasser mit Inhibitoren oder Pflanzenschutzmittel.'],
+  ['cat-5', 'point', 'Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.'],
+  ['cat-5', 'point', 'Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.'],
+  ['cat-5', 'warn', 'Hier braucht es den stärksten Schutz.'],
+  ['s-protect', 'explain', 'Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.'],
+  ['s-protect', 'point', 'Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.'],
+  ['s-protect', 'explain', 'Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.'],
+  ['s-sum', 'explain', 'Kurz zusammengefasst:'],
+  ['s-sum', 'point', '1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.'],
+  ['s-sum', 'wave', 'Bis zum nächsten Step – und bleib sauber!'],
+];
+
+// Ursprüngliche Folienlänge, auf die die Einblend-Zeiten (data-at) ausgelegt sind
+const DESIGN_LEN = { 's-intro': 8.4, 's-why': 17, 's-ladder': 9, 's-protect': 16, 's-sum': 15 };
+
+// Pausen (Sekunden)
+const WALK_IN = 2.55;      // Auftritt
+const GAP_LINE = 0.35;     // zwischen zwei Sätzen
+const GAP_SCENE = 0.5;     // Folienwechsel: Ende Satz -> neue Folie
+const LEAD_SCENE = 0.5;    // neue Folie -> erster Satz
+const OUTRO = 1.8;
+
+const TIMING = {"source": "step1-stimme-chris.mp3", "fps": 30, "lines": [{"s": 0, "e": 1.603, "dur": 1.603, "env": [0.0, 0.05, 0.27, 0.65, 0.93, 1.0, 0.99, 0.98, 0.96, 0.83, 0.56, 0.33, 0.33, 0.53, 0.64, 0.54, 0.31, 0.16, 0.07, 0.02, 0.02, 0.08, 0.3, 0.67, 0.92, 0.81, 0.51, 0.42, 0.45, 0.51, 0.63, 0.63, 0.62, 0.79, 0.92, 0.73, 0.44, 0.5, 0.8, 0.88, 0.75, 0.65, 0.57, 0.47, 0.36, 0.22, 0.1, 0.03, 0.01]}, {"s": 2.21, "e": 6.754, "dur": 4.544, "env": [0.03, 0.13, 0.28, 0.35, 0.44, 0.7, 0.94, 0.8, 0.45, 0.38, 0.57, 0.76, 0.87, 0.92, 0.91, 0.82, 0.64, 0.42, 0.28, 0.21, 0.14, 0.28, 0.68, 0.88, 0.87, 0.88, 0.86, 0.65, 0.3, 0.09, 0.16, 0.35, 0.44, 0.51, 0.69, 0.85, 0.81, 0.58, 0.32, 0.23, 0.31, 0.35, 0.31, 0.3, 0.27, 0.21, 0.17, 0.16, 0.19, 0.18, 0.13, 0.12, 0.15, 0.19, 0.19, 0.15, 0.11, 0.1, 0.08, 0.05, 0.03, 0.01, 0.01, 0.0, 0.01, 0.07, 0.21, 0.31, 0.27, 0.17, 0.11, 0.11, 0.22, 0.52, 0.86, 0.96, 0.86, 0.77, 0.63, 0.39, 0.21, 0.15, 0.13, 0.1, 0.07, 0.04, 0.02, 0.04, 0.09, 0.13, 0.14, 0.15, 0.17, 0.31, 0.65, 0.92, 0.99, 0.87, 0.66, 0.49, 0.44, 0.47, 0.49, 0.47, 0.39, 0.26, 0.21, 0.26, 0.35, 0.39, 0.35, 0.24, 0.17, 0.23, 0.34, 0.33, 0.26, 0.29, 0.36, 0.38, 0.34, 0.24, 0.19, 0.21, 0.19, 0.19, 0.24, 0.24, 0.16, 0.1, 0.11, 0.11, 0.09, 0.08, 0.06, 0.04, 0.03]}, {"s": 7.649, "e": 11.408, "dur": 3.758, "env": [0.08, 0.34, 0.7, 0.94, 0.95, 0.89, 0.91, 0.76, 0.39, 0.18, 0.27, 0.53, 0.82, 0.96, 0.89, 0.64, 0.54, 0.76, 0.83, 0.57, 0.36, 0.43, 0.64, 0.66, 0.49, 0.42, 0.52, 0.6, 0.56, 0.43, 0.29, 0.27, 0.42, 0.6, 0.74, 0.86, 0.82, 0.67, 0.63, 0.63, 0.47, 0.25, 0.19, 0.27, 0.3, 0.26, 0.2, 0.14, 0.09, 0.07, 0.06, 0.04, 0.02, 0.01, 0.02, 0.07, 0.19, 0.37, 0.46, 0.45, 0.39, 0.5, 0.82, 0.87, 0.6, 0.42, 0.51, 0.78, 0.89, 0.81, 0.85, 0.96, 0.99, 0.92, 0.67, 0.33, 0.16, 0.11, 0.04, 0.01, 0.0, 0.0, 0.16, 0.56, 0.83, 0.72, 0.51, 0.42, 0.38, 0.36, 0.39, 0.48, 0.65, 0.77, 0.78, 0.72, 0.75, 0.84, 0.7, 0.42, 0.31, 0.31, 0.31, 0.29, 0.23, 0.19, 0.18, 0.19, 0.18, 0.14, 0.09, 0.04, 0.02]}, {"s": 12.03, "e": 15.495, "dur": 3.465, "env": [0.03, 0.21, 0.57, 0.87, 0.95, 0.83, 0.72, 0.76, 0.79, 0.71, 0.53, 0.31, 0.14, 0.05, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.02, 0.06, 0.19, 0.45, 0.73, 0.74, 0.54, 0.5, 0.61, 0.55, 0.32, 0.26, 0.38, 0.56, 0.71, 0.62, 0.48, 0.58, 0.68, 0.65, 0.61, 0.56, 0.59, 0.74, 0.86, 0.79, 0.56, 0.44, 0.54, 0.59, 0.55, 0.64, 0.75, 0.62, 0.31, 0.1, 0.03, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.06, 0.22, 0.47, 0.7, 0.77, 0.67, 0.53, 0.53, 0.6, 0.51, 0.39, 0.37, 0.37, 0.38, 0.3, 0.21, 0.29, 0.41, 0.45, 0.59, 0.84, 0.9, 0.64, 0.35, 0.24, 0.22, 0.22, 0.24, 0.24, 0.19, 0.17, 0.19, 0.17, 0.1, 0.05, 0.02]}, {"s": 15.97, "e": 21.706, "dur": 5.736, "env": [0.05, 0.18, 0.27, 0.34, 0.59, 0.89, 0.95, 0.72, 0.44, 0.31, 0.25, 0.19, 0.28, 0.55, 0.78, 0.85, 0.83, 0.74, 0.57, 0.41, 0.34, 0.4, 0.58, 0.68, 0.66, 0.63, 0.6, 0.51, 0.36, 0.2, 0.08, 0.02, 0.0, 0.0, 0.02, 0.08, 0.15, 0.17, 0.17, 0.21, 0.31, 0.57, 0.88, 0.96, 0.73, 0.35, 0.13, 0.07, 0.18, 0.43, 0.58, 0.66, 0.78, 0.74, 0.45, 0.24, 0.35, 0.54, 0.6, 0.59, 0.58, 0.57, 0.54, 0.46, 0.33, 0.22, 0.18, 0.23, 0.31, 0.37, 0.43, 0.43, 0.35, 0.26, 0.18, 0.12, 0.12, 0.17, 0.34, 0.65, 0.92, 0.88, 0.59, 0.41, 0.43, 0.42, 0.43, 0.62, 0.88, 0.98, 0.93, 0.86, 0.74, 0.58, 0.47, 0.48, 0.45, 0.32, 0.15, 0.04, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.07, 0.27, 0.48, 0.53, 0.47, 0.48, 0.54, 0.55, 0.63, 0.85, 0.99, 0.98, 0.93, 0.86, 0.75, 0.54, 0.3, 0.23, 0.35, 0.42, 0.38, 0.36, 0.33, 0.22, 0.16, 0.28, 0.5, 0.6, 0.58, 0.53, 0.4, 0.3, 0.43, 0.65, 0.78, 0.75, 0.51, 0.25, 0.23, 0.31, 0.3, 0.24, 0.2, 0.17, 0.14, 0.17, 0.22, 0.25, 0.31, 0.31, 0.24, 0.17, 0.16, 0.22, 0.26, 0.26, 0.26, 0.24, 0.21, 0.17, 0.11, 0.05, 0.03, 0.01]}, {"s": 22.299, "e": 26.285, "dur": 3.986, "env": [0.02, 0.23, 0.64, 0.77, 0.62, 0.66, 0.89, 0.93, 0.67, 0.39, 0.32, 0.51, 0.79, 0.92, 0.74, 0.48, 0.51, 0.73, 0.83, 0.83, 0.79, 0.76, 0.81, 0.83, 0.76, 0.68, 0.56, 0.42, 0.31, 0.27, 0.34, 0.56, 0.79, 0.88, 0.82, 0.75, 0.74, 0.56, 0.3, 0.19, 0.32, 0.61, 0.75, 0.6, 0.43, 0.37, 0.4, 0.42, 0.32, 0.19, 0.27, 0.57, 0.88, 0.99, 0.9, 0.63, 0.29, 0.11, 0.04, 0.12, 0.42, 0.71, 0.84, 0.84, 0.8, 0.76, 0.78, 0.82, 0.83, 0.74, 0.51, 0.25, 0.13, 0.22, 0.46, 0.54, 0.42, 0.26, 0.13, 0.09, 0.13, 0.31, 0.66, 0.91, 0.94, 0.84, 0.61, 0.33, 0.19, 0.13, 0.14, 0.27, 0.46, 0.71, 0.74, 0.54, 0.5, 0.52, 0.5, 0.65, 0.77, 0.64, 0.47, 0.49, 0.53, 0.47, 0.35, 0.25, 0.18, 0.17, 0.26, 0.35, 0.33, 0.27, 0.23, 0.18, 0.11, 0.06, 0.03, 0.01]}, {"s": 26.942, "e": 31.553, "dur": 4.611, "env": [0.02, 0.13, 0.3, 0.34, 0.28, 0.32, 0.57, 0.88, 1.0, 0.95, 0.8, 0.61, 0.41, 0.24, 0.18, 0.32, 0.64, 0.91, 0.95, 0.84, 0.8, 0.86, 0.82, 0.65, 0.46, 0.26, 0.1, 0.03, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.08, 0.26, 0.44, 0.45, 0.35, 0.29, 0.4, 0.68, 0.93, 1.0, 1.0, 0.92, 0.79, 0.74, 0.61, 0.4, 0.4, 0.63, 0.73, 0.57, 0.45, 0.49, 0.5, 0.58, 0.74, 0.71, 0.58, 0.59, 0.71, 0.75, 0.71, 0.64, 0.51, 0.34, 0.16, 0.05, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.13, 0.33, 0.42, 0.36, 0.29, 0.26, 0.32, 0.32, 0.28, 0.28, 0.23, 0.16, 0.13, 0.15, 0.24, 0.51, 0.84, 0.97, 0.96, 0.94, 0.8, 0.6, 0.48, 0.38, 0.3, 0.32, 0.38, 0.37, 0.32, 0.31, 0.27, 0.2, 0.19, 0.24, 0.34, 0.37, 0.31, 0.25, 0.2, 0.18, 0.19, 0.18, 0.13, 0.14, 0.19, 0.2, 0.15, 0.1, 0.06, 0.05, 0.04, 0.02, 0.01]}, {"s": 32.005, "e": 33.771, "dur": 1.766, "env": [0.03, 0.17, 0.35, 0.55, 0.79, 0.96, 0.96, 0.87, 0.77, 0.75, 0.81, 0.86, 0.82, 0.68, 0.51, 0.36, 0.24, 0.12, 0.13, 0.39, 0.74, 0.91, 0.88, 0.84, 0.73, 0.47, 0.24, 0.17, 0.28, 0.51, 0.63, 0.6, 0.53, 0.39, 0.23, 0.18, 0.29, 0.47, 0.55, 0.55, 0.56, 0.54, 0.52, 0.48, 0.4, 0.29, 0.21, 0.17, 0.15, 0.11, 0.08, 0.05, 0.03]}, {"s": 34.659, "e": 38.035, "dur": 3.377, "env": [0.04, 0.2, 0.52, 0.82, 0.79, 0.66, 0.66, 0.66, 0.77, 0.92, 0.85, 0.68, 0.72, 0.85, 0.86, 0.69, 0.44, 0.36, 0.54, 0.78, 0.9, 0.9, 0.85, 0.81, 0.79, 0.78, 0.64, 0.43, 0.32, 0.27, 0.24, 0.29, 0.38, 0.41, 0.35, 0.25, 0.22, 0.33, 0.5, 0.63, 0.64, 0.67, 0.83, 0.88, 0.62, 0.25, 0.08, 0.14, 0.33, 0.51, 0.7, 0.91, 0.98, 0.86, 0.61, 0.31, 0.2, 0.34, 0.44, 0.36, 0.26, 0.26, 0.24, 0.19, 0.16, 0.12, 0.08, 0.04, 0.02, 0.01, 0.03, 0.14, 0.33, 0.44, 0.49, 0.68, 0.84, 0.66, 0.3, 0.18, 0.35, 0.51, 0.5, 0.39, 0.27, 0.36, 0.7, 0.88, 0.83, 0.86, 0.85, 0.67, 0.43, 0.25, 0.16, 0.16, 0.17, 0.16, 0.11, 0.06, 0.03, 0.01]}, {"s": 38.576, "e": 40.516, "dur": 1.939, "env": [0.03, 0.23, 0.56, 0.76, 0.87, 0.97, 1.0, 1.0, 0.95, 0.88, 0.88, 0.8, 0.59, 0.44, 0.42, 0.61, 0.88, 0.84, 0.55, 0.36, 0.43, 0.67, 0.82, 0.73, 0.51, 0.38, 0.48, 0.56, 0.47, 0.36, 0.29, 0.32, 0.53, 0.69, 0.63, 0.49, 0.43, 0.42, 0.46, 0.61, 0.7, 0.52, 0.32, 0.33, 0.36, 0.33, 0.35, 0.32, 0.24, 0.23, 0.28, 0.28, 0.22, 0.17, 0.12, 0.09, 0.05, 0.03, 0.01]}, {"s": 40.987, "e": 42.676, "dur": 1.689, "env": [0.02, 0.19, 0.58, 0.82, 0.71, 0.52, 0.5, 0.5, 0.41, 0.36, 0.51, 0.65, 0.57, 0.4, 0.36, 0.44, 0.49, 0.45, 0.35, 0.29, 0.29, 0.31, 0.25, 0.11, 0.05, 0.14, 0.31, 0.4, 0.56, 0.81, 0.9, 0.79, 0.64, 0.52, 0.4, 0.31, 0.23, 0.2, 0.19, 0.16, 0.13, 0.13, 0.19, 0.28, 0.3, 0.23, 0.15, 0.11, 0.08, 0.04, 0.01]}, {"s": 43.494, "e": 47.481, "dur": 3.987, "env": [0.06, 0.21, 0.49, 0.84, 0.93, 0.84, 0.76, 0.66, 0.73, 0.9, 0.84, 0.69, 0.74, 0.82, 0.71, 0.44, 0.28, 0.35, 0.47, 0.42, 0.44, 0.69, 0.78, 0.53, 0.3, 0.18, 0.1, 0.05, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.03, 0.07, 0.13, 0.18, 0.35, 0.72, 0.96, 0.89, 0.65, 0.53, 0.56, 0.59, 0.52, 0.34, 0.21, 0.32, 0.64, 0.91, 0.97, 0.84, 0.54, 0.37, 0.55, 0.7, 0.6, 0.5, 0.55, 0.54, 0.5, 0.57, 0.54, 0.46, 0.56, 0.6, 0.48, 0.46, 0.65, 0.87, 0.91, 0.78, 0.55, 0.36, 0.41, 0.6, 0.67, 0.52, 0.28, 0.18, 0.29, 0.45, 0.58, 0.65, 0.59, 0.45, 0.36, 0.27, 0.16, 0.2, 0.36, 0.39, 0.26, 0.2, 0.28, 0.46, 0.61, 0.65, 0.56, 0.39, 0.2, 0.1, 0.07, 0.04, 0.02]}, {"s": 48.239, "e": 52.46, "dur": 4.222, "env": [0.01, 0.15, 0.43, 0.56, 0.46, 0.29, 0.23, 0.39, 0.66, 0.9, 0.95, 0.77, 0.48, 0.39, 0.66, 0.9, 0.79, 0.52, 0.48, 0.66, 0.7, 0.56, 0.46, 0.4, 0.31, 0.32, 0.58, 0.86, 0.98, 0.95, 0.76, 0.45, 0.41, 0.73, 0.87, 0.72, 0.66, 0.74, 0.78, 0.7, 0.56, 0.41, 0.25, 0.13, 0.08, 0.07, 0.03, 0.01, 0.0, 0.06, 0.2, 0.33, 0.36, 0.33, 0.33, 0.4, 0.51, 0.56, 0.48, 0.48, 0.75, 0.96, 0.93, 0.7, 0.4, 0.21, 0.14, 0.08, 0.03, 0.09, 0.29, 0.46, 0.43, 0.38, 0.54, 0.77, 0.81, 0.59, 0.3, 0.17, 0.12, 0.08, 0.06, 0.07, 0.09, 0.24, 0.58, 0.88, 0.97, 0.95, 0.9, 0.69, 0.48, 0.52, 0.61, 0.52, 0.34, 0.2, 0.13, 0.18, 0.33, 0.5, 0.62, 0.66, 0.49, 0.29, 0.29, 0.4, 0.51, 0.49, 0.42, 0.46, 0.53, 0.67, 0.77, 0.58, 0.29, 0.22, 0.25, 0.32, 0.45, 0.47, 0.35, 0.21, 0.09, 0.03, 0.01]}, {"s": 53.119, "e": 56.165, "dur": 3.046, "env": [0.02, 0.11, 0.34, 0.68, 0.9, 0.93, 0.97, 0.99, 0.9, 0.71, 0.51, 0.31, 0.2, 0.34, 0.52, 0.53, 0.5, 0.5, 0.43, 0.38, 0.59, 0.88, 0.98, 0.9, 0.75, 0.54, 0.36, 0.36, 0.42, 0.38, 0.26, 0.18, 0.23, 0.4, 0.67, 0.88, 0.86, 0.66, 0.41, 0.46, 0.8, 0.93, 0.73, 0.48, 0.43, 0.61, 0.8, 0.8, 0.62, 0.41, 0.24, 0.15, 0.16, 0.23, 0.32, 0.42, 0.52, 0.56, 0.47, 0.31, 0.17, 0.09, 0.09, 0.19, 0.31, 0.38, 0.33, 0.21, 0.16, 0.26, 0.51, 0.77, 0.86, 0.84, 0.75, 0.57, 0.35, 0.26, 0.24, 0.2, 0.14, 0.2, 0.29, 0.38, 0.59, 0.71, 0.6, 0.41, 0.23, 0.1, 0.03, 0.01]}, {"s": 56.95, "e": 62.072, "dur": 5.122, "env": [0.04, 0.16, 0.41, 0.7, 0.71, 0.6, 0.61, 0.58, 0.59, 0.78, 0.83, 0.71, 0.74, 0.89, 0.86, 0.61, 0.34, 0.32, 0.51, 0.57, 0.55, 0.72, 0.9, 0.87, 0.72, 0.52, 0.35, 0.25, 0.18, 0.12, 0.06, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.06, 0.11, 0.28, 0.63, 0.92, 1.0, 1.0, 0.89, 0.63, 0.52, 0.7, 0.77, 0.61, 0.52, 0.54, 0.5, 0.38, 0.34, 0.52, 0.68, 0.61, 0.66, 0.89, 0.98, 0.88, 0.66, 0.48, 0.53, 0.62, 0.52, 0.34, 0.29, 0.29, 0.26, 0.26, 0.23, 0.17, 0.24, 0.46, 0.65, 0.68, 0.54, 0.36, 0.3, 0.3, 0.22, 0.13, 0.06, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.14, 0.51, 0.87, 0.91, 0.66, 0.41, 0.3, 0.25, 0.21, 0.21, 0.4, 0.76, 0.97, 1.0, 1.0, 1.0, 0.98, 0.85, 0.7, 0.77, 0.89, 0.75, 0.46, 0.33, 0.45, 0.53, 0.39, 0.23, 0.16, 0.22, 0.37, 0.45, 0.49, 0.54, 0.5, 0.44, 0.36, 0.33, 0.59, 0.81, 0.66, 0.33, 0.14, 0.12, 0.16, 0.14, 0.06, 0.02]}, {"s": 62.726, "e": 65.875, "dur": 3.149, "env": [0.06, 0.25, 0.53, 0.67, 0.55, 0.4, 0.51, 0.81, 0.8, 0.56, 0.57, 0.66, 0.62, 0.57, 0.53, 0.42, 0.25, 0.11, 0.28, 0.76, 1.0, 0.95, 0.8, 0.63, 0.51, 0.34, 0.21, 0.35, 0.55, 0.57, 0.54, 0.47, 0.37, 0.29, 0.21, 0.16, 0.19, 0.26, 0.46, 0.77, 0.95, 0.87, 0.58, 0.32, 0.28, 0.36, 0.45, 0.48, 0.42, 0.36, 0.31, 0.29, 0.42, 0.6, 0.59, 0.45, 0.37, 0.39, 0.5, 0.57, 0.46, 0.26, 0.09, 0.02, 0.05, 0.26, 0.63, 0.91, 0.98, 0.95, 0.86, 0.74, 0.63, 0.43, 0.26, 0.31, 0.39, 0.41, 0.49, 0.56, 0.51, 0.41, 0.38, 0.43, 0.42, 0.28, 0.18, 0.23, 0.27, 0.22, 0.16, 0.1, 0.06, 0.03, 0.01]}, {"s": 66.225, "e": 68.551, "dur": 2.326, "env": [0.01, 0.15, 0.42, 0.56, 0.53, 0.41, 0.41, 0.64, 0.82, 0.89, 0.92, 0.81, 0.69, 0.67, 0.53, 0.27, 0.13, 0.08, 0.12, 0.31, 0.44, 0.52, 0.72, 0.91, 0.93, 0.84, 0.78, 0.7, 0.54, 0.33, 0.2, 0.33, 0.71, 0.93, 0.83, 0.57, 0.34, 0.27, 0.33, 0.4, 0.41, 0.42, 0.5, 0.48, 0.31, 0.25, 0.29, 0.29, 0.29, 0.29, 0.24, 0.21, 0.35, 0.65, 0.9, 0.89, 0.63, 0.3, 0.19, 0.31, 0.34, 0.27, 0.25, 0.24, 0.2, 0.16, 0.12, 0.07, 0.03, 0.01]}, {"s": 69.34, "e": 74.644, "dur": 5.305, "env": [0.06, 0.19, 0.41, 0.72, 0.85, 0.65, 0.52, 0.6, 0.57, 0.53, 0.66, 0.69, 0.53, 0.49, 0.59, 0.64, 0.57, 0.41, 0.25, 0.18, 0.18, 0.21, 0.25, 0.32, 0.42, 0.47, 0.42, 0.31, 0.19, 0.11, 0.07, 0.04, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.07, 0.27, 0.56, 0.84, 0.94, 0.78, 0.45, 0.24, 0.28, 0.34, 0.26, 0.17, 0.26, 0.52, 0.71, 0.7, 0.64, 0.59, 0.51, 0.41, 0.29, 0.24, 0.4, 0.65, 0.81, 0.77, 0.59, 0.39, 0.24, 0.18, 0.19, 0.21, 0.19, 0.14, 0.07, 0.04, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.18, 0.54, 0.89, 0.89, 0.58, 0.3, 0.18, 0.15, 0.18, 0.31, 0.39, 0.35, 0.32, 0.34, 0.29, 0.18, 0.09, 0.05, 0.02, 0.02, 0.13, 0.35, 0.53, 0.65, 0.64, 0.49, 0.36, 0.28, 0.25, 0.27, 0.3, 0.41, 0.66, 0.91, 1.0, 0.98, 0.89, 0.7, 0.45, 0.29, 0.31, 0.34, 0.26, 0.19, 0.18, 0.22, 0.26, 0.26, 0.27, 0.3, 0.31, 0.33, 0.27, 0.26, 0.36, 0.37, 0.25, 0.14, 0.11, 0.13, 0.11, 0.06, 0.04]}, {"s": 75.311, "e": 80.067, "dur": 4.756, "env": [0.05, 0.33, 0.76, 0.92, 0.7, 0.45, 0.41, 0.5, 0.49, 0.37, 0.34, 0.44, 0.61, 0.84, 0.98, 1.0, 0.97, 0.85, 0.69, 0.59, 0.63, 0.75, 0.76, 0.55, 0.3, 0.19, 0.13, 0.1, 0.12, 0.18, 0.32, 0.59, 0.84, 0.97, 0.95, 0.77, 0.61, 0.67, 0.83, 0.84, 0.63, 0.31, 0.15, 0.19, 0.23, 0.31, 0.52, 0.65, 0.54, 0.46, 0.59, 0.7, 0.63, 0.45, 0.28, 0.14, 0.05, 0.01, 0.0, 0.0, 0.01, 0.06, 0.18, 0.28, 0.33, 0.42, 0.65, 0.9, 0.98, 0.8, 0.47, 0.34, 0.36, 0.38, 0.48, 0.62, 0.59, 0.45, 0.44, 0.55, 0.59, 0.52, 0.42, 0.42, 0.47, 0.51, 0.59, 0.61, 0.5, 0.32, 0.16, 0.06, 0.01, 0.0, 0.02, 0.16, 0.42, 0.65, 0.86, 0.91, 0.66, 0.31, 0.09, 0.1, 0.33, 0.61, 0.79, 0.85, 0.69, 0.35, 0.12, 0.1, 0.22, 0.39, 0.47, 0.39, 0.24, 0.17, 0.23, 0.37, 0.44, 0.4, 0.38, 0.38, 0.38, 0.38, 0.34, 0.28, 0.23, 0.24, 0.31, 0.36, 0.3, 0.27, 0.4, 0.44, 0.29, 0.15, 0.1, 0.11, 0.08, 0.04, 0.02]}, {"s": 80.676, "e": 84.359, "dur": 3.682, "env": [0.04, 0.14, 0.36, 0.67, 0.83, 0.86, 0.94, 0.98, 0.86, 0.65, 0.47, 0.29, 0.19, 0.39, 0.71, 0.87, 0.87, 0.75, 0.54, 0.39, 0.36, 0.43, 0.62, 0.87, 0.91, 0.64, 0.38, 0.42, 0.63, 0.73, 0.63, 0.46, 0.35, 0.41, 0.71, 0.88, 0.71, 0.46, 0.44, 0.58, 0.64, 0.59, 0.57, 0.47, 0.28, 0.14, 0.16, 0.35, 0.55, 0.61, 0.56, 0.54, 0.54, 0.46, 0.4, 0.44, 0.4, 0.25, 0.22, 0.27, 0.35, 0.59, 0.88, 0.99, 0.95, 0.87, 0.7, 0.49, 0.33, 0.23, 0.16, 0.1, 0.08, 0.12, 0.21, 0.32, 0.45, 0.47, 0.3, 0.14, 0.1, 0.15, 0.23, 0.45, 0.76, 0.96, 0.96, 0.82, 0.63, 0.45, 0.35, 0.33, 0.33, 0.36, 0.37, 0.33, 0.27, 0.23, 0.16, 0.16, 0.21, 0.21, 0.23, 0.24, 0.2, 0.16, 0.16, 0.16, 0.11, 0.06, 0.03]}, {"s": 85.127, "e": 90.355, "dur": 5.228, "env": [0.06, 0.22, 0.51, 0.85, 0.9, 0.8, 0.77, 0.7, 0.74, 0.9, 0.83, 0.67, 0.75, 0.89, 0.78, 0.48, 0.25, 0.16, 0.15, 0.23, 0.51, 0.86, 0.97, 0.89, 0.77, 0.61, 0.41, 0.24, 0.15, 0.12, 0.1, 0.09, 0.08, 0.07, 0.06, 0.1, 0.23, 0.37, 0.41, 0.34, 0.22, 0.24, 0.43, 0.56, 0.48, 0.33, 0.21, 0.31, 0.66, 0.94, 0.99, 0.86, 0.58, 0.37, 0.29, 0.22, 0.21, 0.26, 0.3, 0.32, 0.27, 0.2, 0.22, 0.27, 0.23, 0.16, 0.11, 0.12, 0.15, 0.14, 0.09, 0.05, 0.03, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.05, 0.18, 0.29, 0.46, 0.75, 0.95, 0.97, 0.89, 0.7, 0.49, 0.49, 0.71, 0.76, 0.51, 0.3, 0.28, 0.32, 0.36, 0.36, 0.3, 0.29, 0.37, 0.41, 0.38, 0.37, 0.43, 0.45, 0.35, 0.25, 0.28, 0.34, 0.29, 0.3, 0.5, 0.52, 0.28, 0.09, 0.11, 0.26, 0.35, 0.46, 0.75, 0.96, 0.95, 0.77, 0.52, 0.44, 0.5, 0.51, 0.45, 0.37, 0.3, 0.25, 0.25, 0.27, 0.23, 0.16, 0.13, 0.2, 0.34, 0.5, 0.65, 0.8, 0.83, 0.62, 0.33, 0.18, 0.14, 0.1, 0.05, 0.03]}, {"s": 90.822, "e": 94.122, "dur": 3.3, "env": [0.04, 0.17, 0.38, 0.65, 0.9, 1.0, 1.0, 0.98, 0.86, 0.63, 0.42, 0.24, 0.27, 0.64, 0.89, 0.78, 0.45, 0.17, 0.26, 0.66, 0.84, 0.58, 0.22, 0.07, 0.26, 0.69, 0.84, 0.6, 0.37, 0.31, 0.33, 0.36, 0.37, 0.29, 0.19, 0.12, 0.11, 0.2, 0.4, 0.48, 0.34, 0.21, 0.23, 0.31, 0.39, 0.6, 0.88, 1.0, 0.98, 0.87, 0.66, 0.51, 0.47, 0.41, 0.35, 0.39, 0.45, 0.41, 0.38, 0.43, 0.46, 0.47, 0.54, 0.66, 0.77, 0.81, 0.75, 0.65, 0.51, 0.36, 0.22, 0.11, 0.06, 0.03, 0.08, 0.29, 0.54, 0.74, 0.83, 0.69, 0.53, 0.63, 0.83, 0.86, 0.73, 0.57, 0.48, 0.39, 0.33, 0.35, 0.32, 0.29, 0.32, 0.29, 0.2, 0.15, 0.11, 0.06, 0.03]}, {"s": 94.635, "e": 96.525, "dur": 1.89, "env": [0.02, 0.14, 0.46, 0.84, 0.98, 0.85, 0.69, 0.7, 0.87, 0.98, 0.91, 0.64, 0.31, 0.16, 0.2, 0.31, 0.37, 0.28, 0.17, 0.23, 0.37, 0.4, 0.37, 0.39, 0.43, 0.43, 0.31, 0.26, 0.51, 0.78, 0.81, 0.71, 0.52, 0.32, 0.25, 0.27, 0.26, 0.19, 0.14, 0.22, 0.28, 0.31, 0.35, 0.34, 0.3, 0.27, 0.24, 0.16, 0.09, 0.13, 0.22, 0.26, 0.24, 0.19, 0.11, 0.04, 0.01]}, {"s": 97.36, "e": 101.392, "dur": 4.032, "env": [0.08, 0.3, 0.54, 0.63, 0.56, 0.4, 0.35, 0.58, 0.88, 0.96, 0.83, 0.68, 0.57, 0.62, 0.86, 0.86, 0.55, 0.34, 0.3, 0.38, 0.57, 0.68, 0.65, 0.69, 0.7, 0.61, 0.55, 0.51, 0.41, 0.28, 0.2, 0.24, 0.34, 0.42, 0.41, 0.31, 0.29, 0.45, 0.58, 0.5, 0.39, 0.38, 0.47, 0.53, 0.46, 0.33, 0.21, 0.09, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03, 0.26, 0.63, 0.69, 0.61, 0.83, 0.86, 0.49, 0.21, 0.25, 0.52, 0.81, 0.8, 0.59, 0.44, 0.42, 0.55, 0.71, 0.8, 0.85, 0.82, 0.71, 0.56, 0.57, 0.72, 0.72, 0.54, 0.47, 0.54, 0.53, 0.43, 0.42, 0.4, 0.32, 0.29, 0.27, 0.25, 0.27, 0.34, 0.36, 0.33, 0.27, 0.21, 0.2, 0.21, 0.22, 0.24, 0.22, 0.17, 0.18, 0.18, 0.13, 0.08, 0.06, 0.04]}, {"s": 102.08, "e": 106.586, "dur": 4.506, "env": [0.07, 0.28, 0.52, 0.65, 0.59, 0.46, 0.5, 0.77, 0.96, 1.0, 1.0, 0.96, 0.79, 0.63, 0.6, 0.51, 0.37, 0.42, 0.59, 0.6, 0.47, 0.45, 0.43, 0.36, 0.41, 0.47, 0.39, 0.37, 0.55, 0.75, 0.84, 0.86, 0.77, 0.58, 0.35, 0.16, 0.05, 0.04, 0.04, 0.03, 0.01, 0.05, 0.23, 0.49, 0.58, 0.45, 0.28, 0.29, 0.46, 0.53, 0.52, 0.53, 0.5, 0.36, 0.39, 0.75, 0.97, 0.95, 0.86, 0.66, 0.46, 0.55, 0.72, 0.7, 0.66, 0.65, 0.46, 0.27, 0.3, 0.38, 0.51, 0.78, 0.93, 0.83, 0.65, 0.51, 0.39, 0.27, 0.18, 0.11, 0.05, 0.02, 0.01, 0.0, 0.02, 0.24, 0.65, 0.79, 0.59, 0.41, 0.36, 0.33, 0.41, 0.7, 0.89, 0.84, 0.71, 0.52, 0.35, 0.33, 0.39, 0.41, 0.33, 0.21, 0.14, 0.14, 0.14, 0.15, 0.26, 0.51, 0.74, 0.84, 0.82, 0.74, 0.63, 0.51, 0.37, 0.31, 0.36, 0.41, 0.35, 0.28, 0.26, 0.24, 0.22, 0.26, 0.27, 0.23, 0.17, 0.11, 0.08, 0.07, 0.07, 0.05, 0.02, 0.01]}, {"s": 107.322, "e": 112.37, "dur": 5.048, "env": [0.03, 0.15, 0.44, 0.81, 0.99, 1.0, 0.88, 0.65, 0.62, 0.79, 0.76, 0.61, 0.55, 0.59, 0.66, 0.58, 0.35, 0.21, 0.21, 0.36, 0.69, 0.95, 0.91, 0.76, 0.7, 0.63, 0.51, 0.52, 0.56, 0.59, 0.64, 0.65, 0.57, 0.44, 0.38, 0.4, 0.54, 0.79, 0.95, 0.97, 0.91, 0.73, 0.51, 0.38, 0.33, 0.23, 0.1, 0.05, 0.03, 0.01, 0.01, 0.01, 0.0, 0.0, 0.01, 0.05, 0.19, 0.3, 0.46, 0.76, 0.96, 0.96, 0.79, 0.61, 0.58, 0.53, 0.35, 0.29, 0.54, 0.82, 0.86, 0.8, 0.79, 0.82, 0.85, 0.87, 0.79, 0.6, 0.41, 0.33, 0.27, 0.2, 0.16, 0.2, 0.23, 0.26, 0.3, 0.28, 0.19, 0.19, 0.33, 0.36, 0.24, 0.11, 0.06, 0.05, 0.05, 0.03, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.04, 0.15, 0.43, 0.82, 0.96, 0.72, 0.37, 0.26, 0.3, 0.33, 0.41, 0.56, 0.67, 0.74, 0.88, 0.94, 0.78, 0.58, 0.47, 0.41, 0.35, 0.29, 0.2, 0.14, 0.17, 0.26, 0.25, 0.16, 0.13, 0.15, 0.13, 0.08, 0.03, 0.02]}, {"s": 112.746, "e": 114.259, "dur": 1.513, "env": [0.09, 0.38, 0.72, 0.86, 0.77, 0.61, 0.47, 0.37, 0.29, 0.24, 0.23, 0.21, 0.15, 0.08, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.04, 0.14, 0.31, 0.61, 0.89, 0.91, 0.68, 0.41, 0.24, 0.25, 0.32, 0.3, 0.25, 0.24, 0.21, 0.17, 0.13, 0.07, 0.03, 0.01]}, {"s": 114.721, "e": 121.017, "dur": 6.296, "env": [0.01, 0.1, 0.28, 0.42, 0.43, 0.5, 0.77, 0.96, 0.92, 0.79, 0.66, 0.54, 0.41, 0.28, 0.16, 0.06, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.05, 0.15, 0.34, 0.64, 0.9, 0.97, 0.93, 0.83, 0.67, 0.6, 0.59, 0.54, 0.45, 0.35, 0.31, 0.29, 0.24, 0.35, 0.52, 0.52, 0.43, 0.4, 0.42, 0.41, 0.37, 0.3, 0.19, 0.1, 0.05, 0.04, 0.03, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.09, 0.29, 0.49, 0.66, 0.88, 0.98, 0.95, 0.89, 0.8, 0.68, 0.52, 0.37, 0.26, 0.14, 0.04, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03, 0.12, 0.2, 0.25, 0.29, 0.49, 0.83, 0.99, 1.0, 0.99, 0.91, 0.74, 0.52, 0.37, 0.3, 0.23, 0.21, 0.29, 0.32, 0.23, 0.15, 0.12, 0.11, 0.15, 0.18, 0.16, 0.12, 0.12, 0.1, 0.07, 0.03, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.07, 0.12, 0.2, 0.36, 0.59, 0.75, 0.82, 0.89, 0.94, 0.86, 0.69, 0.51, 0.38, 0.25, 0.11, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.07, 0.37, 0.79, 0.87, 0.57, 0.31, 0.25, 0.22, 0.2, 0.26, 0.26, 0.18, 0.13, 0.12, 0.1, 0.07, 0.04, 0.01]}, {"s": 121.479, "e": 125.466, "dur": 3.987, "env": [0.01, 0.04, 0.1, 0.16, 0.33, 0.67, 0.93, 0.99, 0.95, 0.89, 0.79, 0.62, 0.38, 0.2, 0.13, 0.1, 0.09, 0.07, 0.05, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.08, 0.24, 0.34, 0.43, 0.63, 0.76, 0.7, 0.57, 0.47, 0.35, 0.26, 0.21, 0.18, 0.14, 0.09, 0.05, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.44, 0.84, 0.89, 0.61, 0.35, 0.28, 0.41, 0.65, 0.78, 0.8, 0.85, 0.95, 0.98, 0.86, 0.66, 0.48, 0.34, 0.32, 0.46, 0.51, 0.42, 0.35, 0.29, 0.3, 0.53, 0.8, 0.84, 0.6, 0.27, 0.09, 0.07, 0.07, 0.06, 0.03, 0.08, 0.3, 0.56, 0.64, 0.48, 0.45, 0.73, 0.96, 0.96, 0.77, 0.48, 0.31, 0.34, 0.48, 0.64, 0.71, 0.65, 0.51, 0.32, 0.2, 0.18, 0.18, 0.22, 0.28]}]};
+
+// ---------------- Zeitplan berechnen ----------------
+const LINES = [];
+const SCENES = [];
+{
+  let t = WALK_IN + 0.15;
+  SCRIPT.forEach(([scene, pose, text], i) => {
+    const dur = TIMING ? TIMING.lines[i].dur : 1.2 + text.length * 0.055;
+    const prev = LINES[i - 1];
+    if (!prev || prev.scene !== scene) {
+      const from = prev ? prev.end + GAP_SCENE : 0.6;
+      if (SCENES.length) SCENES[SCENES.length - 1].to = from + 0.3;
+      SCENES.push({ id: scene, from, to: 0 });
+      t = prev ? from + LEAD_SCENE : t;
+    } else {
+      t = prev.end + GAP_LINE;
+    }
+    LINES.push({ i, scene, pose, text, start: +t.toFixed(3), end: +(t + dur).toFixed(3), dur });
+  });
+}
+const DURATION = +(LINES[LINES.length - 1].end + OUTRO).toFixed(2);
+SCENES[SCENES.length - 1].to = DURATION + 1;
+// Posen-Zeitplan: [ab, pose]
+const POSES = [[0, 'walk'], [WALK_IN, 'wave']];
+LINES.forEach((l, i) => {
+  if (l.scene === 's-intro') return;
+  const first = i === 0 || LINES[i - 1].scene !== l.scene;
+  POSES.push([first ? SCENES.find(s => s.id === l.scene).from : l.start - 0.2, l.pose]);
+});
 
 const CATS = [
-  { n: 1, from: 35, c: 'var(--k1)', kicker: 'Kategorie 1', title: 'Trinkwasser',
+  { n: 1, c: 'var(--k1)', kicker: 'Kategorie 1', title: 'Trinkwasser',
     def: 'Wasser für den menschlichen Gebrauch, das direkt aus der Trinkwasser&shy;installation entnommen wird.',
     ex: ['Kaltes Trinkwasser aus der Leitung'], risk: 'Keine Gefährdung', glass: { fill: '#8cc8f5', extra: 'shine' } },
-  { n: 2, from: 50, c: 'var(--k2)', kicker: 'Kategorie 2', title: 'Keine Gesundheits&shy;gefährdung',
+  { n: 2, c: 'var(--k2)', kicker: 'Kategorie 2', title: 'Keine Gesundheits&shy;gefährdung',
     def: 'Trinkwasser, das in Geschmack, Geruch, Farbe oder Temperatur verändert ist – aber nicht gesundheits&shy;gefährdend.',
     ex: ['Erwärmtes Trinkwasser', 'Kaffee und Tee'], risk: 'Ungefährlich', glass: { fill: '#9a6237', extra: 'steam' } },
-  { n: 3, from: 65, c: 'var(--k3)', kicker: 'Kategorie 3', title: 'Weniger giftige Stoffe',
+  { n: 3, c: 'var(--k3)', kicker: 'Kategorie 3', title: 'Weniger giftige Stoffe',
     def: 'Gesundheits&shy;gefährdung durch einen oder mehrere weniger giftige Stoffe.',
     ex: ['Heizungswasser ohne Zusätze'], risk: 'Geringe Gefährdung', glass: { fill: '#d9c27a', extra: 'drop' } },
-  { n: 4, from: 80, c: 'var(--k4)', kicker: 'Kategorie 4', title: 'Giftige Stoffe',
+  { n: 4, c: 'var(--k4)', kicker: 'Kategorie 4', title: 'Giftige Stoffe',
     def: 'Gesundheits&shy;gefährdung durch giftige oder sehr giftige Stoffe – auch radioaktive, krebserregende oder erbgutverändernde.',
     ex: ['Heizungswasser mit Inhibitoren', 'Pflanzenschutzmittel'], risk: 'Hohe Gefährdung', glass: { fill: '#6c8a2c', extra: 'warn' } },
-  { n: 5, from: 95, c: 'var(--k5)', kicker: 'Kategorie 5', title: 'Krankheitserreger',
+  { n: 5, c: 'var(--k5)', kicker: 'Kategorie 5', title: 'Krankheitserreger',
     def: 'Gesundheits&shy;gefährdung durch Mikroorganismen oder Viren übertragbarer Krankheiten.',
     ex: ['Abwasser, WC und Urinal', 'Regenwasser'], risk: 'Sehr hohe Gefährdung', glass: { fill: '#6b5532', extra: 'germs' } },
 ];
 
-// Posen: [von, bis, pose]
-const POSES = [
-  [0, 2.4, 'walk'], [2.4, 9, 'wave'],
-  [9, 17.4, 'explain'], [17.4, 26, 'warn'],
-  [26, 35, 'explain'],
-  [35, 41, 'point'], [41, 50, 'explain'],
-  [50, 56, 'point'], [56, 65, 'explain'],
-  [65, 71, 'point'], [71, 80, 'explain'],
-  [80, 86, 'point'], [86, 95, 'warn'],
-  [95, 101, 'point'], [101, 110, 'warn'],
-  [110, 116, 'explain'], [116, 126, 'point'],
-  [126, 134.5, 'explain'], [134.5, 141, 'jump'],
-];
-
-// Untertitel = Sprechertext: [von, bis, text]
-const CAPTIONS = [
-  [2.6, 4.45, 'Hallo und herzlich willkommen!'],
-  [4.71, 9.45, 'Step 1 der Trinkwasserhygiene: die 5 Flüssigkeitskategorien.'],
-  [9.5, 13.45, 'Unser Trinkwasser soll sauber bleiben – vom Wasserwerk bis zum Wasserhahn.'],
-  [13.5, 17.17, 'Aber: Fällt der Druck in der Leitung ab, kann Wasser zurückfließen.'],
-  [17.22, 22.4, 'Rückfließen, Rückdrücken oder Rücksaugen – und schon ist Schmutz im Trinkwasser!'],
-  [22.45, 26.35, 'Deshalb ordnen wir jede Flüssigkeit einer von 5 Kategorien zu.'],
-  [26.4, 30.75, 'Die Faustregel: Je höher die Kategorie, desto gefährlicher die Flüssigkeit.'],
-  [30.8, 32.82, 'Schauen wir uns alle fünf genauer an.'],
-  [35.3, 38.93, 'Kategorie 1 ist unser Trinkwasser – direkt aus der Leitung.'],
-  [39.7, 41.89, 'Genau das Wasser, das wir schützen wollen.'],
-  [44.7, 46.64, 'Hier besteht also keine Gefahr.'],
-  [50.3, 54.54, 'Kategorie 2: Flüssigkeiten, die die Gesundheit nicht gefährden.'],
-  [54.9, 59.37, 'Das Trinkwasser ist nur verändert – in Geschmack, Geruch, Farbe oder Temperatur.'],
-  [59.9, 63.2, 'Zum Beispiel erwärmtes Trinkwasser oder Kaffee und Tee.'],
-  [64.63, 69.95, 'Kategorie 3: Hier wird es gesundheitsgefährdend – durch weniger giftige Stoffe.'],
-  [70.0, 73.4, 'Ein typisches Beispiel ist Heizungswasser ohne Zusätze.'],
-  [74.9, 77.48, 'Das gehört auf keinen Fall zurück ins Trinkwasser!'],
-  [79.45, 84.95, 'Kategorie 4: Jetzt wird es ernst – giftige oder sehr giftige Stoffe.'],
-  [85.0, 89.95, 'Dazu zählen auch radioaktive, krebserregende oder erbgutverändernde Stoffe.'],
-  [90.0, 93.93, 'Zum Beispiel Heizungswasser mit Inhibitoren oder Pflanzenschutzmittel.'],
-  [94.52, 99.95, 'Kategorie 5 ist die höchste Stufe: Krankheitserreger wie Bakterien und Viren.'],
-  [100.0, 103.55, 'Zum Beispiel Abwasser, WC und Urinal – oder Regenwasser.'],
-  [104.9, 107.04, 'Hier braucht es den stärksten Schutz.'],
-  [110.3, 114.58, 'Und wie schützen wir das Trinkwasser? Mit der passenden Sicherungseinrichtung.'],
-  [115.4, 120.16, 'Je höher die Kategorie, desto stärker die Trennung – bis hin zum freien Auslauf.'],
-  [120.9, 126.2, 'Welche Armatur du genau brauchst, zeige ich dir im nächsten Step.'],
-  [126.3, 128.06, 'Kurz zusammengefasst:'],
-  [128.15, 134.65, '1 Trinkwasser, 2 harmlos verändert, 3 wenig giftig, 4 giftig, 5 Keime.'],
-  [134.7, 138.94, 'Bis zum nächsten Step – und bleib sauber!'],
-];
 
 const KCOL = { 1: '#2d8fe0', 2: '#3aa86b', 3: '#e8b416', 4: '#ef7a1a', 5: '#d7141a' };
 
@@ -670,7 +696,7 @@ const catsEl = document.getElementById('cats');
 CATS.forEach(k => {
   const ex = k.ex.map((e, i) => `<div class="ex in" data-at="${5.2 + i * 1.2}">${e}</div>`).join('');
   catsEl.insertAdjacentHTML('beforeend', `
-    <section class="slide" data-from="${k.from}" data-to="${k.from + 15}" style="--c:${k.c}">
+    <section class="slide" id="cat-${k.n}" style="--c:${k.c}">
       <div class="cat-head">
         <div class="cat-num in" data-at="0.2" style="background:${k.c}">${k.n}</div>
         <div class="in" data-at="0.5"><div class="cat-kicker" style="color:${k.c}">${k.kicker}</div><div class="cat-title">${k.title}</div></div>
@@ -687,7 +713,7 @@ CATS.forEach(k => {
     </section>`);
 });
 
-// ---------------- Figur vorbereiten (Marcel-Look) ----------------
+// ---------------- Figur vorbereiten ----------------
 const fig = document.getElementById('figur');
 const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; };
 ['hairShort', 'hairSide', 'hairCurly', 'hairThin', 'glassesRound', 'glassesSquare', 'helmet', 'beardStubble', 'beardShort'].forEach(id => show(id, false));
@@ -697,9 +723,18 @@ fig.classList.remove('pointer-on');
 // ---------------- Rendern zum Zeitpunkt t ----------------
 const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
 const slides = [...document.querySelectorAll('.slide')];
+for (const sl of slides) {
+  const sc = SCENES.find(x => x.id === sl.id);
+  sl.dataset.from = sc.from; sl.dataset.to = sc.to;
+  sl.dataset.k = Math.min(1, (sc.to - sc.from) / (DESIGN_LEN[sl.id] || 15));
+}
+const lineAt = id => LINES.filter(l => l.scene === id);
+const T_BACK = lineAt('s-why')[1].start + 1.4, T_THREE = lineAt('s-why')[2].start;
 const capEl = document.querySelector('#caption span');
 const figWrap = document.getElementById('figWrap');
-let currentPose = '', currentTalk = null;
+let currentPose = '', currentTalk = null, blend = null;
+const mouth = document.getElementById('mouth');
+const PARTS = [['armL', 'armLwrap'], ['armR', 'armRwrap'], ['head', 'headWrap']].map(([a, b]) => [document.getElementById(a), document.getElementById(b)]);
 
 function render(t) {
   // Folien
@@ -710,46 +745,75 @@ function render(t) {
     s.style.visibility = a > 0 ? 'visible' : 'hidden';
     if (a <= 0) continue;
     for (const el of s.querySelectorAll('.in')) {
-      const p = ease((t - from - +el.dataset.at) / 0.45);
+      const p = ease((t - from - +el.dataset.at * +s.dataset.k) / 0.45);
       el.style.opacity = p;
       el.style.transform = `translateY(${(1 - p) * 30}px)`;
     }
   }
   // Rückfluss-Animation
-  const back = t >= 15.2;
+  const back = t >= T_BACK;
   document.getElementById('flowClean').style.strokeDashoffset = -t * 160;
-  document.getElementById('flowClean').style.opacity = back ? Math.max(0, 1 - (t - 15.2) / 0.5) : 1;
+  document.getElementById('flowClean').style.opacity = back ? Math.max(0, 1 - (t - T_BACK) / 0.5) : 1;
   document.getElementById('flowDirty').style.strokeDashoffset = -t * 160;
-  document.getElementById('flowDirty').style.opacity = back ? Math.min(1, (t - 15.2) / 0.5) : 0;
+  document.getElementById('flowDirty').style.opacity = back ? Math.min(1, (t - T_BACK) / 0.5) : 0;
   document.getElementById('arrowFwd').style.opacity = back ? 0 : 1;
   document.getElementById('arrowBack').style.opacity = back ? 1 : 0;
-  document.getElementById('threeR').style.opacity = ease((t - 17.6) / 0.5);
+  document.getElementById('threeR').style.opacity = ease((t - T_THREE) / 0.5);
   // Dampf & Keime wackeln
   document.querySelectorAll('.steam').forEach(el => el.style.transform = `translateY(${Math.sin(t * 3) * 6}px)`);
   document.querySelectorAll('.germ').forEach((el, i) => el.style.transform = `translate(${Math.sin(t * 2 + i) * 6}px, ${Math.cos(t * 2.5 + i) * 6}px)`);
 
   // Figur: Auftritt
-  const walkIn = ease(t / 2.4);
+  const walkIn = ease(t / WALK_IN);
   figWrap.style.transform = `translateX(${(1 - walkIn) * -760}px)`;
-  // Pose
-  const pose = (POSES.find(([a, b]) => t >= a && t < b) || POSES[POSES.length - 1])[2];
+  // Pose (mit weichem Übergang: Arme und Kopf drehen sanft in die neue Haltung)
+  let pose = POSES[0][1];
+  for (const [a, p] of POSES) if (t >= a) pose = p;
   if (pose !== currentPose) {
+    const before = PARTS.map(([el]) => angleOf(el));
     fig.classList.forEach(c => c.startsWith('mode-') && fig.classList.remove(c));
     fig.classList.add('mode-' + pose); currentPose = pose;
+    syncAnimations(t);
+    const after = PARTS.map(([el]) => angleOf(el));
+    blend = { t, delta: before.map((b, k) => { let d = b - after[k]; while (d > 180) d -= 360; while (d < -180) d += 360; return d; }) };
   }
-  // Untertitel + Sprechen
-  const cap = CAPTIONS.find(([a, b]) => t >= a && t < b);
-  const text = cap ? cap[2] : '';
-  if (capEl.textContent !== text) capEl.textContent = text;
-  const talk = !!cap && t < cap[1] - 0.25;
-  if (talk !== currentTalk) { fig.classList.toggle('talking', talk); currentTalk = talk; }
+  const bk = blend ? 1 - ease((t - blend.t) / 0.9) : 0;
+  PARTS.forEach(([, wrap], k) => { wrap.style.transform = bk > 0 && t >= blend.t ? `rotate(${blend.delta[k] * bk}deg)` : ''; });
 
-  // CSS-Animationen der Figur auf Zeitpunkt t setzen (deterministisch)
+  // Untertitel + Mund (folgt der Lautstärke der Stimme)
+  const line = LINES.find(l => t >= l.start && t < l.end + 0.15);
+  const text = line ? line.text : '';
+  if (capEl.textContent !== text) capEl.textContent = text;
+  if (TIMING) {
+    let open = 0, speaking = false;
+    const cur = LINES.find(l => t >= l.start && t < l.end);
+    if (cur) {
+      speaking = true;
+      const env = TIMING.lines[cur.i].env;
+      open = env[Math.min(env.length - 1, Math.floor((t - cur.start) * TIMING.fps))] || 0;
+    }
+    mouth.style.transform = `scaleY(${speaking ? 0.4 + 0.5 * open : 0.55})`;
+  } else {
+    const talk = !!line && t < line.end;
+    if (talk !== currentTalk) { fig.classList.toggle('talking', talk); currentTalk = talk; }
+  }
+
+  syncAnimations(t);
+}
+// CSS-Animationen der Figur auf Zeitpunkt t setzen (deterministisch)
+function syncAnimations(t) {
   getComputedStyle(fig).transform;
   for (const an of fig.getAnimations({ subtree: true })) { an.pause(); an.currentTime = t * 1000; }
 }
+function angleOf(el) {
+  const m = getComputedStyle(el).transform;
+  if (!m || m === 'none') return 0;
+  const v = m.slice(m.indexOf('(') + 1, -1).split(',').map(Number);
+  return Math.atan2(v[1], v[0]) * 180 / Math.PI;
+}
 window.render = render;
 window.DURATION = DURATION;
+window.LINES = LINES;
 
 // ---------------- Vorschau-Player ----------------
 function fit() {
@@ -771,6 +835,7 @@ playBtn.onclick = () => {
   if (playing) { start = +seek.value >= DURATION - 0.1 ? 0 : +seek.value; t0 = performance.now(); requestAnimationFrame(frame); }
 };
 seek.oninput = () => { playing = false; playBtn.textContent = '▶ Abspielen'; render(+seek.value); timeEl.textContent = (+seek.value).toFixed(1) + ' s'; };
+seek.max = DURATION;
 if (location.search.includes('render')) document.body.classList.add('render');
 render(0);
 </script>
