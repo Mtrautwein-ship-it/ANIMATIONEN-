@@ -4,7 +4,7 @@ Lehrer-Figur für Erklärvideos zu **Trinkwasserhygiene und Installation**.
 Gedrungene, comichafte Proportionen (großer Kopf, kurze Beine, ca. 3,5 Kopflängen hoch),
 Werkzeugtasche mit Rohrzange und ein Kupferrohr als Zeigestab.
 
-Standard-Look: schwarze Snapback-Cap, kräftige Brille mit Doppelsteg,
+Standard-Look: schwarze Snapback-Cap mit Wappen (`figur/wappen.png`), kräftige Brille mit Doppelsteg,
 dunkler Vollbart, Ohr-Tunnel, schwarzes T-Shirt mit PMPNZNG-Schriftzug (weiß auf rot),
 tätowierte Unterarme, Rot als Akzentfarbe. Alternativ: Arbeitsjacke und Schutzhelm.
 
